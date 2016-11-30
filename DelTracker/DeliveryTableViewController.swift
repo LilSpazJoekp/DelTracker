@@ -20,7 +20,7 @@ class DeliveryTableViewController: UITableViewController {
 			deliveries += savedDeliveries
 		}
 	}
-
+	
 	// MARK: - Table view data source
 	
 	override func numberOfSections(in tableView: UITableView) -> Int {
@@ -55,6 +55,9 @@ class DeliveryTableViewController: UITableViewController {
 		cell.amountGivenCell.text = delivery.amountGivenValue
 		cell.totalTipsCell.text = delivery.totalTipsValue
 		cell.paymentMethodCell.text = paymentMethodString
+		
+		print(delivery.ticketAmountValue)
+		
 		return cell
 	}
 	override func viewDidAppear(_ animated: Bool) {
@@ -64,7 +67,7 @@ class DeliveryTableViewController: UITableViewController {
 		// Return false if you do not want the specified item to be editable.
 		return true
 	}
-
+	
 	// Override to support editing the table view.
 	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
@@ -83,7 +86,7 @@ class DeliveryTableViewController: UITableViewController {
 		if let sourceViewController = sender.source as? DeliveryViewController, let delivery = sourceViewController.delivery {
 			if let selectedIndexPath = tableView.indexPathForSelectedRow {
 				deliveries[selectedIndexPath.row] = delivery
-				
+				print(delivery)
 				tableView.reloadRows(at: [selectedIndexPath], with: .right)
 			} else {
 				let newIndexPath = IndexPath(row: deliveries.count, section: 0)

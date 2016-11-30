@@ -110,10 +110,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	}
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if saveDelivery === sender as AnyObject? {
-			print(noTipSwitch)
-			print("1")
-			print(noTipSwitch.isOn)
-			print("2")
+			
 			let ticketNumberValue = ticketNumberField.text ?? ""
 			let ticketAmountValue = ticketAmountField.text ?? ""
 			let noTipSwitchValue = String(noTipSwitch.isOn)
