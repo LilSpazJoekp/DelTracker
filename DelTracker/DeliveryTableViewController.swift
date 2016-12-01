@@ -13,6 +13,10 @@ class DeliveryTableViewController: UITableViewController {
 	@IBOutlet var table: UITableView!
 	var deliveries = [Delivery]()
 	override func viewDidLoad() {
+		ticketTotalArray.removeAll()
+		amountGivenArray.removeAll()
+		cashTipsArray.removeAll()
+		totalTipsArray.removeAll()
 		super.viewDidLoad()
 		self.clearsSelectionOnViewWillAppear = true
 		self.navigationItem.leftBarButtonItem = self.editButtonItem
@@ -31,7 +35,15 @@ class DeliveryTableViewController: UITableViewController {
 		// #warning Incomplete implementation, return the number of rows
 		return deliveries.count
 	}
+	var ticketAmountFinal: Double = 0.0
+	var amountGivenFinal: Double = 0.0
+	var cashTipsFinal: Double = 0.0
+	var totalTipsFinal: Double = 0.0
 	var paymentMethodString = ""
+	var ticketTotalArray: [Double] = []
+	var amountGivenArray: [Double] = []
+	var cashTipsArray: [Double] = []
+	var totalTipsArray: [Double] = []
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cellIdentifier = "deliveryCell"
 		let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! DeliveryTableViewCell
@@ -49,15 +61,50 @@ class DeliveryTableViewController: UITableViewController {
 		} else if delivery.paymentMethodValue == "5" {
 			self.paymentMethodString = "Other"
 		}
+		
 		cell.deliveryNumber.text = String(indexPath.row + 1)
 		cell.ticketNumberCell.text = delivery.ticketNumberValue
 		cell.ticketAmountCell.text = delivery.ticketAmountValue
 		cell.amountGivenCell.text = delivery.amountGivenValue
+		cell.cashTipsCell.text = delivery.cashTipsValue
 		cell.totalTipsCell.text = delivery.totalTipsValue
 		cell.paymentMethodCell.text = paymentMethodString
-		
-		print(delivery.ticketAmountValue)
-		
+		// Sum of ticketAmount
+		var ticketAmountDropped = delivery.ticketAmountValue
+		ticketAmountDropped.remove(at: (delivery.ticketAmountValue.startIndex))
+		let ticketAmountRounded = round(Double(ticketAmountDropped)! * 100) / 100
+		ticketTotalArray.append(ticketAmountRounded)
+		let ticketAmountTotaled = ticketTotalArray.reduce(0, +)
+		self.ticketAmountFinal = ticketAmountTotaled
+		print("ticketAmountFinal")
+		print(String(format: "%.2f", ticketAmountFinal)) // result: 147.46
+		// Sum of amountGiven
+		var amountGivenDropped = delivery.amountGivenValue
+		amountGivenDropped.remove(at: (delivery.amountGivenValue.startIndex))
+		let amountGivenRounded = round(Double(amountGivenDropped)! * 100) / 100
+		amountGivenArray.append(amountGivenRounded)
+		let amountGivenTotaled = amountGivenArray.reduce(0, +)
+		self.amountGivenFinal = amountGivenTotaled
+		print("amountGivenFinal")
+		print(String(format: "%.2f", amountGivenFinal)) // result: 165.00
+		// Sum of cashTips
+		var cashTipsDropped = delivery.cashTipsValue
+		cashTipsDropped.remove(at: (delivery.cashTipsValue.startIndex))
+		let cashTipsRounded = round(Double(cashTipsDropped)! * 100) / 100
+		cashTipsArray.append(cashTipsRounded)
+		let cashTipsTotaled = cashTipsArray.reduce(0, +)
+		self.cashTipsFinal = cashTipsTotaled
+		print("cashTipsFinal")
+		print(String(format: "%.2f", cashTipsFinal)) // result: 0.00
+		// Sum of totalTips
+		var totalTipsDropped = delivery.totalTipsValue
+		totalTipsDropped.remove(at: (delivery.totalTipsValue.startIndex))
+		let totalTipsRounded = round(Double(totalTipsDropped)! * 100) / 100
+		totalTipsArray.append(totalTipsRounded)
+		let totalTipsTotaled = totalTipsArray.reduce(0, +)
+		self.totalTipsFinal = totalTipsTotaled
+		print("totalTipsFinal")
+		print(String(format: "%.2f", totalTipsFinal)) // result: 17.54
 		return cell
 	}
 	override func viewDidAppear(_ animated: Bool) {
@@ -86,7 +133,6 @@ class DeliveryTableViewController: UITableViewController {
 		if let sourceViewController = sender.source as? DeliveryViewController, let delivery = sourceViewController.delivery {
 			if let selectedIndexPath = tableView.indexPathForSelectedRow {
 				deliveries[selectedIndexPath.row] = delivery
-				print(delivery)
 				tableView.reloadRows(at: [selectedIndexPath], with: .right)
 			} else {
 				let newIndexPath = IndexPath(row: deliveries.count, section: 0)

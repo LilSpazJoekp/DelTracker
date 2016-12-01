@@ -50,7 +50,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	}
 	@IBAction func saveDelivery(_ sender: Any) {
 		removeFirstCharacterAndCalculate()
-		print(Delivery.self)
 	}
 	@IBAction func cancelEdit(_ sender: UIBarButtonItem) {
 		dismiss(animated: true, completion: nil)
@@ -110,7 +109,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	}
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if saveDelivery === sender as AnyObject? {
-			
 			let ticketNumberValue = ticketNumberField.text ?? ""
 			let ticketAmountValue = ticketAmountField.text ?? ""
 			let noTipSwitchValue = String(noTipSwitch.isOn)
@@ -118,7 +116,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			let cashTipsValue = cashTipsField?.text ?? ""
 			let totalTipsValue = totalTips.text ?? ""
 			let paymentMethodValue = String(paymentMethodPicker.selectedRow(inComponent: 0))
-			print(delivery?.noTipSwitchValue ?? "")
 			delivery = Delivery(ticketNumberValue: ticketNumberValue, ticketAmountValue: ticketAmountValue, noTipSwitchValue: noTipSwitchValue, amountGivenValue: amountGivenValue, cashTipsValue: cashTipsValue, totalTipsValue: totalTipsValue, paymentMethodValue: paymentMethodValue)
 		}
 	}
