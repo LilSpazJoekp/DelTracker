@@ -9,7 +9,7 @@
 import UIKit
 
 class Delivery: NSObject, NSCoding {
-	let deliveryDay = D
+	
     // MARK: Properties
     
     var ticketNumberValue: String
@@ -23,7 +23,7 @@ class Delivery: NSObject, NSCoding {
 	// MARK: Archiving Paths
 	
 	static let DocumentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-	static let ArchiveURL = DocumentsDirectory.appendingPathComponent("\(DeliveryDayViewController.)")
+	static let ArchiveURL = DocumentsDirectory.appendingPathComponent("deliveries")
 
 	// MARK: Types
 	
