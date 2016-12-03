@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EE7F8C331DF23B0000F52349 /* DeliveryDayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7F8C321DF23B0000F52349 /* DeliveryDayViewController.swift */; };
+		EE7F8C351DF23B1400F52349 /* DeliveryDayTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7F8C341DF23B1400F52349 /* DeliveryDayTableViewController.swift */; };
+		EE7F8C371DF23B3000F52349 /* DeliveryDayTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7F8C361DF23B3000F52349 /* DeliveryDayTableViewCell.swift */; };
 		EE8F7AF51DECF64500B38B51 /* DeliveryStatisticsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8F7AF41DECF64500B38B51 /* DeliveryStatisticsTableViewController.swift */; };
 		EEC49D601DECB1A3008DB859 /* Delivery.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC49D5F1DECB1A3008DB859 /* Delivery.swift */; };
 		EEC635731DEBDABF009D713F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC635721DEBDABF009D713F /* AppDelegate.swift */; };
@@ -20,6 +23,10 @@
 		EEC635A61DEBDBF7009D713F /* DeliveryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC635A51DEBDBF7009D713F /* DeliveryTableViewController.swift */; };
 		EEC635A81DEBDC3B009D713F /* DeliveryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC635A71DEBDC3B009D713F /* DeliveryTableViewCell.swift */; };
 		EEC635AA1DEBDD11009D713F /* TextFieldMaxLengths.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC635A91DEBDD11009D713F /* TextFieldMaxLengths.swift */; };
+		EEF011851DF07DFE00CEC323 /* DropTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF011841DF07DFE00CEC323 /* DropTableViewController.swift */; };
+		EEF011891DF07EB200CEC323 /* Drop.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF011881DF07EB200CEC323 /* Drop.swift */; };
+		EEF0118D1DF087F000CEC323 /* DropTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF0118C1DF087F000CEC323 /* DropTableViewCell.swift */; };
+		EEF0118F1DF0DEA600CEC323 /* DropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF0118E1DF0DEA600CEC323 /* DropViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +47,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EE7F8C321DF23B0000F52349 /* DeliveryDayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeliveryDayViewController.swift; path = ../DeliveryDayViewController.swift; sourceTree = "<group>"; };
+		EE7F8C341DF23B1400F52349 /* DeliveryDayTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeliveryDayTableViewController.swift; path = ../DeliveryDayTableViewController.swift; sourceTree = "<group>"; };
+		EE7F8C361DF23B3000F52349 /* DeliveryDayTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeliveryDayTableViewCell.swift; sourceTree = "<group>"; };
 		EE8F7AF41DECF64500B38B51 /* DeliveryStatisticsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeliveryStatisticsTableViewController.swift; sourceTree = "<group>"; };
 		EEC49D5F1DECB1A3008DB859 /* Delivery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Delivery.swift; sourceTree = "<group>"; };
 		EEC6356F1DEBDABF009D713F /* DelTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DelTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -59,6 +69,10 @@
 		EEC635A51DEBDBF7009D713F /* DeliveryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeliveryTableViewController.swift; sourceTree = "<group>"; };
 		EEC635A71DEBDC3B009D713F /* DeliveryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeliveryTableViewCell.swift; sourceTree = "<group>"; };
 		EEC635A91DEBDD11009D713F /* TextFieldMaxLengths.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldMaxLengths.swift; sourceTree = "<group>"; };
+		EEF011841DF07DFE00CEC323 /* DropTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DropTableViewController.swift; path = ../DropTableViewController.swift; sourceTree = "<group>"; };
+		EEF011881DF07EB200CEC323 /* Drop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Drop.swift; path = ../Drop.swift; sourceTree = "<group>"; };
+		EEF0118C1DF087F000CEC323 /* DropTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DropTableViewCell.swift; path = ../DropTableViewCell.swift; sourceTree = "<group>"; };
+		EEF0118E1DF0DEA600CEC323 /* DropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,11 +124,12 @@
 		EEC635711DEBDABF009D713F /* DelTracker */ = {
 			isa = PBXGroup;
 			children = (
-				EEC49D5F1DECB1A3008DB859 /* Delivery.swift */,
-				EEC635A51DEBDBF7009D713F /* DeliveryTableViewController.swift */,
-				EEC635A71DEBDC3B009D713F /* DeliveryTableViewCell.swift */,
+				EE7F8C361DF23B3000F52349 /* DeliveryDayTableViewCell.swift */,
+				EE7F8C321DF23B0000F52349 /* DeliveryDayViewController.swift */,
+				EE7F8C341DF23B1400F52349 /* DeliveryDayTableViewController.swift */,
+				EEF011901DF13FD800CEC323 /* DeliveryView */,
+				EEF011911DF1400F00CEC323 /* DropView */,
 				EEC635721DEBDABF009D713F /* AppDelegate.swift */,
-				EEC635741DEBDABF009D713F /* DeliveryViewController.swift */,
 				EEC635761DEBDABF009D713F /* Main.storyboard */,
 				EE8F7AF41DECF64500B38B51 /* DeliveryStatisticsTableViewController.swift */,
 				EEC6357C1DEBDABF009D713F /* Assets.xcassets */,
@@ -141,6 +156,28 @@
 				EEC635971DEBDAC0009D713F /* Info.plist */,
 			);
 			path = DelTrackerUITests;
+			sourceTree = "<group>";
+		};
+		EEF011901DF13FD800CEC323 /* DeliveryView */ = {
+			isa = PBXGroup;
+			children = (
+				EEC49D5F1DECB1A3008DB859 /* Delivery.swift */,
+				EEC635A51DEBDBF7009D713F /* DeliveryTableViewController.swift */,
+				EEC635A71DEBDC3B009D713F /* DeliveryTableViewCell.swift */,
+				EEC635741DEBDABF009D713F /* DeliveryViewController.swift */,
+			);
+			name = DeliveryView;
+			sourceTree = "<group>";
+		};
+		EEF011911DF1400F00CEC323 /* DropView */ = {
+			isa = PBXGroup;
+			children = (
+				EEF0118C1DF087F000CEC323 /* DropTableViewCell.swift */,
+				EEF011881DF07EB200CEC323 /* Drop.swift */,
+				EEF011841DF07DFE00CEC323 /* DropTableViewController.swift */,
+				EEF0118E1DF0DEA600CEC323 /* DropViewController.swift */,
+			);
+			name = DropView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -285,9 +322,16 @@
 				EEC6357B1DEBDABF009D713F /* DelTracker.xcdatamodeld in Sources */,
 				EEC635A61DEBDBF7009D713F /* DeliveryTableViewController.swift in Sources */,
 				EEC635751DEBDABF009D713F /* DeliveryViewController.swift in Sources */,
+				EE7F8C371DF23B3000F52349 /* DeliveryDayTableViewCell.swift in Sources */,
 				EEC635731DEBDABF009D713F /* AppDelegate.swift in Sources */,
+				EEF011851DF07DFE00CEC323 /* DropTableViewController.swift in Sources */,
+				EE7F8C351DF23B1400F52349 /* DeliveryDayTableViewController.swift in Sources */,
+				EEF0118D1DF087F000CEC323 /* DropTableViewCell.swift in Sources */,
 				EEC635A81DEBDC3B009D713F /* DeliveryTableViewCell.swift in Sources */,
 				EEC49D601DECB1A3008DB859 /* Delivery.swift in Sources */,
+				EE7F8C331DF23B0000F52349 /* DeliveryDayViewController.swift in Sources */,
+				EEF0118F1DF0DEA600CEC323 /* DropViewController.swift in Sources */,
+				EEF011891DF07EB200CEC323 /* Drop.swift in Sources */,
 				EEC635AA1DEBDD11009D713F /* TextFieldMaxLengths.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
