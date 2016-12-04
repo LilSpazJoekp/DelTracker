@@ -11,14 +11,19 @@ import UIKit
 class DeliveryDayViewController: UIViewController {
 
 	@IBOutlet var deliveryDatePicker: UIDatePicker!
+	
+	let deliveryDayViewController = DeliveryDayViewController()
+	let delivery = Delivery()
 
 	override func viewDidLoad() {
         super.viewDidLoad()
+		delivery.deliveryDayViewController = deliveryDayViewController
 	
-
-		let deliveryDate = "\(deliveryDatePicker.date)".substring(to:"\(deliveryDatePicker.date)".index("\(deliveryDatePicker.date)".startIndex, offsetBy: 10))
+	let deliveryDate = "\(deliveryDatePicker.date)".substring(to:"\(deliveryDatePicker.date)".index("\(deliveryDatePicker.date)".startIndex, offsetBy: 10))
 		print(deliveryDate)
-        // Do any additional setup after loading the view.
+
+
+		        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {

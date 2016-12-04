@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D2894071DF3792E00E45BE6 /* deliveryDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2894061DF3792E00E45BE6 /* deliveryDay.swift */; };
 		EE7F8C331DF23B0000F52349 /* DeliveryDayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7F8C321DF23B0000F52349 /* DeliveryDayViewController.swift */; };
 		EE7F8C351DF23B1400F52349 /* DeliveryDayTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7F8C341DF23B1400F52349 /* DeliveryDayTableViewController.swift */; };
 		EE7F8C371DF23B3000F52349 /* DeliveryDayTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7F8C361DF23B3000F52349 /* DeliveryDayTableViewCell.swift */; };
@@ -47,6 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5D2894061DF3792E00E45BE6 /* deliveryDay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = deliveryDay.swift; sourceTree = "<group>"; };
 		EE7F8C321DF23B0000F52349 /* DeliveryDayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeliveryDayViewController.swift; path = ../DeliveryDayViewController.swift; sourceTree = "<group>"; };
 		EE7F8C341DF23B1400F52349 /* DeliveryDayTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeliveryDayTableViewController.swift; path = ../DeliveryDayTableViewController.swift; sourceTree = "<group>"; };
 		EE7F8C361DF23B3000F52349 /* DeliveryDayTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeliveryDayTableViewCell.swift; sourceTree = "<group>"; };
@@ -100,6 +102,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5D2894051DF34D9C00E45BE6 /* DeliveryDayView */ = {
+			isa = PBXGroup;
+			children = (
+				EE7F8C361DF23B3000F52349 /* DeliveryDayTableViewCell.swift */,
+				5D2894061DF3792E00E45BE6 /* deliveryDay.swift */,
+				EE7F8C321DF23B0000F52349 /* DeliveryDayViewController.swift */,
+				EE7F8C341DF23B1400F52349 /* DeliveryDayTableViewController.swift */,
+			);
+			name = DeliveryDayView;
+			sourceTree = "<group>";
+		};
 		EEC635661DEBDABF009D713F = {
 			isa = PBXGroup;
 			children = (
@@ -124,9 +137,7 @@
 		EEC635711DEBDABF009D713F /* DelTracker */ = {
 			isa = PBXGroup;
 			children = (
-				EE7F8C361DF23B3000F52349 /* DeliveryDayTableViewCell.swift */,
-				EE7F8C321DF23B0000F52349 /* DeliveryDayViewController.swift */,
-				EE7F8C341DF23B1400F52349 /* DeliveryDayTableViewController.swift */,
+				5D2894051DF34D9C00E45BE6 /* DeliveryDayView */,
 				EEF011901DF13FD800CEC323 /* DeliveryView */,
 				EEF011911DF1400F00CEC323 /* DropView */,
 				EEC635721DEBDABF009D713F /* AppDelegate.swift */,
@@ -332,6 +343,7 @@
 				EE7F8C331DF23B0000F52349 /* DeliveryDayViewController.swift in Sources */,
 				EEF0118F1DF0DEA600CEC323 /* DropViewController.swift in Sources */,
 				EEF011891DF07EB200CEC323 /* Drop.swift in Sources */,
+				5D2894071DF3792E00E45BE6 /* deliveryDay.swift in Sources */,
 				EEC635AA1DEBDD11009D713F /* TextFieldMaxLengths.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

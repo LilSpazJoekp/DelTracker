@@ -9,6 +9,8 @@
 import UIKit
 
 class DeliveryDayTableViewCell: UITableViewCell {
+	@IBOutlet weak var dateLabel: UILabel!
+	
 
     override func awakeFromNib() {
         super.awakeFromNib()
