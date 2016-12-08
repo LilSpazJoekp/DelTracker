@@ -5,21 +5,24 @@
 	//  Created by Joel Payne on 11/27/16.
 	//  Copyright © 2016 Joel Payne. All rights reserved.
 	//
-
+	
 	import UIKit
-
+	
 	class DeliveryTableViewController: UITableViewController {
 		
 		@IBOutlet var table: UITableView!
+		@IBAction func editButtonItem(_ sender: UIBarButtonItem) {
+			func setEditing(editing: Bool, animated: Bool) {
+    super.setEditing(editing, animated: animated)
+    self.tableView.setEditing(editing, animated: animated)
+			}
+			tableView.setEditing(!tableView.isEditing, animated: true)
+		}
 		var deliveries = [Delivery]()
 		override func viewDidLoad() {
-			ticketTotalArray.removeAll()
-			amountGivenArray.removeAll()
-			cashTipsArray.removeAll()
-			totalTipsArray.removeAll()
 			super.viewDidLoad()
 			self.clearsSelectionOnViewWillAppear = true
-			self.navigationItem.leftBarButtonItem = self.editButtonItem
+			//self.navigationItem.leftBarButtonItem = self.editButtonItem
 			if let savedDeliveries = loadDeliveries() {
 				deliveries += savedDeliveries
 			}
@@ -28,22 +31,12 @@
 		// MARK: - Table view data source
 		
 		override func numberOfSections(in tableView: UITableView) -> Int {
-			// #warning Incomplete implementation, return the number of sections
 			return 1
 		}
 		override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-			// #warning Incomplete implementation, return the number of rows
 			return deliveries.count
 		}
-		var ticketAmountFinal: Double = 0.0
-		var amountGivenFinal: Double = 0.0
-		var cashTipsFinal: Double = 0.0
-		var totalTipsFinal: Double = 0.0
 		var paymentMethodString = ""
-		var ticketTotalArray: [Double] = []
-		var amountGivenArray: [Double] = []
-		var cashTipsArray: [Double] = []
-		var totalTipsArray: [Double] = []
 		override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 			let cellIdentifier = "deliveryCell"
 			let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! DeliveryTableViewCell
@@ -61,7 +54,6 @@
 			} else if delivery.paymentMethodValue == "5" {
 				self.paymentMethodString = "Other"
 			}
-			
 			cell.deliveryNumber.text = String(indexPath.row + 1)
 			cell.ticketNumberCell.text = delivery.ticketNumberValue
 			cell.ticketAmountCell.text = delivery.ticketAmountValue
@@ -69,53 +61,16 @@
 			cell.cashTipsCell.text = delivery.cashTipsValue
 			cell.totalTipsCell.text = delivery.totalTipsValue
 			cell.paymentMethodCell.text = paymentMethodString
-			// Sum of ticketAmount
-			var ticketAmountDropped = delivery.ticketAmountValue
-			ticketAmountDropped.remove(at: (delivery.ticketAmountValue.startIndex))
-			let ticketAmountRounded = round(Double(ticketAmountDropped)! * 100) / 100
-			ticketTotalArray.append(ticketAmountRounded)
-			let ticketAmountTotaled = ticketTotalArray.reduce(0, +)
-			self.ticketAmountFinal = ticketAmountTotaled
-			print("ticketAmountFinal")
-			print(String(format: "%.2f", ticketAmountFinal)) // result: 147.46
-			// Sum of amountGiven
-			var amountGivenDropped = delivery.amountGivenValue
-			amountGivenDropped.remove(at: (delivery.amountGivenValue.startIndex))
-			let amountGivenRounded = round(Double(amountGivenDropped)! * 100) / 100
-			amountGivenArray.append(amountGivenRounded)
-			let amountGivenTotaled = amountGivenArray.reduce(0, +)
-			self.amountGivenFinal = amountGivenTotaled
-			print("amountGivenFinal")
-			print(String(format: "%.2f", amountGivenFinal)) // result: 165.00
-			// Sum of cashTips
-			var cashTipsDropped = delivery.cashTipsValue
-			cashTipsDropped.remove(at: (delivery.cashTipsValue.startIndex))
-			let cashTipsRounded = round(Double(cashTipsDropped)! * 100) / 100
-			cashTipsArray.append(cashTipsRounded)
-			let cashTipsTotaled = cashTipsArray.reduce(0, +)
-			self.cashTipsFinal = cashTipsTotaled
-			print("cashTipsFinal")
-			print(String(format: "%.2f", cashTipsFinal)) // result: 0.00
-			// Sum of totalTips
-			var totalTipsDropped = delivery.totalTipsValue
-			totalTipsDropped.remove(at: (delivery.totalTipsValue.startIndex))
-			let totalTipsRounded = round(Double(totalTipsDropped)! * 100) / 100
-			totalTipsArray.append(totalTipsRounded)
-			let totalTipsTotaled = totalTipsArray.reduce(0, +)
-			self.totalTipsFinal = totalTipsTotaled
-			print("totalTipsFinal")
-			print(String(format: "%.2f", totalTipsFinal)) // result: 17.54
 			return cell
 		}
-	
 		override func viewDidAppear(_ animated: Bool) {
+			table.reloadSections(IndexSet.init(integer: 0), with: .fade)
 		}
 		// Override to support conditional editing of the table view.
 		override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 			// Return false if you do not want the specified item to be editable.
 			return true
 		}
-		
 		// Override to support editing the table view.
 		override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 			if editingStyle == .delete {
@@ -130,6 +85,7 @@
 		}
 		
 		// MARK: - Navigation
+		
 		@IBAction func unwindToDeliveryList(_ sender: UIStoryboardSegue) {
 			if let sourceViewController = sender.source as? DeliveryViewController, let delivery = sourceViewController.delivery {
 				if let selectedIndexPath = tableView.indexPathForSelectedRow {
@@ -155,7 +111,8 @@
 				print("Adding new Delivery.")
 			}
 		}
-		// MARK: NSCoding
+		
+		//MARK: NSCoding
 		
 		func saveDeliveries() {
 			let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(deliveries, toFile: Delivery.ArchiveURL.path)
@@ -166,6 +123,4 @@
 		func loadDeliveries() -> [Delivery]? {
 			return NSKeyedUnarchiver.unarchiveObject(withFile: Delivery.ArchiveURL.path) as? [Delivery]
 		}
-		
-			
 	}

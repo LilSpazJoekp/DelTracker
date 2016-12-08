@@ -11,7 +11,7 @@ import UIKit
 class Delivery: NSObject, NSCoding {
 	
     // MARK: Properties
-    var deliveryDayViewController = DeliveryDayViewController?
+	var deliveryDayViewController: DeliveryDayViewController?
     var ticketNumberValue: String
     var ticketAmountValue: String
     var noTipSwitchValue: String
@@ -23,7 +23,8 @@ class Delivery: NSObject, NSCoding {
 	// MARK: Archiving Paths
 	
 	static let DocumentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-	static let ArchiveURL = DocumentsDirectory.appendingPathComponent(deliveryDayViewController?.)
+	
+	static var ArchiveURL = DocumentsDirectory.appendingPathComponent("\(DeliveryDayViewController.selectedDateGlobal)")
 
 	// MARK: Types
 	

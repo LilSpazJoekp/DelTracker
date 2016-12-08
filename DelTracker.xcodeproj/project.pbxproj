@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5D2894071DF3792E00E45BE6 /* deliveryDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2894061DF3792E00E45BE6 /* deliveryDay.swift */; };
+		EE35BB9D1DF9A70C00F850B7 /* WhoClosedBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35BB9C1DF9A70C00F850B7 /* WhoClosedBank.swift */; };
+		EE35BB9F1DF9B9C200F850B7 /* WhoClosedBankTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35BB9E1DF9B9C200F850B7 /* WhoClosedBankTableViewController.swift */; };
+		EE5BEAF91DF9A40C00967172 /* WhoMadeBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5BEAF81DF9A40C00967172 /* WhoMadeBank.swift */; };
 		EE7F8C331DF23B0000F52349 /* DeliveryDayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7F8C321DF23B0000F52349 /* DeliveryDayViewController.swift */; };
 		EE7F8C351DF23B1400F52349 /* DeliveryDayTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7F8C341DF23B1400F52349 /* DeliveryDayTableViewController.swift */; };
 		EE7F8C371DF23B3000F52349 /* DeliveryDayTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7F8C361DF23B3000F52349 /* DeliveryDayTableViewCell.swift */; };
@@ -24,6 +26,12 @@
 		EEC635A61DEBDBF7009D713F /* DeliveryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC635A51DEBDBF7009D713F /* DeliveryTableViewController.swift */; };
 		EEC635A81DEBDC3B009D713F /* DeliveryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC635A71DEBDC3B009D713F /* DeliveryTableViewCell.swift */; };
 		EEC635AA1DEBDD11009D713F /* TextFieldMaxLengths.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC635A91DEBDD11009D713F /* TextFieldMaxLengths.swift */; };
+		EED2DAC91DF50AC100FF8C1D /* DeliveryDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED2DAC81DF50AC100FF8C1D /* DeliveryDay.swift */; };
+		EED2DACB1DF8AB2B00FF8C1D /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED2DACA1DF8AB2B00FF8C1D /* Person.swift */; };
+		EED2DACD1DF8AB4800FF8C1D /* PersonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED2DACC1DF8AB4800FF8C1D /* PersonTableViewCell.swift */; };
+		EED2DACF1DF8AB5F00FF8C1D /* WhoMadeBankTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED2DACE1DF8AB5F00FF8C1D /* WhoMadeBankTableViewController.swift */; };
+		EED2DAD11DF8ABA500FF8C1D /* PersonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED2DAD01DF8ABA500FF8C1D /* PersonViewController.swift */; };
+		EED2DAD31DF8ABF700FF8C1D /* PeopleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED2DAD21DF8ABF700FF8C1D /* PeopleTableViewController.swift */; };
 		EEF011851DF07DFE00CEC323 /* DropTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF011841DF07DFE00CEC323 /* DropTableViewController.swift */; };
 		EEF011891DF07EB200CEC323 /* Drop.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF011881DF07EB200CEC323 /* Drop.swift */; };
 		EEF0118D1DF087F000CEC323 /* DropTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF0118C1DF087F000CEC323 /* DropTableViewCell.swift */; };
@@ -48,7 +56,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		5D2894061DF3792E00E45BE6 /* deliveryDay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = deliveryDay.swift; sourceTree = "<group>"; };
+		EE35BB9C1DF9A70C00F850B7 /* WhoClosedBank.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhoClosedBank.swift; sourceTree = "<group>"; };
+		EE35BB9E1DF9B9C200F850B7 /* WhoClosedBankTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhoClosedBankTableViewController.swift; sourceTree = "<group>"; };
+		EE5BEAF81DF9A40C00967172 /* WhoMadeBank.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhoMadeBank.swift; sourceTree = "<group>"; };
 		EE7F8C321DF23B0000F52349 /* DeliveryDayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeliveryDayViewController.swift; path = ../DeliveryDayViewController.swift; sourceTree = "<group>"; };
 		EE7F8C341DF23B1400F52349 /* DeliveryDayTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeliveryDayTableViewController.swift; path = ../DeliveryDayTableViewController.swift; sourceTree = "<group>"; };
 		EE7F8C361DF23B3000F52349 /* DeliveryDayTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeliveryDayTableViewCell.swift; sourceTree = "<group>"; };
@@ -71,6 +81,12 @@
 		EEC635A51DEBDBF7009D713F /* DeliveryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeliveryTableViewController.swift; sourceTree = "<group>"; };
 		EEC635A71DEBDC3B009D713F /* DeliveryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeliveryTableViewCell.swift; sourceTree = "<group>"; };
 		EEC635A91DEBDD11009D713F /* TextFieldMaxLengths.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldMaxLengths.swift; sourceTree = "<group>"; };
+		EED2DAC81DF50AC100FF8C1D /* DeliveryDay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeliveryDay.swift; sourceTree = "<group>"; };
+		EED2DACA1DF8AB2B00FF8C1D /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
+		EED2DACC1DF8AB4800FF8C1D /* PersonTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PersonTableViewCell.swift; path = ../PersonTableViewCell.swift; sourceTree = "<group>"; };
+		EED2DACE1DF8AB5F00FF8C1D /* WhoMadeBankTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WhoMadeBankTableViewController.swift; path = ../WhoMadeBankTableViewController.swift; sourceTree = "<group>"; };
+		EED2DAD01DF8ABA500FF8C1D /* PersonViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonViewController.swift; sourceTree = "<group>"; };
+		EED2DAD21DF8ABF700FF8C1D /* PeopleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeopleTableViewController.swift; sourceTree = "<group>"; };
 		EEF011841DF07DFE00CEC323 /* DropTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DropTableViewController.swift; path = ../DropTableViewController.swift; sourceTree = "<group>"; };
 		EEF011881DF07EB200CEC323 /* Drop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Drop.swift; path = ../Drop.swift; sourceTree = "<group>"; };
 		EEF0118C1DF087F000CEC323 /* DropTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DropTableViewCell.swift; path = ../DropTableViewCell.swift; sourceTree = "<group>"; };
@@ -106,9 +122,9 @@
 			isa = PBXGroup;
 			children = (
 				EE7F8C361DF23B3000F52349 /* DeliveryDayTableViewCell.swift */,
-				5D2894061DF3792E00E45BE6 /* deliveryDay.swift */,
 				EE7F8C321DF23B0000F52349 /* DeliveryDayViewController.swift */,
 				EE7F8C341DF23B1400F52349 /* DeliveryDayTableViewController.swift */,
+				EED2DAC81DF50AC100FF8C1D /* DeliveryDay.swift */,
 			);
 			name = DeliveryDayView;
 			sourceTree = "<group>";
@@ -137,6 +153,7 @@
 		EEC635711DEBDABF009D713F /* DelTracker */ = {
 			isa = PBXGroup;
 			children = (
+				EED2DAD41DF8AC0000FF8C1D /* PersonView */,
 				5D2894051DF34D9C00E45BE6 /* DeliveryDayView */,
 				EEF011901DF13FD800CEC323 /* DeliveryView */,
 				EEF011911DF1400F00CEC323 /* DropView */,
@@ -167,6 +184,21 @@
 				EEC635971DEBDAC0009D713F /* Info.plist */,
 			);
 			path = DelTrackerUITests;
+			sourceTree = "<group>";
+		};
+		EED2DAD41DF8AC0000FF8C1D /* PersonView */ = {
+			isa = PBXGroup;
+			children = (
+				EED2DACA1DF8AB2B00FF8C1D /* Person.swift */,
+				EED2DACC1DF8AB4800FF8C1D /* PersonTableViewCell.swift */,
+				EED2DAD01DF8ABA500FF8C1D /* PersonViewController.swift */,
+				EED2DAD21DF8ABF700FF8C1D /* PeopleTableViewController.swift */,
+				EE5BEAF81DF9A40C00967172 /* WhoMadeBank.swift */,
+				EE35BB9C1DF9A70C00F850B7 /* WhoClosedBank.swift */,
+				EED2DACE1DF8AB5F00FF8C1D /* WhoMadeBankTableViewController.swift */,
+				EE35BB9E1DF9B9C200F850B7 /* WhoClosedBankTableViewController.swift */,
+			);
+			name = PersonView;
 			sourceTree = "<group>";
 		};
 		EEF011901DF13FD800CEC323 /* DeliveryView */ = {
@@ -329,21 +361,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EED2DACF1DF8AB5F00FF8C1D /* WhoMadeBankTableViewController.swift in Sources */,
 				EE8F7AF51DECF64500B38B51 /* DeliveryStatisticsTableViewController.swift in Sources */,
 				EEC6357B1DEBDABF009D713F /* DelTracker.xcdatamodeld in Sources */,
 				EEC635A61DEBDBF7009D713F /* DeliveryTableViewController.swift in Sources */,
 				EEC635751DEBDABF009D713F /* DeliveryViewController.swift in Sources */,
+				EED2DACD1DF8AB4800FF8C1D /* PersonTableViewCell.swift in Sources */,
 				EE7F8C371DF23B3000F52349 /* DeliveryDayTableViewCell.swift in Sources */,
 				EEC635731DEBDABF009D713F /* AppDelegate.swift in Sources */,
+				EE35BB9D1DF9A70C00F850B7 /* WhoClosedBank.swift in Sources */,
+				EE35BB9F1DF9B9C200F850B7 /* WhoClosedBankTableViewController.swift in Sources */,
 				EEF011851DF07DFE00CEC323 /* DropTableViewController.swift in Sources */,
 				EE7F8C351DF23B1400F52349 /* DeliveryDayTableViewController.swift in Sources */,
 				EEF0118D1DF087F000CEC323 /* DropTableViewCell.swift in Sources */,
 				EEC635A81DEBDC3B009D713F /* DeliveryTableViewCell.swift in Sources */,
 				EEC49D601DECB1A3008DB859 /* Delivery.swift in Sources */,
 				EE7F8C331DF23B0000F52349 /* DeliveryDayViewController.swift in Sources */,
+				EED2DACB1DF8AB2B00FF8C1D /* Person.swift in Sources */,
+				EED2DAD11DF8ABA500FF8C1D /* PersonViewController.swift in Sources */,
 				EEF0118F1DF0DEA600CEC323 /* DropViewController.swift in Sources */,
 				EEF011891DF07EB200CEC323 /* Drop.swift in Sources */,
-				5D2894071DF3792E00E45BE6 /* deliveryDay.swift in Sources */,
+				EE5BEAF91DF9A40C00967172 /* WhoMadeBank.swift in Sources */,
+				EED2DAC91DF50AC100FF8C1D /* DeliveryDay.swift in Sources */,
+				EED2DAD31DF8ABF700FF8C1D /* PeopleTableViewController.swift in Sources */,
 				EEC635AA1DEBDD11009D713F /* TextFieldMaxLengths.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

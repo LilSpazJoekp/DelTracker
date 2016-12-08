@@ -16,6 +16,7 @@ class DropTableViewController: UITableViewController {
 		super.viewDidLoad()
 		self.clearsSelectionOnViewWillAppear = true
 		self.navigationItem.leftBarButtonItem = self.editButtonItem
+		self.navigationItem.leftBarButtonItem?.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
 		if let savedDrops = loadDrops() {
 			drops += savedDrops
 		}
@@ -36,10 +37,8 @@ class DropTableViewController: UITableViewController {
 		let cellIdentifier = "dropCell"
 		let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! DropTableViewCell
 		let drop = drops[indexPath.row]
-		
 		cell.dropNumber.text = String(indexPath.row + 1)
 		cell.dropAmount.text = drop.deliveryDropAmount
-		// Sum of ticketAmount
 				return cell
 	}
 	
@@ -58,7 +57,6 @@ class DropTableViewController: UITableViewController {
 			saveDrops()
 			tableView.deleteRows(at: [indexPath], with: .fade)
 		} else if editingStyle == .insert {
-			// Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
 		}
 	}
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
@@ -90,6 +88,7 @@ class DropTableViewController: UITableViewController {
 			print("Adding new Drop.")
 		}
 	}
+	
 	// MARK: NSCoding
 	
 	func saveDrops() {
@@ -101,8 +100,4 @@ class DropTableViewController: UITableViewController {
 	func loadDrops() -> [Drop]? {
 		return NSKeyedUnarchiver.unarchiveObject(withFile: Drop.ArchiveURL.path) as? [Drop]
 	}
-	
-	
 }
-
-

@@ -59,9 +59,3 @@ class DropViewController: UIViewController, UITextFieldDelegate, UIToolbarDelega
 		}
 	}
 }
-
-
-
-
-
-

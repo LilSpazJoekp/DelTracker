@@ -16,25 +16,28 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	@IBAction func ticketNumberEditingBegan(_ sender: UITextField) {
 		previousBarButton.isEnabled = false
 		nextBarButton.isEnabled = true
+		ticketNumberField.selectedTextRange = ticketNumberField.textRange(from: ticketNumberField.beginningOfDocument, to: ticketNumberField.endOfDocument)
 	}
 	@IBAction func ticketNumberChanged(_ sender: UITextField) {
 		if ticketNumberField.text?.characters.count == 3 {
 			ticketNumberField.resignFirstResponder()
 			ticketAmountField.becomeFirstResponder()
+			ticketAmountField.selectedTextRange = ticketAmountField.textRange(from: ticketAmountField.beginningOfDocument, to: ticketAmountField.endOfDocument)
 		}
 	}
 	@IBAction func ticketAmountEditingBegan(_ sender: UITextField) {
 		previousBarButton.isEnabled = true
 		nextBarButton.isEnabled = true
+		ticketAmountField.selectedTextRange = ticketAmountField.textRange(from: ticketAmountField.beginningOfDocument, to: ticketAmountField.endOfDocument)
 	}
 	@IBAction func ticketAmountEditingEnded(_ sender: UITextField) {
 		amountGivenField.isEnabled = true
 		amountGivenField.isUserInteractionEnabled = true
-		
 	}
 	@IBAction func amountGivenEditingBegan(_ sender: UITextField) {
 		previousBarButton.isEnabled = true
 		nextBarButton.isEnabled = true
+		amountGivenField.selectedTextRange = amountGivenField.textRange(from: amountGivenField.beginningOfDocument, to: amountGivenField.endOfDocument)
 	}
 	@IBAction func amountGivenEditingEnded(_ sender: UITextField) {
 		removeFirstCharacterAndCalculate()
@@ -44,6 +47,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	@IBAction func cashTipsEditingBegan(_ sender: UITextField) {
 		previousBarButton.isEnabled = true
 		nextBarButton.isEnabled = false
+		cashTipsField?.selectedTextRange = cashTipsField?.textRange(from: (cashTipsField?.beginningOfDocument)!, to: (cashTipsField?.endOfDocument)!)
 	}
 	@IBAction func cashTipsEditingEnded(_ sender: UITextField) {
 		removeFirstCharacterAndCalculate()
@@ -76,6 +80,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		keyboardToolbar.backgroundColor = UIColor(red:0.09, green:0.11, blue:0.11, alpha:1.0)
 		ticketNumberField.delegate = self
 		ticketAmountField.delegate = self
 		amountGivenField.delegate = self
@@ -108,6 +113,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		}
 	}
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		print(DeliveryDayViewController.selectedDateGlobal)
 		if saveDelivery === sender as AnyObject? {
 			let ticketNumberValue = ticketNumberField.text ?? ""
 			let ticketAmountValue = ticketAmountField.text ?? ""
@@ -129,7 +135,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		ticketNumberField.clearsOnInsertion = true
 	}
 	func configureAmountGivenField() {
-		amountGivenField.clearsOnInsertion = true
+		
 	}
 	func configureQuickTipSegmentControl() {
 		quickTipSelector.addTarget(self, action: #selector(DeliveryViewController.selectedSegmentDidChange(_:)), for: .valueChanged)
@@ -139,7 +145,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		noTipSwitch.addTarget(self, action: #selector(DeliveryViewController.switchValueDidChange(_:)), for: .valueChanged)
 	}
 	func configureCashTipsField() {
-		cashTipsField?.clearsOnInsertion = true
+		
 	}
 	func configureDoubleZeroButtonKey() {
 		doubleZero.setTitle("00", for: UIControlState())
@@ -148,7 +154,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		doubleZero.frame = CGRect(x: 0, y: 115, width: 137, height: 56)
 		doubleZero.adjustsImageWhenHighlighted = true
 		doubleZero.addTarget(self, action: #selector(DeliveryViewController.doubleZero(_:)), for: UIControlEvents.touchUpInside)
-		doubleZero.setBackgroundColor(UIColor(red:0.54, green:0.54, blue:0.54, alpha:1.0), forState: UIControlState.highlighted)
+		doubleZero.setBackgroundColor(UIColor(red:0.47, green:0.47, blue:0.47, alpha:1.0), forState: UIControlState.highlighted)
 	}
 	
 	// Quick Tip Segment Control
@@ -199,6 +205,11 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		return paymentMethodDataSource[row]
 	}
+	func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+		let titleData = paymentMethodDataSource[row]
+		let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "System", size: 15.0) as Any,NSForegroundColorAttributeName:UIColor.white])
+		return myTitle
+	}
 	func paymentMethodChanged() {
 		ticketAmountField.resignFirstResponder()
 		amountGivenField.resignFirstResponder()
@@ -234,23 +245,29 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		} else if row == 5 {
 			quickTipSelector.isEnabled = true
 			cashTipsField?.isEnabled = true
-			selectedPaymentMethod = "other"
+			selectedPaymentMethod = "Other"
 			paymentMethodChanged()
 		}
 	}
 	
 	// Keyboard Double Zero Key
 	let doubleZero = UIButton(type: UIButtonType.custom)
+	
+	// Toolbar Previous and Next Buttons
 	func goToPreviousField(_:Any?) {
 		if ticketAmountField.isFirstResponder {
 			ticketAmountField.resignFirstResponder()
 			ticketNumberField.becomeFirstResponder()
+			ticketNumberField.selectedTextRange = ticketNumberField.textRange(from: ticketNumberField.beginningOfDocument, to: ticketNumberField.endOfDocument)
 		} else if amountGivenField.isFirstResponder {
 			amountGivenField.resignFirstResponder()
 			ticketAmountField.becomeFirstResponder()
+			ticketAmountField.selectedTextRange = ticketAmountField.textRange(from: ticketAmountField.beginningOfDocument, to: ticketAmountField.endOfDocument)
 		} else if (cashTipsField?.isFirstResponder)! {
 			cashTipsField?.resignFirstResponder()
 			amountGivenField.becomeFirstResponder()
+			amountGivenField.selectedTextRange = amountGivenField.textRange(from: amountGivenField.beginningOfDocument, to: amountGivenField.endOfDocument)
+			
 		}
 	}
 	func goToNextField() {
@@ -258,14 +275,19 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			previousBarButton.isEnabled = true
 			ticketNumberField.resignFirstResponder()
 			ticketAmountField.becomeFirstResponder()
+			ticketAmountField.selectedTextRange = ticketAmountField.textRange(from: ticketAmountField.beginningOfDocument, to: ticketAmountField.endOfDocument)
 		} else if ticketAmountField.isFirstResponder {
 			ticketAmountField.resignFirstResponder()
 			if quickTipSelector.selectedSegmentIndex == 5 {
+				amountGivenField.isEnabled = true
 				amountGivenField.becomeFirstResponder()
+				amountGivenField.selectedTextRange = amountGivenField.textRange(from: amountGivenField.beginningOfDocument, to: amountGivenField.endOfDocument)
 			}
 		} else if amountGivenField.isFirstResponder {
 			amountGivenField.resignFirstResponder()
+			cashTipsField?.isEnabled = true
 			cashTipsField?.becomeFirstResponder()
+			cashTipsField?.selectedTextRange = cashTipsField?.textRange(from: (cashTipsField?.beginningOfDocument)!, to: (cashTipsField?.endOfDocument)!)
 		}
 	}
 	func doubleZero(_ sender : UIButton) {
@@ -273,6 +295,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			ticketAmountField.insertText("00")
 			ticketAmountField.resignFirstResponder()
 			amountGivenField.becomeFirstResponder()
+			amountGivenField.selectedTextRange = amountGivenField.textRange(from: amountGivenField.beginningOfDocument, to: amountGivenField.endOfDocument)
 		} else if amountGivenField.isFirstResponder {
 			amountGivenField.insertText("00")
 			amountGivenField.resignFirstResponder()
@@ -287,8 +310,12 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	let flexBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
 	                                    target: nil, action: nil)
 	let previousBarButton = UIBarButtonItem(title: "Previous", style: UIBarButtonItemStyle.plain, target: self, action: #selector(DeliveryViewController.goToPreviousField))
+	
 	let nextBarButton = UIBarButtonItem(title: "Next", style: UIBarButtonItemStyle.plain, target: self, action: #selector(DeliveryViewController.goToNextField))
 	func addBarButtons() {
+		nextBarButton.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
+		previousBarButton.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
+		keyboardToolbar.barTintColor = UIColor(red:0.09, green:0.11, blue:0.11, alpha:1.0)
 		keyboardToolbar.sizeToFit()
 		keyboardToolbar.items = [flexBarButton, previousBarButton, nextBarButton]
 		ticketAmountField.inputAccessoryView = keyboardToolbar
@@ -298,7 +325,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	}
 	
 	// MARK: - Actions
-	
 	
 	func textFieldDidBeginEditing(_: UITextField) {
 		NotificationCenter.default.addObserver(self, selector: #selector(DeliveryViewController.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -345,12 +371,11 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			cashTipsField?.text = "$0.00"
 			amountGivenField.isEnabled = false
 			cashTipsField?.isEnabled = false
-			// Checking if cashTipsField has value and calculating tips
 			removeFirstCharacterAndCalculate()
 		} else {
 			delivery?.noTipSwitchValue = "false"
-			amountGivenField.isEnabled = false
-			cashTipsField?.isEnabled = false
+			amountGivenField.isEnabled = true
+			cashTipsField?.isEnabled = true
 		}
 	}
 	// Dismissing Keyboard
