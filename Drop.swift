@@ -17,7 +17,7 @@ class Drop: NSObject, NSCoding {
 	// MARK: Archiving Paths
 	
 	static let DocumentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-	static var ArchiveURL = DocumentsDirectory.appendingPathComponent("deliveryDrops")
+	static var ArchiveURL = DocumentsDirectory.appendingPathComponent("drops" + "\(DeliveryDayViewController.selectedDateGlobal)")
 	
 	// MARK: Types
 	

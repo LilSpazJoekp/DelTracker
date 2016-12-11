@@ -11,7 +11,7 @@ import UIKit
 import UIKit
 
 class WhoClosedBankTableViewController: UITableViewController, UIPickerViewDelegate, UIPickerViewDataSource {
-	
+	@IBOutlet var personPicker: UIPickerView!
 	@IBOutlet var savePerson: AnyObject!
 	@IBAction func cancelButton(_ sender: UIBarButtonItem) {
 		dismiss(animated: true, completion: nil)
@@ -33,24 +33,17 @@ class WhoClosedBankTableViewController: UITableViewController, UIPickerViewDeleg
 		}
 	}
 	override func viewDidAppear(_ animated: Bool) {
-		if people.count != 0 {
-			let selectedPerson = "\(peopleArray[personPicker.selectedRow(inComponent: 0)])"
-			print(DeliveryDayViewController.selectedDateGlobal)
-			let name = selectedPerson
-			whoClosedBank = WhoClosedBank(name: name)
-		} else {
-			peopleArray.removeAll()
-			if let savedPeople = loadPeople() {
-				people += savedPeople
-				for (index, _) in people.enumerated() {
-					let person = people[index]
-					let personName = person.name
-					peopleArray.append(personName)
-				}
+		peopleArray.removeAll()
+		if let savedPeople = loadPeople() {
+			people = savedPeople
+			for (index, _) in people.enumerated() {
+				let person = people[index]
+				let personName = person.name
+				peopleArray.append(personName)
 			}
 		}
+		self.personPicker.reloadAllComponents()
 	}
-	@IBOutlet var personPicker: UIPickerView!
 	func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
 		let titleData = peopleArray[row]
 		let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "System", size: 15.0) as Any,NSForegroundColorAttributeName:UIColor.white])
@@ -75,10 +68,8 @@ class WhoClosedBankTableViewController: UITableViewController, UIPickerViewDeleg
 	override func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
-	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return 2
-		
 	}
 	
 	// MARK: - Navigation

@@ -31,21 +31,16 @@ class WhoMadeBankTableViewController: UITableViewController, UIPickerViewDelegat
 		}
 	}
 	override func viewDidAppear(_ animated: Bool) {
-		if people.count != 0 {
-			let selectedPerson = "\(peopleArray[personPicker.selectedRow(inComponent: 0)])"
-			let name = selectedPerson
-			whoMadeBank = WhoMadeBank(name: name)
-		} else {
-			peopleArray.removeAll()
-			if let savedPeople = loadPeople() {
-				people += savedPeople
-				for (index, _) in people.enumerated() {
-					let person = people[index]
-					let personName = person.name
-					peopleArray.append(personName)
-				}
+		peopleArray.removeAll()
+		if let savedPeople = loadPeople() {
+			people = savedPeople
+			for (index, _) in people.enumerated() {
+				let person = people[index]
+				let personName = person.name
+				peopleArray.append(personName)
 			}
 		}
+		self.personPicker.reloadAllComponents()
 	}
 	
 	@IBOutlet var personPicker: UIPickerView!
@@ -90,17 +85,5 @@ class WhoMadeBankTableViewController: UITableViewController, UIPickerViewDelegat
 				whoMadeBank = WhoMadeBank(name: name)
 			}
 		}
-	}
-	
-	// MARK: NSCoding
-	
-	func saveWhoMadeBank() {
-		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(selectedPerson, toFile: WhoMadeBank.ArchiveURL.path)
-		if !isSuccessfulSave {
-			print("Failed to save whoMadeBank...")
-		}
-	}
-	func loadWhoMadeBank() -> [WhoMadeBank]? {
-		return NSKeyedUnarchiver.unarchiveObject(withFile: WhoMadeBank.ArchiveURL.path) as? [WhoMadeBank]
 	}
 }

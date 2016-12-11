@@ -61,7 +61,19 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	@IBAction func cancelAdd(_ sender: UIBarButtonItem) {
 		dismiss(animated: true, completion: nil)
 	}
-	
+	@IBAction func overrideDeliveryTimeChanged(_ sender: UISwitch) {
+		if timeOverrideSwitch.isOn {
+			deliveryTime.setDate(NSDate() as Date, animated: true)
+		} else {
+			if let delivery = delivery {
+				let dateFormatter = DateFormatter()
+				dateFormatter.dateFormat = "hh:mm:ss a"
+				if let date = dateFormatter.date(from: delivery.deliveryTimeValue) {
+					deliveryTime.setDate(date, animated: true)
+				}
+			}
+		}
+	}
 	// MARK: - Storyboard Outlets
 	
 	@IBOutlet var ticketNumberField: UITextField!
@@ -73,7 +85,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	@IBOutlet var totalTips: UILabel!
 	@IBOutlet var paymentMethodPicker: UIPickerView!
 	@IBOutlet var saveDelivery: AnyObject?
-	@IBOutlet var cancelDelivery: UIBarButtonItem!
 	@IBOutlet var timeOverrideSwitch: UISwitch!
 	@IBOutlet var deliveryTime: UIDatePicker!
 	var delivery: Delivery?
@@ -88,7 +99,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		ticketAmountField.delegate = self
 		amountGivenField.delegate = self
 		cashTipsField?.delegate = self
-		
 		var ticketAmountDropped = ticketAmountField.text
 		ticketAmountDropped?.remove(at: (ticketAmountDropped?.startIndex)!)
 		var amountGivenDropped = amountGivenField.text
@@ -101,6 +111,12 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		configureDoubleZeroButtonKey()
 		addBarButtons()
 		configureQuickTipSegmentControl()
+		setDeliveryTime()
+		if delivery != nil {
+			navigationItem.title = "Edit Delivery"
+		}
+	}
+	override func viewDidAppear(_ animated: Bool) {
 		if let delivery = delivery {
 			navigationItem.title = "Edit Delivery"
 			ticketNumberField.text = delivery.ticketNumberValue
@@ -118,26 +134,28 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		} else {
 			ticketNumberField.becomeFirstResponder()
 		}
-		setDeliveryTime()
-		print(selectedTime)
 	}
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		print(DeliveryDayViewController.selectedDateGlobal)
-		if self.navigationItem.title == "Add Delivery" {
+		if timeOverrideSwitch.isOn {
+			deliveryTime.setDate(NSDate() as Date, animated: true)
 			setDeliveryTime()
-		} else if timeOverrideSwitch.isOn {
+		} else if self.navigationItem.title == "Add Delivery" {
+			deliveryTime.setDate(NSDate() as Date, animated: true)
 			setDeliveryTime()
 		}
 		if saveDelivery === sender as AnyObject? {
-			setDeliveryTime()
+			if timeOverrideSwitch.isOn {
+				setDeliveryTime()
+			} else if self.navigationItem.title == "Add Delivery" {
+				setDeliveryTime()
+			}
 			let ticketNumberValue = ticketNumberField.text ?? ""
 			let ticketAmountValue = ticketAmountField.text ?? ""
 			let noTipSwitchValue = String(noTipSwitch.isOn)
 			let amountGivenValue = amountGivenField.text ?? ""
 			let cashTipsValue = cashTipsField?.text ?? ""
 			let totalTipsValue = totalTips.text ?? ""
-			print(selectedTime)
-			print(self.selectedTime)
 			let deliveryTimeValue = selectedTime
 			let paymentMethodValue = String(paymentMethodPicker.selectedRow(inComponent: 0))
 			delivery = Delivery(ticketNumberValue: ticketNumberValue, ticketAmountValue: ticketAmountValue, noTipSwitchValue: noTipSwitchValue, amountGivenValue: amountGivenValue, cashTipsValue: cashTipsValue, totalTipsValue: totalTipsValue, paymentMethodValue: paymentMethodValue, deliveryTimeValue: deliveryTimeValue)
@@ -264,6 +282,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	
 	// TimePicker
 	func setDeliveryTime() {
+		deliveryTime.reloadInputViews()
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "hh:mm:ss a"
 		dateFormatter.amSymbol = "AM"

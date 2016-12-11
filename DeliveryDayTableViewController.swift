@@ -12,10 +12,12 @@ class DeliveryDayTableViewController: UITableViewController {
 	@IBOutlet var table: UITableView!
 	var deliveryDayView: DeliveryDayViewController?
 	var deliveryDays = [DeliveryDay]()
+	static var status: String = ""
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.clearsSelectionOnViewWillAppear = true
 		self.navigationItem.leftBarButtonItem = self.editButtonItem
+		
 		self.navigationItem.leftBarButtonItem?.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
 		if let savedDeliveryDays = loadDeliveryDays() {
 			deliveryDays += savedDeliveryDays
@@ -45,26 +47,36 @@ class DeliveryDayTableViewController: UITableViewController {
 		cell.totalPay?.text = deliveryDay.totalRecievedValue
 		return cell
 	}
-	//override func viewDidAppear(_ animated: Bool) {
-	//	table.reloadSections(IndexSet.init(integer: 0), with: .fade)
-	//}
-	// Override to support conditional editing of the table view.
+	override func viewDidAppear(_ animated: Bool) {
+		table.reloadSections(IndexSet.init(integer: 0), with: .fade)
+	}
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		// Return false if you do not want the specified item to be editable.
+		self.navigationItem.leftBarButtonItem = self.deleteButtonItem
+		self.navigationItem.leftBarButtonItem?.tintColor = UIColor.red
 		return true
 	}
 	
-	// Override to support editing the table view.
 	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+		tableView.cellForRow(at: indexPath)?.isUserInteractionEnabled = false
 		if editingStyle == .delete {
+			let deliveryDay = deliveryDays[indexPath.row]
+			removeDelivery(deliveryDate: deliveryDay.deliveryDateValue)
+			print(deliveryDay.deliveryDateValue)
 			deliveryDays.remove(at: indexPath.row)
 			saveDeliveryDays()
 			tableView.deleteRows(at: [indexPath], with: .fade)
 		} else if editingStyle == .insert {
-			// Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+			
 		}
 	}
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+		let tempItemToMove = deliveryDays[fromIndexPath.row]
+		deliveryDays.remove(at: fromIndexPath.row)
+		deliveryDays.insert(tempItemToMove, at: to.row)
+		saveDeliveryDays()
+	}
+	override func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
+		
 	}
 	
 	// MARK: - Navigation
@@ -85,22 +97,36 @@ class DeliveryDayTableViewController: UITableViewController {
 			saveDeliveryDays()
 		}
 	}
-	static var status: String = ""
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.identifier == "showDetail" {
-			let deliveryDayDetailViewController = segue.destination as! DeliveryDayViewController
-			if let selectedDeliveryDayCell = sender as? DeliveryDayTableViewCell {
-				let indexPath = tableView.indexPath(for: selectedDeliveryDayCell)!
-				let selectedDeliveryDay = deliveryDays[indexPath.row]
-				deliveryDayDetailViewController.deliveryDay = selectedDeliveryDay
-				DeliveryDayTableViewController.status = String(indexPath.row)
+	override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+		if !tableView.isEditing {
+			if identifier == "showDetail" {
+				performSegue(withIdentifier: "showDetail", sender: AnyObject.self)
+				return true
+			} else if identifier == "addItem" {
+				performSegue(withIdentifier: "addItem", sender: AnyObject.self)
+				return true
 			}
-		} else if segue.identifier == "addItem" {
-			print("Adding new DeliveryDay.")
-			DeliveryDayTableViewController.status = "adding"
+			return true
+		} else {
+			return false
 		}
 	}
-	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if !tableView.isEditing {
+			if segue.identifier == "showDetail" {
+				let deliveryDayDetailViewController = segue.destination as! DeliveryDayViewController
+				if let selectedDeliveryDayCell = sender as? DeliveryDayTableViewCell {
+					let indexPath = tableView.indexPath(for: selectedDeliveryDayCell)!
+					let selectedDeliveryDay = deliveryDays[indexPath.row]
+					deliveryDayDetailViewController.deliveryDay = selectedDeliveryDay
+					DeliveryDayTableViewController.status = String(indexPath.row)
+				}
+			} else if segue.identifier == "addItem" {
+				print("Adding new DeliveryDay.")
+				DeliveryDayTableViewController.status = "adding"
+			}
+		}
+	}
 	// MARK: NSCoding
 	
 	func saveDeliveryDays() {
@@ -111,5 +137,44 @@ class DeliveryDayTableViewController: UITableViewController {
 	}
 	func loadDeliveryDays() -> [DeliveryDay]? {
 		return NSKeyedUnarchiver.unarchiveObject(withFile: DeliveryDay.ArchiveURL.path) as? [DeliveryDay]
+	}
+}
+func removeDelivery(deliveryDate: String) {
+	let fileManager = FileManager.default
+	let nsDocumentDirectory = FileManager.SearchPathDirectory.documentDirectory
+	let nsUserDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+	let paths = NSSearchPathForDirectoriesInDomains(nsDocumentDirectory, nsUserDomainMask, true)
+	guard let dirPath = paths.first else {
+		return
+	}
+	let filePath = "\(dirPath)/\(deliveryDate)"
+	do {
+		try fileManager.removeItem(atPath: filePath)
+	} catch let error as NSError {
+		print(error.debugDescription)
+	}}
+func removeFile(fileName: String) {
+	let fileManager = FileManager.default
+	let nsDocumentDirectory = FileManager.SearchPathDirectory.documentDirectory
+	let nsUserDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+	let paths = NSSearchPathForDirectoriesInDomains(nsDocumentDirectory, nsUserDomainMask, true)
+	guard let dirPath = paths.first else {
+		return
+	}
+	let filePath = "\(dirPath)/\(fileName)"
+	do {
+		try fileManager.removeItem(atPath: filePath)
+	} catch let error as NSError {
+		print(error.debugDescription)
+	}
+	printDirectoryContents()
+}
+func printDirectoryContents() {
+	let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+	do {
+		let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil, options: [])
+		print(directoryContents)
+	} catch let error as NSError {
+		print(error.localizedDescription)
 	}
 }

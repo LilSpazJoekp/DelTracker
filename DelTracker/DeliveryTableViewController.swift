@@ -87,7 +87,12 @@
 			}
 		}
 		override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+			let tempItemToMove = deliveries[fromIndexPath.row]
+			deliveries.remove(at: fromIndexPath.row)
+			deliveries.insert(tempItemToMove, at: to.row)
+			saveDeliveries()
 		}
+
 		
 		// MARK: - Navigation
 		

@@ -30,6 +30,10 @@ class PersonViewController: UIViewController, UITextFieldDelegate, UIToolbarDele
 			personTextField.becomeFirstResponder()
 		}
 	}
+	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+		personTextField.resignFirstResponder()
+		return true
+	}
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		self.view.endEditing(true)
 	}
@@ -40,6 +44,6 @@ class PersonViewController: UIViewController, UITextFieldDelegate, UIToolbarDele
 		if personSaveButton === sender as AnyObject? {
 			let personTextFieldValue = personTextField.text ?? ""
 			person = Person(name: personTextFieldValue)
-		}
+		}  
 	}
 }
