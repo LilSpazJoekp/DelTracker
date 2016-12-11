@@ -51,8 +51,7 @@ class DeliveryDayTableViewController: UITableViewController {
 		table.reloadSections(IndexSet.init(integer: 0), with: .fade)
 	}
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		self.navigationItem.leftBarButtonItem = self.deleteButtonItem
-		self.navigationItem.leftBarButtonItem?.tintColor = UIColor.red
+		
 		return true
 	}
 	
