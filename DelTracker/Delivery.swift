@@ -10,22 +10,23 @@ import UIKit
 
 class Delivery: NSObject, NSCoding {
 	
-    // MARK: Properties
+	// MARK: Properties
+	
 	var deliveryDayViewController: DeliveryDayViewController?
-    var ticketNumberValue: String
-    var ticketAmountValue: String
-    var noTipSwitchValue: String
-    var amountGivenValue: String
+	var ticketNumberValue: String
+	var ticketAmountValue: String
+	var noTipSwitchValue: String
+	var amountGivenValue: String
 	var cashTipsValue: String
-    var totalTipsValue: String
-    var paymentMethodValue: String
+	var totalTipsValue: String
+	var paymentMethodValue: String
+	var deliveryTimeValue: String
 	
 	// MARK: Archiving Paths
 	
 	static let DocumentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-	
 	static var ArchiveURL = DocumentsDirectory.appendingPathComponent("\(DeliveryDayViewController.selectedDateGlobal)")
-
+	
 	// MARK: Types
 	
 	struct PropertyKey {
@@ -36,17 +37,19 @@ class Delivery: NSObject, NSCoding {
 		static let cashTipsValueKey = "cashTipsValue"
 		static let totalTipsValueKey = "totalTipsValue"
 		static let paymentMethodValueKey = "paymentMethodValue"
+		static let deliveryTimeValueKey = "deliveryTimeValue"
 	}
-	init?(ticketNumberValue: String, ticketAmountValue: String, noTipSwitchValue: String, amountGivenValue: String, cashTipsValue: String, totalTipsValue: String, paymentMethodValue: String) {
-        self.ticketNumberValue = ticketNumberValue
-        self.ticketAmountValue = ticketAmountValue
-        self.noTipSwitchValue = noTipSwitchValue
-        self.amountGivenValue = amountGivenValue
+	init?(ticketNumberValue: String, ticketAmountValue: String, noTipSwitchValue: String, amountGivenValue: String, cashTipsValue: String, totalTipsValue: String, paymentMethodValue: String, deliveryTimeValue: String) {
+		self.ticketNumberValue = ticketNumberValue
+		self.ticketAmountValue = ticketAmountValue
+		self.noTipSwitchValue = noTipSwitchValue
+		self.amountGivenValue = amountGivenValue
 		self.cashTipsValue = cashTipsValue
-        self.totalTipsValue = totalTipsValue
-        self.paymentMethodValue = paymentMethodValue
+		self.totalTipsValue = totalTipsValue
+		self.paymentMethodValue = paymentMethodValue
+		self.deliveryTimeValue = deliveryTimeValue
 		super.init()
-        }
+	}
 	
 	//MARK: NSCoding
 	
@@ -58,6 +61,7 @@ class Delivery: NSObject, NSCoding {
 		aCoder.encode(cashTipsValue, forKey: PropertyKey.cashTipsValueKey)
 		aCoder.encode(totalTipsValue, forKey: PropertyKey.totalTipsValueKey)
 		aCoder.encode(paymentMethodValue, forKey: PropertyKey.paymentMethodValueKey)
+		aCoder.encode(deliveryTimeValue, forKey: PropertyKey.deliveryTimeValueKey)
 	}
 	required convenience init?(coder aDecoder: NSCoder) {
 		let ticketNumberValue = aDecoder.decodeObject(forKey: PropertyKey.ticketNumberValueKey) as! String
@@ -67,7 +71,7 @@ class Delivery: NSObject, NSCoding {
 		let cashTipsValue = aDecoder.decodeObject(forKey: PropertyKey.cashTipsValueKey) as! String
 		let totalTipsValue = aDecoder.decodeObject(forKey: PropertyKey.totalTipsValueKey) as! String
 		let paymentMethodValue = aDecoder.decodeObject(forKey: PropertyKey.paymentMethodValueKey) as! String
-		// Must call designated initializer.
-		self.init(ticketNumberValue: ticketNumberValue, ticketAmountValue: ticketAmountValue, noTipSwitchValue: noTipSwitchValue, amountGivenValue: amountGivenValue, cashTipsValue: cashTipsValue, totalTipsValue: totalTipsValue, paymentMethodValue: paymentMethodValue)
-}
+		let deliveryTimeValue = aDecoder.decodeObject(forKey: PropertyKey.deliveryTimeValueKey) as? String ?? ""
+		self.init(ticketNumberValue: ticketNumberValue, ticketAmountValue: ticketAmountValue, noTipSwitchValue: noTipSwitchValue, amountGivenValue: amountGivenValue, cashTipsValue: cashTipsValue, totalTipsValue: totalTipsValue, paymentMethodValue: paymentMethodValue, deliveryTimeValue: deliveryTimeValue)
+	}
 }

@@ -9,7 +9,6 @@
 import UIKit
 
 class PersonViewController: UIViewController, UITextFieldDelegate, UIToolbarDelegate, UINavigationControllerDelegate {
-
 	@IBOutlet var personSaveButton: AnyObject!
 	@IBOutlet var personTextField: UITextField!
 	@IBAction func personSaveButton(_ sender: UIBarButtonItem) {
@@ -21,7 +20,6 @@ class PersonViewController: UIViewController, UITextFieldDelegate, UIToolbarDele
 		dismiss(animated: true, completion: nil)
 	}
 	var person: Person?
-	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		personTextField.delegate = self
@@ -31,15 +29,7 @@ class PersonViewController: UIViewController, UITextFieldDelegate, UIToolbarDele
 		} else {
 			personTextField.becomeFirstResponder()
 		}
-		
-		// Do any additional setup after loading the view.
 	}
-	
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
-		// Dispose of any resources that can be recreated.
-	}
-	
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		self.view.endEditing(true)
 	}

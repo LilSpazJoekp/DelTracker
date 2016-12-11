@@ -9,8 +9,25 @@
 
 import UIKit
 
-class DeliveryStatisticsTableViewController: UITableViewController {
+class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldDelegate {
 	
+	@IBAction func endEditing(_ sender: UITapGestureRecognizer) {
+		self.view.endEditing(true)
+	}
+	@IBAction func RecievedTextFieldEditingEnded(_ sender: UITextField) {
+		let tips = self.amountGivenFinal - self.ticketAmountFinal + self.cashTipsFinal
+		let paidOut = Double(self.deliveries.count) * 1.25
+		let shouldRecieve = tips + paidOut
+		if actuallyRecievedField.text != nil {
+			let actuallyRecieved = Double(self.removeFirstCharactersFrom(inputString: self.actuallyRecievedField.text!))
+			let difference = actuallyRecieved! - shouldRecieve
+			differenceLabel.text = "$" + "\(String(format: "%.2f", difference))"
+		} else {
+			let actuallyRecieved = 0.00
+			let difference = shouldRecieve - actuallyRecieved
+			differenceLabel.text = "$" + "\(String(format: "%.2f", difference))"
+		}
+	}
 	@IBOutlet var saveDeliveryDay: UIBarButtonItem!
 	@IBOutlet var deliveriesCount: UILabel!
 	@IBOutlet var totalSalesLabel: UILabel!
@@ -40,7 +57,8 @@ class DeliveryStatisticsTableViewController: UITableViewController {
 	@IBOutlet var otherSalesLabel: UILabel!
 	var deliveryDays = [DeliveryDay]()
 	var deliveryDay: DeliveryDay?
-	
+	var whoMadeBankLoad: WhoMadeBankTableViewController?
+	var deliveryDayViewController: DeliveryDayViewController?
 	var deliveries = [Delivery]()
 	var drops = [Drop]()
 	var ticketAmountFinal: Double = 0.0
@@ -55,17 +73,20 @@ class DeliveryStatisticsTableViewController: UITableViewController {
 	var cashTipsArray: [Double] = []
 	var totalTipsArray: [Double] = []
 	var noTipArrayCount = 0
-	
-	
 	override func viewDidLoad() {
 		print("viewDidload")
 		super.viewDidLoad()
+		actuallyRecievedField.delegate = self
+		print(deliveryDay)
+		
 		if let savedDeliveryDays = loadDeliveryDays() {
 			deliveryDays += savedDeliveryDays
 		}
-		//whoMadeBankLabel.text = deliveryDay?.whoMadeBankName
-		//	whoClosedBankLabel.text = deliveryDay?.whoClosedBankName
-		//	actuallyRecievedField.text = deliveryDay?.totalRecievedValue
+		if DeliveryDayTableViewController.status != "adding" {
+			whoMadeBankLabel.text = DeliveryDayViewController.whoMadeBankName
+			whoClosedBankLabel.text = DeliveryDayViewController.whoClosedBankName
+			actuallyRecievedField.text = DeliveryDayViewController.totalRecievedValue
+		}
 	}
 	override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int)
 	{
@@ -106,39 +127,37 @@ class DeliveryStatisticsTableViewController: UITableViewController {
 			let deliveryCountValue = String(deliveries.count)
 			let deliveryDateValue = String(DeliveryDayViewController.selectedDateGlobal) ?? "010116"
 			let totalTipsValue = "$" + "\(String(format: "%.2f", totalTipsFinal))"
-			let whoMadeBankName = WhoMadeBankTableViewController.whoDidBag
-			let whoClosedBankName = WhoClosedBankTableViewController.whoDidBag
+			let whoMadeBankName = whoMadeBankLabel.text
+			let whoClosedBankName = whoClosedBankLabel.text
+			let totalRecievedValue = actuallyRecievedField.text
 			
-			func totalRecievedValue(input1: (String), input2: (String)) -> String {
-				if actuallyRecievedField.text != "$0.00" {
-					let totalRecievedValue = input1
-					return totalRecievedValue
-				} else {
-					let totalRecievedValue = input2
-					return totalRecievedValue
-				}
-			}
-			deliveryDay = DeliveryDay(deliveryDateValue: deliveryDateValue, deliveryDayCountValue: deliveryCountValue, totalTipsValue: totalTipsValue, totalRecievedValue: totalRecievedValue(input1: (actuallyRecievedField.text)!, input2: (shouldRecieveLabel.text)!), whoMadeBankName: whoMadeBankName, whoClosedBankName: whoClosedBankName)
+			deliveryDay = DeliveryDay(deliveryDateValue: deliveryDateValue, deliveryDayCountValue: deliveryCountValue, totalTipsValue: totalTipsValue, totalRecievedValue: totalRecievedValue!, whoMadeBankName: whoMadeBankName!, whoClosedBankName: whoClosedBankName!)
 			
 		}
 	}
-	
+	var whoMadeBankSelectedName = [WhoMadeBank]()
+	@IBAction func unwindToDeliveryStatisticsTableList(_ sender: UIStoryboardSegue) {
+		if let sourceViewController = sender.source as? DeliveryDayViewController, let deliveryDay = sourceViewController.deliveryDay {
+			if DeliveryDayTableViewController.status != "adding" {
+				let selectedIndexPath = Int(DeliveryDayTableViewController.status)
+				print(true)
+				deliveryDays[selectedIndexPath!] = deliveryDay
+			} else {
+				print(false)
+			}
+			saveDeliveryDays()
+			print(sender.source)
+		} else if let sourceViewController = sender.source as? WhoMadeBankTableViewController, let name = sourceViewController.whoMadeBank {
+			whoMadeBankLabel.text = name.name
+		} else if let sourceViewController = sender.source as? WhoClosedBankTableViewController, let name = sourceViewController.whoClosedBank {
+			whoClosedBankLabel.text = name.name
+		}
+	}
 	override func viewDidAppear(_ animated: Bool) {
 		print("viewDidAppear")
-		let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-		
-		do {
-			// Get the directory contents urls (including subfolders urls)
-			let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil, options: [])
-			print(directoryContents)
-			
-		} catch let error as NSError {
-			print(error.localizedDescription)
-		}
-		
-		whoMadeBankLabel.text = deliveryDay?.whoMadeBankName
-		whoClosedBankLabel.text = deliveryDay?.whoClosedBankName
-		
+		print("whoMadeBankLoad?.whoMadeBank" + "\(deliveryDay?.whoMadeBankName)")
+		//let whoClosedBankName = WhoClosedBankTableViewController.wh
+		//whoClosedBankLabel.text = WhoClosedBankTableViewController.whoDidBag ?? "None"
 		ticketAmountArray.removeAll()
 		amountGivenArray.removeAll()
 		cashTipsArray.removeAll()
@@ -227,8 +246,6 @@ class DeliveryStatisticsTableViewController: UITableViewController {
 		} else {
 			self.noTipArrayCount = 0
 		}
-		let difference = Double(removeFirstCharactersFrom(inputString: actuallyRecievedField.text!))! - amountShouldReceive
-		
 		deliveriesCount.text = String(deliveries.count)
 		totalSalesLabel.text = "$" + "\(String(format: "%.2f", ticketAmountFinal))"
 		totalAmountGivenLabel.text = "$" + "\(String(format: "%.2f", amountGivenFinal))"
@@ -247,7 +264,6 @@ class DeliveryStatisticsTableViewController: UITableViewController {
 		}
 		totalDropsLabel.text = "$" + "\(String(format: "%.2f", totalDropsFinal))"
 		bankBalanceLabel.text = "$" + "\(String(format: "%.2f", bankBalance))"
-		differenceLabel.text = "$" + "\(String(format: "%.2f", difference))"
 		noTipCountLabel.text = String(self.noTipArrayCount)
 	}
 	func removeFirstCharactersFrom(inputString: (String)) -> String {
@@ -259,17 +275,21 @@ class DeliveryStatisticsTableViewController: UITableViewController {
 		self.view.endEditing(true)
 	}
 	
-	
-	
 	// MARK: NSCoding
 	
 	func loadDeliveryDays() -> [DeliveryDay]? {
-			return NSKeyedUnarchiver.unarchiveObject(withFile: DeliveryDay.ArchiveURL.path) as? [DeliveryDay]
-		}
-func saveDeliverys() {
+		return NSKeyedUnarchiver.unarchiveObject(withFile: DeliveryDay.ArchiveURL.path) as? [DeliveryDay]
+	}
+	func saveDeliveries() {
 		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(deliveries, toFile: Delivery.ArchiveURL.path)
 		if !isSuccessfulSave {
 			print("Failed to save deliveries...")
+		}
+	}
+	func saveDeliveryDays() {
+		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(deliveryDays, toFile: DeliveryDay.ArchiveURL.path)
+		if !isSuccessfulSave {
+			print("Failed to save deliveryDays...")
 		}
 	}
 	func loadDeliveries() -> [Delivery]? {

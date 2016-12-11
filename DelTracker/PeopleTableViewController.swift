@@ -1,23 +1,31 @@
 //
-//  DropTableViewController.swift
+//  PeopleTableViewController.swift
 //  DelTracker
 //
-//  Created by Joel Payne on 12/1/16.
+//  Created by Joel Payne on 12/7/16.
 //  Copyright © 2016 Joel Payne. All rights reserved.
 //
 
 import UIKit
 
-class DropTableViewController: UITableViewController {
+class PeopleTableViewController: UITableViewController {
+	
 	@IBOutlet var table: UITableView!
-	var drops = [Drop]()
+	@IBAction func saveButton(_ sender: UIBarButtonItem) {
+		savePeople()
+		dismiss(animated: true, completion: nil)
+	}
+	@IBAction func cancelButton(_ sender: UIBarButtonItem) {
+		dismiss(animated: true, completion: nil)
+	}
+	var people = [Person]()
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.clearsSelectionOnViewWillAppear = true
 		self.navigationItem.leftBarButtonItem = self.editButtonItem
 		self.navigationItem.leftBarButtonItem?.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
-		if let savedDrops = loadDrops() {
-			drops += savedDrops
+		if let savedPeople = loadPeople() {
+			people += savedPeople
 		}
 	}
 	
@@ -29,28 +37,25 @@ class DropTableViewController: UITableViewController {
 	}
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		// #warning Incomplete implementation, return the number of rows
-		return drops.count
+		return people.count
 	}
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cellIdentifier = "dropCell"
-		let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! DropTableViewCell
-		let drop = drops[indexPath.row]
-		cell.dropNumber.text = String(indexPath.row + 1)
-		cell.dropAmount.text = drop.deliveryDropAmount
+		let cellIdentifier = "personCell"
+		let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! PersonTableViewCell
+		let person = people[indexPath.row]
+		cell.personName.text = person.name
 		return cell
-	}
-	override func viewDidAppear(_ animated: Bool) {
 	}
 	// Override to support conditional editing of the table view.
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 		// Return false if you do not want the specified item to be editable.
 		return true
-	}
+	}	
 	// Override to support editing the table view.
 	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
-			drops.remove(at: indexPath.row)
-			saveDrops()
+			people.remove(at: indexPath.row)
+			savePeople()
 			tableView.deleteRows(at: [indexPath], with: .fade)
 		} else if editingStyle == .insert {
 		}
@@ -59,41 +64,42 @@ class DropTableViewController: UITableViewController {
 	}
 	
 	// MARK: - Navigation
-	@IBAction func unwindToDropList(_ sender: UIStoryboardSegue) {
-		if let sourceViewController = sender.source as? DropViewController, let drop = sourceViewController.drop {
+	
+	@IBAction func unwindToPersonList(_ sender: UIStoryboardSegue) {
+		if let sourceViewController = sender.source as? PersonViewController, let person = sourceViewController.person {
 			if let selectedIndexPath = tableView.indexPathForSelectedRow {
-				drops[selectedIndexPath.row] = drop
+				people[selectedIndexPath.row] = person
 				tableView.reloadRows(at: [selectedIndexPath], with: .right)
 			} else {
-				let newIndexPath = IndexPath(row: drops.count, section: 0)
-				drops.append(drop)
+				let newIndexPath = IndexPath(row: people.count, section: 0)
+				people.append(person)
 				tableView.insertRows(at: [newIndexPath], with: .bottom)
 			}
-			saveDrops()
+			savePeople()
 		}
 	}
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.identifier == "showDropDetail" {
-			let dropDetailViewController = segue.destination as! DropViewController
-			if let selectedDropCell = sender as? DropTableViewCell {
-				let indexPath = tableView.indexPath(for: selectedDropCell)!
-				let selectedDrop = drops[indexPath.row]
-				dropDetailViewController.drop = selectedDrop
+		if segue.identifier == "showDetail" {
+			let personDetailViewController = segue.destination as! PersonViewController
+			if let selectedPersonCell = sender as? PersonTableViewCell {
+				let indexPath = tableView.indexPath(for: selectedPersonCell)!
+				let selectedPerson = people[indexPath.row]
+				personDetailViewController.person = selectedPerson
 			}
-		} else if segue.identifier == "addDrop" {
-			print("Adding new Drop.")
+		} else if segue.identifier == "addItem" {
+			print("Adding new Person.")
 		}
 	}
 	
 	// MARK: NSCoding
 	
-	func saveDrops() {
-		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(drops, toFile: Drop.ArchiveURL.path)
+	func savePeople() {
+		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(people, toFile: Person.ArchiveURL.path)
 		if !isSuccessfulSave {
-			print("Failed to save drops...")
+			print("Failed to save people...")
 		}
 	}
-	func loadDrops() -> [Drop]? {
-		return NSKeyedUnarchiver.unarchiveObject(withFile: Drop.ArchiveURL.path) as? [Drop]
+	func loadPeople() -> [Person]? {
+		return NSKeyedUnarchiver.unarchiveObject(withFile: Person.ArchiveURL.path) as? [Person]
 	}
 }

@@ -8,15 +8,10 @@
 
 import UIKit
 
-class DropTableViewCell: UITableViewCell {
-
-   
+class DropTableViewCell: UITableViewCell {	
 	@IBOutlet var dropNumber: UILabel!
 	@IBOutlet var dropAmount: UILabel!
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
+	override func setSelected(_ selected: Bool, animated: Bool) {
+		super.setSelected(selected, animated: animated)
+	}
 }

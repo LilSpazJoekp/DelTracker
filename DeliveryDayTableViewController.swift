@@ -85,6 +85,7 @@ class DeliveryDayTableViewController: UITableViewController {
 			saveDeliveryDays()
 		}
 	}
+	static var status: String = ""
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == "showDetail" {
 			let deliveryDayDetailViewController = segue.destination as! DeliveryDayViewController
@@ -92,11 +93,14 @@ class DeliveryDayTableViewController: UITableViewController {
 				let indexPath = tableView.indexPath(for: selectedDeliveryDayCell)!
 				let selectedDeliveryDay = deliveryDays[indexPath.row]
 				deliveryDayDetailViewController.deliveryDay = selectedDeliveryDay
+				DeliveryDayTableViewController.status = String(indexPath.row)
 			}
 		} else if segue.identifier == "addItem" {
 			print("Adding new DeliveryDay.")
+			DeliveryDayTableViewController.status = "adding"
 		}
 	}
+	
 	// MARK: NSCoding
 	
 	func saveDeliveryDays() {

@@ -14,7 +14,6 @@ class Drop: NSObject, NSCoding {
 	
 	var deliveryDropAmount: String
 	
-	
 	// MARK: Archiving Paths
 	
 	static let DocumentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
@@ -28,7 +27,6 @@ class Drop: NSObject, NSCoding {
 	}
 	init?(deliveryDropAmount: String) {
 		self.deliveryDropAmount = deliveryDropAmount
-		
 		super.init()
 	}
 	

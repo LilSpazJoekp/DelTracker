@@ -205,8 +205,8 @@
 			isa = PBXGroup;
 			children = (
 				EEC49D5F1DECB1A3008DB859 /* Delivery.swift */,
-				EEC635A51DEBDBF7009D713F /* DeliveryTableViewController.swift */,
 				EEC635A71DEBDC3B009D713F /* DeliveryTableViewCell.swift */,
+				EEC635A51DEBDBF7009D713F /* DeliveryTableViewController.swift */,
 				EEC635741DEBDABF009D713F /* DeliveryViewController.swift */,
 			);
 			name = DeliveryView;

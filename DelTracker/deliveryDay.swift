@@ -11,6 +11,7 @@ import UIKit
 class DeliveryDay: NSObject, NSCoding {
 	
 	// MARK: Properties
+	
 	var deliveryDayViewController: DeliveryDayViewController?
 	var deliveryDateValue: String
 	var deliveryDayCountValue: String
@@ -18,6 +19,7 @@ class DeliveryDay: NSObject, NSCoding {
 	var totalRecievedValue: String
 	var whoMadeBankName: String
 	var whoClosedBankName: String
+	
 	// MARK: Archiving Paths
 	
 	static let DocumentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
@@ -60,8 +62,6 @@ class DeliveryDay: NSObject, NSCoding {
 		let totalRecievedValue = aDecoder.decodeObject(forKey: PropertyKey.totalRecievedValueKey) as! String
 		let whoMadeBankName = aDecoder.decodeObject(forKey: PropertyKey.whoMadeBankNameKey) as! String
 		let whoClosedBankName = aDecoder.decodeObject(forKey: PropertyKey.whoClosedBankNameKey) as! String
-		
-		// Must call designated initializer.
 		self.init(deliveryDateValue: deliveryDateValue, deliveryDayCountValue: deliveryDayCountValue, totalTipsValue: totalTipsValue, totalRecievedValue: totalRecievedValue, whoMadeBankName: whoMadeBankName, whoClosedBankName: whoClosedBankName)
 	}
 }

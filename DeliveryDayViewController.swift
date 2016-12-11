@@ -8,46 +8,77 @@
 
 import UIKit
 
-class DeliveryDayViewController: UIViewController {
-	let deliveryTableViewController = DeliveryTableViewController()
-	
-	@IBAction func daySaveButton(_ sender: UIBarButtonItem) {
-		print("setting archive path")
+class DeliveryDayViewController: UIViewController, UINavigationControllerDelegate {
+	@IBAction func datePickerValueChanged(_ sender: UIDatePicker) {
 		setArchiveURLPath()
+	}
+	@IBAction func daySaveButton(_ sender: UIBarButtonItem) {
+		setArchiveURLPath()
+		performSegue(withIdentifier: "edit", sender: saveDayButton)
 	}
 	@IBAction func cancelButton(_ sender: UIBarButtonItem) {
 		dismiss(animated: true, completion: nil)
 	}
-	
 	@IBOutlet var deliveryDatePicker: UIDatePicker!
+	@IBOutlet var saveDayButton: AnyObject?
+	var deliveryTableViewController: DeliveryTableViewController? = nil
 	var delivery: Delivery?
 	var deliveryDay: DeliveryDay?
+	var deliveryDays = [DeliveryDay]()
 	var deliveryDateViewController = DeliveryDayViewController.self
-	
 	static var selectedDateGlobal: String = "010116"
-	
+	static var totalRecievedValue: String = "$0.00"
+	static var whoMadeBankName: String = "None"
+	static var whoClosedBankName: String = "None"
 	var selectedDate: String = ""
+	
+	
 	convenience required init(selectedDate: String) {
 		self.init(selectedDate: DeliveryDayViewController.selectedDateGlobal)
 		self.selectedDate = selectedDate
 	}
-	
-	@IBAction func datePickerValueChanged(_ sender: UIDatePicker) {
-		print("setting archive path")
-		setArchiveURLPath()
-	}
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		print("viewDidLoad")
 		deliveryDatePicker.setValue(UIColor.white, forKey: "textColor")
+	}
+	override func viewDidAppear(_ animated: Bool) {
 		if let deliveryDay = deliveryDay {
 			let dateFormatter = DateFormatter()
 			dateFormatter.dateFormat = "MMddyy"
 			let date = dateFormatter.date(from: deliveryDay.deliveryDateValue)
 			deliveryDatePicker.setDate(date!, animated: true)
+			if let savedDeliveryDays = loadDeliveryDays() {
+				deliveryDays += savedDeliveryDays
+			}
 		}
-		print("setting archive path")
 		setArchiveURLPath()
+	}
+	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		if saveDayButton === sender as AnyObject? {
+	
+			if let savedDeliveryDays = loadDeliveryDays() {
+				deliveryDays += savedDeliveryDays
+				let deliveryDayDetailViewController = segue.destination as? DeliveryStatisticsTableViewController
+				if DeliveryDayTableViewController.status != "adding" {
+					let selectedDeliveryDayCell = Int(DeliveryDayTableViewController.status)
+					let indexPath = selectedDeliveryDayCell
+					let selectedDeliveryDay = deliveryDays[indexPath!]
+					deliveryDayDetailViewController?.deliveryDay = selectedDeliveryDay
+					
+					let deliveryDateValue = deliveryDay?.deliveryDateValue
+					let deliveryDayCountValue = deliveryDay?.deliveryDayCountValue
+					let totalTipsValue = deliveryDay?.totalTipsValue
+					let totalRecievedValue = deliveryDay?.totalRecievedValue
+					DeliveryDayViewController.totalRecievedValue = (deliveryDay?.totalRecievedValue)!
+					DeliveryDayViewController.whoMadeBankName = (deliveryDay?.whoMadeBankName)!
+					DeliveryDayViewController.whoClosedBankName = (deliveryDay?.whoClosedBankName)!
+					let whoMadeBankName = deliveryDay?.whoMadeBankName
+					let whoClosedBankName = deliveryDay?.whoClosedBankName
+					deliveryDay = DeliveryDay(deliveryDateValue: deliveryDateValue!, deliveryDayCountValue: deliveryDayCountValue!, totalTipsValue: totalTipsValue!, totalRecievedValue: totalRecievedValue!, whoMadeBankName: whoMadeBankName!, whoClosedBankName: whoClosedBankName!)
+				}
+			}
+		}
 	}
 	func setArchiveURLPath() {
 		let dateFormatter = DateFormatter()
@@ -55,17 +86,8 @@ class DeliveryDayViewController: UIViewController {
 		DeliveryDayViewController.selectedDateGlobal = dateFormatter.string(from: deliveryDatePicker.date)
 		Delivery.ArchiveURL = Delivery.DocumentsDirectory.appendingPathComponent("\(DeliveryDayViewController.selectedDateGlobal)")
 		Drop.ArchiveURL = Drop.DocumentsDirectory.appendingPathComponent("\(DeliveryDayViewController.selectedDateGlobal)")
-		print(Delivery.ArchiveURL.path)
 	}
-	
-	
-	/*
-	// MARK: - Navigation
-	
-	// In a storyboard-based application, you will often want to do a little preparation before navigation
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-	// Get the new view controller using segue.destinationViewController.
-	// Pass the selected object to the new view controller.
+	func loadDeliveryDays() -> [DeliveryDay]? {
+		return NSKeyedUnarchiver.unarchiveObject(withFile: DeliveryDay.ArchiveURL.path) as? [DeliveryDay]
 	}
-	*/
 }

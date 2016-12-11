@@ -8,7 +8,7 @@
 	
 	import UIKit
 	
-	class DeliveryTableViewController: UITableViewController {
+	class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 		
 		@IBOutlet var table: UITableView!
 		@IBAction func editButtonItem(_ sender: UIBarButtonItem) {
@@ -61,6 +61,11 @@
 			cell.cashTipsCell.text = delivery.cashTipsValue
 			cell.totalTipsCell.text = delivery.totalTipsValue
 			cell.paymentMethodCell.text = paymentMethodString
+			cell.deliveryTimeCell.text = delivery.deliveryTimeValue
+			let cellTime = cell.deliveryTimeCell.text ?? "error"
+			print("cell time " + cellTime)
+			let deliveryTime = delivery.deliveryTimeValue
+			print("delivery time " + deliveryTime)
 			return cell
 		}
 		override func viewDidAppear(_ animated: Bool) {

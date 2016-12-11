@@ -16,11 +16,8 @@ class DeliveryTableViewCell: UITableViewCell {
 	@IBOutlet var cashTipsCell: UILabel!
     @IBOutlet var totalTipsCell: UILabel!
     @IBOutlet var paymentMethodCell: UILabel!
-    override func awakeFromNib() {
-	super.awakeFromNib()
-    }
+	@IBOutlet var deliveryTimeCell: UILabel!
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-    
 }

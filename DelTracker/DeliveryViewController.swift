@@ -74,7 +74,10 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	@IBOutlet var paymentMethodPicker: UIPickerView!
 	@IBOutlet var saveDelivery: AnyObject?
 	@IBOutlet var cancelDelivery: UIBarButtonItem!
+	@IBOutlet var timeOverrideSwitch: UISwitch!
+	@IBOutlet var deliveryTime: UIDatePicker!
 	var delivery: Delivery?
+	var selectedTime: String = ""
 	
 	// MARK: - View Life Cycle
 	
@@ -85,6 +88,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		ticketAmountField.delegate = self
 		amountGivenField.delegate = self
 		cashTipsField?.delegate = self
+		
 		var ticketAmountDropped = ticketAmountField.text
 		ticketAmountDropped?.remove(at: (ticketAmountDropped?.startIndex)!)
 		var amountGivenDropped = amountGivenField.text
@@ -93,9 +97,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		cashTipsDropped?.remove(at: (cashTipsDropped?.startIndex)!)
 		configureTicketNumberField()
 		configureTicketAmountField()
-		configureAmountGivenField()
 		configureNoTipSwitch()
-		configureCashTipsField()
 		configureDoubleZeroButtonKey()
 		addBarButtons()
 		configureQuickTipSegmentControl()
@@ -108,21 +110,37 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			cashTipsField?.text = delivery.cashTipsValue
 			totalTips.text = delivery.totalTipsValue
 			paymentMethodPicker.selectRow(Int(delivery.paymentMethodValue)!, inComponent: 0, animated: true)
+			let dateFormatter = DateFormatter()
+			dateFormatter.dateFormat = "hh:mm:ss a"
+			if let date = dateFormatter.date(from: delivery.deliveryTimeValue) {
+				deliveryTime.setDate(date, animated: true)
+			}
 		} else {
 			ticketNumberField.becomeFirstResponder()
 		}
+		setDeliveryTime()
+		print(selectedTime)
 	}
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		print(DeliveryDayViewController.selectedDateGlobal)
+		if self.navigationItem.title == "Add Delivery" {
+			setDeliveryTime()
+		} else if timeOverrideSwitch.isOn {
+			setDeliveryTime()
+		}
 		if saveDelivery === sender as AnyObject? {
+			setDeliveryTime()
 			let ticketNumberValue = ticketNumberField.text ?? ""
 			let ticketAmountValue = ticketAmountField.text ?? ""
 			let noTipSwitchValue = String(noTipSwitch.isOn)
 			let amountGivenValue = amountGivenField.text ?? ""
 			let cashTipsValue = cashTipsField?.text ?? ""
 			let totalTipsValue = totalTips.text ?? ""
+			print(selectedTime)
+			print(self.selectedTime)
+			let deliveryTimeValue = selectedTime
 			let paymentMethodValue = String(paymentMethodPicker.selectedRow(inComponent: 0))
-			delivery = Delivery(ticketNumberValue: ticketNumberValue, ticketAmountValue: ticketAmountValue, noTipSwitchValue: noTipSwitchValue, amountGivenValue: amountGivenValue, cashTipsValue: cashTipsValue, totalTipsValue: totalTipsValue, paymentMethodValue: paymentMethodValue)
+			delivery = Delivery(ticketNumberValue: ticketNumberValue, ticketAmountValue: ticketAmountValue, noTipSwitchValue: noTipSwitchValue, amountGivenValue: amountGivenValue, cashTipsValue: cashTipsValue, totalTipsValue: totalTipsValue, paymentMethodValue: paymentMethodValue, deliveryTimeValue: deliveryTimeValue)
 		}
 	}
 	
@@ -134,18 +152,12 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	func configureTicketAmountField() {
 		ticketNumberField.clearsOnInsertion = true
 	}
-	func configureAmountGivenField() {
-		
-	}
 	func configureQuickTipSegmentControl() {
 		quickTipSelector.addTarget(self, action: #selector(DeliveryViewController.selectedSegmentDidChange(_:)), for: .valueChanged)
 	}
 	func configureNoTipSwitch() {
 		noTipSwitch.setOn(false, animated: true)
 		noTipSwitch.addTarget(self, action: #selector(DeliveryViewController.switchValueDidChange(_:)), for: .valueChanged)
-	}
-	func configureCashTipsField() {
-		
 	}
 	func configureDoubleZeroButtonKey() {
 		doubleZero.setTitle("00", for: UIControlState())
@@ -249,6 +261,17 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			paymentMethodChanged()
 		}
 	}
+	
+	// TimePicker
+	func setDeliveryTime() {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "hh:mm:ss a"
+		dateFormatter.amSymbol = "AM"
+		dateFormatter.pmSymbol = "PM"
+		selectedTime = dateFormatter.string(from: deliveryTime.date)
+		deliveryTime.setValue(UIColor.white, forKey: "textColor")
+	}
+	
 	
 	// Keyboard Double Zero Key
 	let doubleZero = UIButton(type: UIButtonType.custom)
@@ -382,11 +405,8 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		self.view.endEditing(true)
 	}
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
-		// Dispose of any resources that can be recreated.
-	}
 }
+
 // MARK: Custom Classes
 
 // CurrencyField Class
@@ -420,7 +440,6 @@ extension NumberFormatter {
 		self.numberStyle = numberStyle
 	}
 }
-
 extension UIButton {
 	func setBackgroundColor(_ color: UIColor, forState: UIControlState) {
 		UIGraphicsBeginImageContext(CGSize(width: 1, height: 1))

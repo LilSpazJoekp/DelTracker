@@ -11,9 +11,8 @@ import UIKit
 class Person: NSObject, NSCoding {
 	
 	// MARK: Properties
-
-	var name: String
 	
+	var name: String
 	
 	// MARK: Archiving Paths
 	
@@ -24,11 +23,9 @@ class Person: NSObject, NSCoding {
 	
 	struct PropertyKey {
 		static let nameKey = "name"
-		
 	}
 	init?(name: String) {
 		self.name = name
-		
 		super.init()
 	}
 	
@@ -40,8 +37,6 @@ class Person: NSObject, NSCoding {
 	}
 	required convenience init?(coder aDecoder: NSCoder) {
 		let name = aDecoder.decodeObject(forKey: PropertyKey.nameKey) as! String
-		
-		// Must call designated initializer.
 		self.init(name: name)
 	}
 }
