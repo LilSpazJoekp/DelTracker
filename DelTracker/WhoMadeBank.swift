@@ -24,11 +24,9 @@ class WhoMadeBank: NSObject, NSCoding {
 	
 	struct PropertyKey {
 		static let nameKey = "name"
-		
 	}
 	init?(name: String) {
 		self.name = name
-		
 		super.init()
 	}
 	
@@ -36,12 +34,9 @@ class WhoMadeBank: NSObject, NSCoding {
 	
 	func encode(with aCoder: NSCoder) {
 		aCoder.encode(name, forKey: PropertyKey.nameKey)
-		
 	}
 	required convenience init?(coder aDecoder: NSCoder) {
 		let name = aDecoder.decodeObject(forKey: PropertyKey.nameKey) as! String
-		
-		// Must call designated initializer.
 		self.init(name: name)
 	}
 }

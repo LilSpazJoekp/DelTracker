@@ -24,11 +24,9 @@ class DropTableViewController: UITableViewController {
 	// MARK: - Table view data source
 	
 	override func numberOfSections(in tableView: UITableView) -> Int {
-		// #warning Incomplete implementation, return the number of sections
 		return 1
 	}
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		// #warning Incomplete implementation, return the number of rows
 		return drops.count
 	}
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -37,16 +35,16 @@ class DropTableViewController: UITableViewController {
 		let drop = drops[indexPath.row]
 		cell.dropNumber.text = String(indexPath.row + 1)
 		cell.dropAmount.text = drop.deliveryDropAmount
+		let backgroundView = UIView()
+		backgroundView.backgroundColor = UIColor.darkGray
+		cell.selectedBackgroundView = backgroundView
 		return cell
 	}
 	override func viewDidAppear(_ animated: Bool) {
 	}
-	// Override to support conditional editing of the table view.
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		// Return false if you do not want the specified item to be editable.
 		return true
 	}
-	// Override to support editing the table view.
 	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
 			drops.remove(at: indexPath.row)
@@ -59,6 +57,7 @@ class DropTableViewController: UITableViewController {
 	}
 	
 	// MARK: - Navigation
+	
 	@IBAction func unwindToDropList(_ sender: UIStoryboardSegue) {
 		if let sourceViewController = sender.source as? DropViewController, let drop = sourceViewController.drop {
 			if let selectedIndexPath = tableView.indexPathForSelectedRow {
@@ -81,7 +80,6 @@ class DropTableViewController: UITableViewController {
 				dropDetailViewController.drop = selectedDrop
 			}
 		} else if segue.identifier == "addDrop" {
-			print("Adding new Drop.")
 		}
 	}
 	
@@ -90,7 +88,7 @@ class DropTableViewController: UITableViewController {
 	func saveDrops() {
 		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(drops, toFile: Drop.ArchiveURL.path)
 		if !isSuccessfulSave {
-			print("Failed to save drops...")
+			print("save Failed")
 		}
 	}
 	func loadDrops() -> [Drop]? {

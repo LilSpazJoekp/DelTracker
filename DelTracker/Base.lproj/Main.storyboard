@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11761" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="0Ez-AF-gGp">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="0Ez-AF-gGp">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -324,7 +324,7 @@
         <scene sceneID="gcJ-VK-O4N">
             <objects>
                 <tableViewController modalTransitionStyle="crossDissolve" id="KWd-jm-cNS" customClass="DeliveryTableViewController" customModule="DelTracker" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="black" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="75" sectionHeaderHeight="28" sectionFooterHeight="28" id="gfm-mS-H2h">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="black" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelectionDuringEditing="YES" allowsMultipleSelectionDuringEditing="YES" rowHeight="75" sectionHeaderHeight="28" sectionFooterHeight="28" id="gfm-mS-H2h">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
@@ -470,14 +470,20 @@
                             <outlet property="delegate" destination="KWd-jm-cNS" id="chP-hu-4X4"/>
                         </connections>
                     </tableView>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" title="Deliveries" id="IsQ-gB-ZaN">
                         <barButtonItem key="backBarButtonItem" title="Day" id="7NF-II-h1h"/>
-                        <barButtonItem key="leftBarButtonItem" systemItem="edit" id="g2h-ig-5H1">
-                            <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="editButtonItem:" destination="KWd-jm-cNS" id="zy3-FW-Shp"/>
-                            </connections>
-                        </barButtonItem>
+                        <leftBarButtonItems>
+                            <barButtonItem systemItem="edit" id="g2h-ig-5H1">
+                                <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="editButton:" destination="KWd-jm-cNS" id="DBw-W3-Yf3"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Delete(0)" id="Fph-2c-OLb">
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                            </barButtonItem>
+                        </leftBarButtonItems>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="TuU-mm-iLp">
                             <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
@@ -488,7 +494,10 @@
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="deleteButton" destination="Fph-2c-OLb" id="OCy-fD-Ehd"/>
+                        <outlet property="editButton" destination="g2h-ig-5H1" id="gow-aK-idd"/>
                         <outlet property="table" destination="gfm-mS-H2h" id="kiE-zD-YnP"/>
                     </connections>
                 </tableViewController>
@@ -508,7 +517,7 @@
                         <color key="sectionIndexColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="sectionIndexBackgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" showsReorderControl="YES" accessoryType="disclosureIndicator" indentationWidth="0.0" reuseIdentifier="deliveryDayCell" id="Q6K-lb-nz6" customClass="DeliveryDayTableViewCell" customModule="DelTracker" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" showsReorderControl="YES" accessoryType="disclosureIndicator" indentationWidth="0.0" reuseIdentifier="deliveryDayCell" id="Q6K-lb-nz6" customClass="DeliveryDayTableViewCell" customModule="DelTracker" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="414" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" tableViewCell="Q6K-lb-nz6" id="lu6-Z7-xJw">
@@ -594,9 +603,20 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Delivery Days" id="j1j-lR-ydw">
-                        <barButtonItem key="leftBarButtonItem" title="Delete(0)" id="Kl7-Gy-P6g">
-                            <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                        </barButtonItem>
+                        <leftBarButtonItems>
+                            <barButtonItem title="Edit" id="1CE-qD-YQB">
+                                <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="editButton:" destination="yXJ-fj-Vw5" id="qLR-il-TxJ"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Delete(0)" id="Kl7-Gy-P6g">
+                                <color key="tintColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="deleteAction:" destination="yXJ-fj-Vw5" id="4t7-7P-hKX"/>
+                                </connections>
+                            </barButtonItem>
+                        </leftBarButtonItems>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="57Q-t7-Zor">
                             <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
@@ -605,6 +625,8 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="deleteButton" destination="Kl7-Gy-P6g" id="7yd-hr-U1v"/>
+                        <outlet property="editButton" destination="1CE-qD-YQB" id="KLt-Bn-FUY"/>
                         <outlet property="table" destination="5HL-84-f67" id="jH8-22-o4k"/>
                     </connections>
                 </tableViewController>
@@ -645,9 +667,8 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <datePicker contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="v4H-MF-YNv">
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="v4H-MF-YNv">
                                 <rect key="frame" x="0.0" y="103" width="414" height="216"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <date key="date" timeIntervalSinceReferenceDate="502408077.784347">
                                     <!--2016-12-02 21:47:57 +0000-->
                                 </date>
@@ -655,9 +676,30 @@
                                     <action selector="datePickerValueChanged:" destination="VxG-zJ-4Br" eventType="valueChanged" id="4LE-tc-zsU"/>
                                 </connections>
                             </datePicker>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="pgC-V0-Zzq">
+                                <rect key="frame" x="345" y="322" width="51" height="31"/>
+                                <connections>
+                                    <action selector="addWithoutDeliveriesSwitchChanged:" destination="VxG-zJ-4Br" eventType="valueChanged" id="gYp-EC-ZO5"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add without deliveries?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s7A-lD-Rmi">
+                                <rect key="frame" x="20" y="327" width="178" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                         <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="v4H-MF-YNv" firstAttribute="leading" secondItem="hYT-CG-9xD" secondAttribute="leadingMargin" constant="-20" id="6Sn-Xx-pyG"/>
+                            <constraint firstItem="v4H-MF-YNv" firstAttribute="centerX" secondItem="hYT-CG-9xD" secondAttribute="centerX" id="Ny0-5j-gse"/>
+                            <constraint firstItem="s7A-lD-Rmi" firstAttribute="top" secondItem="v4H-MF-YNv" secondAttribute="bottom" constant="8" id="WEh-9n-tao"/>
+                            <constraint firstItem="pgC-V0-Zzq" firstAttribute="leading" secondItem="s7A-lD-Rmi" secondAttribute="trailing" constant="147" id="dwI-D6-7SU"/>
+                            <constraint firstItem="s7A-lD-Rmi" firstAttribute="leading" secondItem="hYT-CG-9xD" secondAttribute="leadingMargin" id="fuY-TG-sXU"/>
+                            <constraint firstItem="pgC-V0-Zzq" firstAttribute="top" secondItem="v4H-MF-YNv" secondAttribute="bottom" constant="3" id="hN5-aH-hOw"/>
+                            <constraint firstItem="v4H-MF-YNv" firstAttribute="top" secondItem="pKj-wQ-YWP" secondAttribute="bottom" constant="39" id="teJ-Uw-gF5"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Add Day" id="mI7-uD-bsn">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="eO4-uQ-sRV">
@@ -666,19 +708,32 @@
                                 <action selector="cancelButton:" destination="VxG-zJ-4Br" id="3kE-fX-mhO"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="efU-BV-Mdk">
-                            <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="daySaveButton:" destination="VxG-zJ-4Br" id="zGn-0N-LTF"/>
-                                <segue destination="pgk-wT-5uc" kind="presentation" identifier="addItem" id="0dH-Sp-i2K"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="save" id="efU-BV-Mdk">
+                                <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="daySaveButton:" destination="VxG-zJ-4Br" id="zGn-0N-LTF"/>
+                                    <segue destination="pgk-wT-5uc" kind="presentation" identifier="addItem" id="0dH-Sp-i2K"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem enabled="NO" title="Add Day" id="cCo-Zp-SQq">
+                                <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="addDaySaveButton:" destination="VxG-zJ-4Br" id="f0z-fa-jx4"/>
+                                    <segue destination="0y7-xv-UhW" kind="popoverPresentation" popoverAnchorBarButtonItem="cCo-Zp-SQq" id="Lgm-Gx-edr">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <connections>
+                        <outlet property="addDayButton" destination="cCo-Zp-SQq" id="ExP-2a-PEF"/>
+                        <outlet property="addWithoutDeliveriesLabel" destination="s7A-lD-Rmi" id="9XH-KK-OrC"/>
+                        <outlet property="addWithoutDeliveriesSwitch" destination="pgC-V0-Zzq" id="Fix-Oe-VDf"/>
                         <outlet property="deliveryDatePicker" destination="v4H-MF-YNv" id="ld7-Hw-El7"/>
-                        <outlet property="saveDayButton" destination="bVN-PK-61d" id="Ud3-VU-HtX"/>
-                        <segue destination="pgk-wT-5uc" kind="presentation" identifier="edit" id="vyL-t0-8WL"/>
+                        <outlet property="saveDayButton" destination="efU-BV-Mdk" id="ZBK-2d-5PQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OY0-pL-ENB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -854,8 +909,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Total" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="8cu-9T-n1S">
-                                                    <rect key="frame" x="14.999999999999996" y="11.999999999999998" width="37.666666666666664" height="20.333333333333332"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Amount Should Recieve" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="8cu-9T-n1S">
+                                                    <rect key="frame" x="15" y="11.999999999999998" width="182" height="20.333333333333332"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1189,8 +1244,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="No Tip Ticket Total" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="yTb-tO-ML6">
-                                                    <rect key="frame" x="15" y="11.999999999999998" width="143.66666666666666" height="20.333333333333332"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="No Tip Sales Total" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="yTb-tO-ML6">
+                                                    <rect key="frame" x="15" y="11.999999999999998" width="138" height="20.333333333333332"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1483,21 +1538,29 @@
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics" barStyle="black"/>
                     <connections>
                         <outlet property="actuallyRecievedField" destination="SgP-y7-nBj" id="Kah-s7-4IO"/>
+                        <outlet property="amountShouldRecieveBankDetailsLabel" destination="XoM-bO-iZy" id="Lke-BR-Cv2"/>
+                        <outlet property="amountShouldRecieveTotalsLabel" destination="3Ez-zB-TUt" id="iyo-GE-OdA"/>
                         <outlet property="bankBalanceLabel" destination="uRQ-WD-U5A" id="1sQ-kD-qVV"/>
+                        <outlet property="cashSalesLabel" destination="A6a-Wt-Fba" id="T4N-uD-7fm"/>
+                        <outlet property="chargeSalesLabel" destination="Azc-v9-2iS" id="Fje-jJ-9CT"/>
+                        <outlet property="checkSalesLabel" destination="AOG-lg-fPi" id="aqb-hb-Evy"/>
+                        <outlet property="creditSalesLabel" destination="1G1-Gl-dKP" id="daa-gU-Tx2"/>
+                        <outlet property="currentDeliverDayDateLabel" destination="oa4-Gf-jal" id="AWp-uL-k4b"/>
                         <outlet property="deliveriesCount" destination="NaY-iP-FNo" id="d8b-tb-4SX"/>
                         <outlet property="differenceLabel" destination="vY9-lU-DzS" id="eQz-YQ-QpS"/>
                         <outlet property="noTipCountLabel" destination="GoC-Z5-2Wl" id="3SW-eT-Ip8"/>
+                        <outlet property="noTipSalesLabel" destination="Cex-CP-Z8N" id="jbM-ET-FKX"/>
+                        <outlet property="otherSalesLabel" destination="LRK-fs-EJO" id="nOF-3u-Wvr"/>
                         <outlet property="paidoutLabel" destination="ulX-ZD-rjg" id="czL-Og-vkg"/>
                         <outlet property="salesAverageLabel" destination="yRX-hf-rPz" id="fQQ-Bu-DQR"/>
                         <outlet property="salesMaxLabel" destination="RhC-YI-TRT" id="1lC-0L-1E0"/>
                         <outlet property="salesMinLabel" destination="bqu-rt-x6P" id="zrY-Ca-ebo"/>
                         <outlet property="saveDeliveryDay" destination="6Ap-DK-jyu" id="guD-de-jCB"/>
-                        <outlet property="shouldRecieveLabel" destination="3Ez-zB-TUt" id="Z6V-aa-en4"/>
                         <outlet property="startingBankField" destination="ecq-Vn-32y" id="Y33-hi-saG"/>
                         <outlet property="tipsAverageLabel" destination="LIL-o1-afz" id="VLB-y6-uM4"/>
                         <outlet property="tipsMaxLabel" destination="H88-p0-eUZ" id="ZtN-3S-j2Y"/>
                         <outlet property="tipsMinLabel" destination="dxM-AR-wEQ" id="kpQ-7E-T8x"/>
-                        <outlet property="totalAmountGivenLabel" destination="2Az-oC-6RS" id="8go-Ig-srj"/>
+                        <outlet property="totalAmountGivenLabel" destination="2Az-oC-6RS" id="55z-GL-J5N"/>
                         <outlet property="totalDropsLabel" destination="mQl-hb-fCl" id="8yK-8Y-MyL"/>
                         <outlet property="totalSalesLabel" destination="thW-m1-PIo" id="zyT-L9-Dly"/>
                         <outlet property="totalTipsLabel" destination="VeS-EW-lKN" id="MXM-9M-70c"/>
@@ -1523,7 +1586,7 @@
                     <tabBarItem key="tabBarItem" title="Deliveries" image="car-fast" id="LJr-bn-MMm"/>
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="UNy-70-YON">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="UNy-70-YON">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1543,7 +1606,7 @@
                     <tabBarItem key="tabBarItem" title="Item" id="SKz-vf-6mB"/>
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="VtG-lg-cOR">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="VtG-lg-cOR">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1889,7 +1952,7 @@
         <scene sceneID="QB9-Yx-VGj">
             <objects>
                 <tableViewController id="0II-aI-JuD" customClass="WhoMadeBankTableViewController" customModule="DelTracker" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="black" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="3AG-hh-ZY9">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="black" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="3AG-hh-ZY9">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
@@ -1899,7 +1962,7 @@
                             <tableViewSection id="KuF-9L-S6s">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="l23-Ff-Ui4" style="IBUITableViewCellStyleDefault" id="YnK-tn-dFz">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="35" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YnK-tn-dFz" id="GTH-Oo-aKM">
                                             <rect key="frame" x="0.0" y="0.0" width="381" height="43.666666666666664"/>
@@ -1924,7 +1987,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="222" id="RyZ-1T-s02">
-                                        <rect key="frame" x="0.0" y="44" width="414" height="222"/>
+                                        <rect key="frame" x="0.0" y="79" width="414" height="222"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RyZ-1T-s02" id="tqp-TW-KbF">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="222"/>
@@ -2063,6 +2126,7 @@
                             </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <connections>
                         <outlet property="table" destination="ECp-55-wLU" id="doS-BI-zsG"/>
                     </connections>
@@ -2160,7 +2224,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fgb-Na-EXh" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="MGD-sz-CWS">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="MGD-sz-CWS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2235,7 +2299,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Cy-HU-yuO">
-                                                    <rect key="frame" x="-2" y="2" width="414" height="216"/>
+                                                    <rect key="frame" x="-3" y="2" width="415" height="216"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                     <connections>
                                                         <outlet property="dataSource" destination="Ht2-K0-Nyk" id="ClI-ZS-ey7"/>
@@ -2279,6 +2343,157 @@
             </objects>
             <point key="canvasLocation" x="6596" y="-194"/>
         </scene>
+        <!--Add Manual Day-->
+        <scene sceneID="tnn-Mh-vk1">
+            <objects>
+                <viewController id="0y7-xv-UhW" userLabel="Add Manual Day" customClass="AddManualDeliveryDayViewController" customModule="DelTracker" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="CGE-Nm-w7Y"/>
+                        <viewControllerLayoutGuide type="bottom" id="cvE-aA-r7K"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="3qx-ha-bxE">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mRq-No-Mkb">
+                                <rect key="frame" x="369" y="72" width="25" height="30"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad" keyboardAppearance="alert" returnKeyType="next"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="maxLength">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="numberOfDeliveriesFieldEditingDidBegan:" destination="0y7-xv-UhW" eventType="editingDidBegin" id="x76-Pk-VLK"/>
+                                </connections>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="$0.00" borderStyle="roundedRect" placeholder="Amount" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="29e-cw-MzD" customClass="CurrencyField" customModule="DelTracker" customModuleProvider="target">
+                                <rect key="frame" x="329" y="117" width="65" height="30"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="12"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad" keyboardAppearance="alert" returnKeyType="next"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="maxLength">
+                                        <integer key="value" value="7"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="totalRecievedWithOutPaidoutEditingDidBegin:" destination="0y7-xv-UhW" eventType="editingDidBegin" id="PdK-TT-P2L"/>
+                                    <action selector="totalRecievedWithOutPaidoutEditingDidEnd:" destination="0y7-xv-UhW" eventType="editingDidEnd" id="LkN-5A-bry"/>
+                                </connections>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Number of Deliveries" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vyh-xz-3Jy">
+                                <rect key="frame" x="200" y="77" width="161" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total With Paidout" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ioI-Oy-fjO">
+                                <rect key="frame" x="181" y="122" width="140" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="$0.00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hp3-9L-Fbf">
+                                <rect key="frame" x="349" y="156" width="45" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Who Made Bank" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gnm-xR-w58">
+                                <rect key="frame" x="20" y="184" width="126" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <pickerView contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="S7U-g1-diH">
+                                <rect key="frame" x="47" y="213" width="320" height="216"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="0y7-xv-UhW" id="bEE-at-VXP"/>
+                                    <outlet property="delegate" destination="0y7-xv-UhW" id="y2c-IJ-5Vd"/>
+                                </connections>
+                            </pickerView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Who Closed Bank" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BY9-cn-tbW">
+                                <rect key="frame" x="258" y="184" width="136" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="U3m-hb-sxe">
+                                <rect key="frame" x="0.0" y="20" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Add Manual Day" id="Naa-rm-NIF">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="kcI-y4-El9">
+                                            <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
+                                            <connections>
+                                                <action selector="cancelButton:" destination="0y7-xv-UhW" id="lTt-cN-ANt"/>
+                                            </connections>
+                                        </barButtonItem>
+                                        <rightBarButtonItems>
+                                            <barButtonItem systemItem="save" id="m68-kT-bh8">
+                                                <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                <connections>
+                                                    <action selector="saveButton:" destination="0y7-xv-UhW" id="QSL-5t-TcN"/>
+                                                    <segue destination="hPQ-MN-RPw" kind="unwind" unwindAction="unwindToDeliveryDayList:" id="ZGj-Uj-fGT"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem title="Edit People" id="Frg-oo-9Rb">
+                                                <connections>
+                                                    <segue destination="JhF-8h-J5s" kind="popoverPresentation" popoverAnchorBarButtonItem="Frg-oo-9Rb" id="KQ8-MZ-pPu">
+                                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                                    </segue>
+                                                </connections>
+                                            </barButtonItem>
+                                        </rightBarButtonItems>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Total Tips" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jVV-V7-GYd">
+                                <rect key="frame" x="266" y="156" width="75" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                        <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="29e-cw-MzD" firstAttribute="centerY" secondItem="ioI-Oy-fjO" secondAttribute="centerY" id="0B0-a4-KZV"/>
+                            <constraint firstItem="mRq-No-Mkb" firstAttribute="top" secondItem="CGE-Nm-w7Y" secondAttribute="bottom" constant="52" id="1U8-xH-4mT"/>
+                            <constraint firstItem="S7U-g1-diH" firstAttribute="centerX" secondItem="3qx-ha-bxE" secondAttribute="centerX" id="1dA-9c-Mcd"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="BY9-cn-tbW" secondAttribute="trailing" id="9rz-m0-nnV"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="29e-cw-MzD" secondAttribute="trailing" id="A86-Jo-xJ7"/>
+                            <constraint firstItem="S7U-g1-diH" firstAttribute="top" secondItem="gnm-xR-w58" secondAttribute="bottom" constant="8" id="KKE-8k-AUi"/>
+                            <constraint firstItem="29e-cw-MzD" firstAttribute="leading" secondItem="ioI-Oy-fjO" secondAttribute="trailing" constant="8" id="OFU-Yr-Fec"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="gnm-xR-w58" secondAttribute="leading" id="Oad-bV-BbT"/>
+                            <constraint firstItem="mRq-No-Mkb" firstAttribute="leading" secondItem="Vyh-xz-3Jy" secondAttribute="trailing" constant="8" id="Psi-ov-xbY"/>
+                            <constraint firstItem="Vyh-xz-3Jy" firstAttribute="centerY" secondItem="mRq-No-Mkb" secondAttribute="centerY" id="dXH-Hk-nCN"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="mRq-No-Mkb" secondAttribute="trailing" id="faq-8F-FfM"/>
+                            <constraint firstItem="gnm-xR-w58" firstAttribute="centerY" secondItem="BY9-cn-tbW" secondAttribute="centerY" id="run-on-nwu"/>
+                            <constraint firstItem="29e-cw-MzD" firstAttribute="top" secondItem="mRq-No-Mkb" secondAttribute="bottom" constant="15" id="wFt-2x-fez"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="numberOfDeliveriesField" destination="mRq-No-Mkb" id="IaU-IW-WgF"/>
+                        <outlet property="pickerView" destination="S7U-g1-diH" id="KmA-V2-ZT2"/>
+                        <outlet property="totalRecievedWithPaidoutField" destination="29e-cw-MzD" id="S3d-4h-kH0"/>
+                        <outlet property="totalTipsLabel" destination="Hp3-9L-Fbf" id="Evh-JS-A6M"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rXb-hs-PnZ" sceneMemberID="firstResponder"/>
+                <exit id="hPQ-MN-RPw" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="3456.521739130435" y="-1207.3369565217392"/>
+        </scene>
     </scenes>
     <resources>
         <image name="business-box-in-7" width="29" height="30"/>
@@ -2286,12 +2501,12 @@
         <image name="chart" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="0dH-Sp-i2K"/>
-        <segue reference="R9y-zR-ZDg"/>
-        <segue reference="0wE-d2-vRe"/>
-        <segue reference="IxG-sB-W3h"/>
-        <segue reference="Hr1-a0-mZO"/>
+        <segue reference="B2A-LC-VtJ"/>
+        <segue reference="ENj-Yr-GQC"/>
+        <segue reference="KQ8-MZ-pPu"/>
         <segue reference="GUC-0u-3mQ"/>
+        <segue reference="CVp-2N-w8V"/>
+        <segue reference="IxG-sB-W3h"/>
         <segue reference="nUl-BY-mW4"/>
     </inferredMetricsTieBreakers>
 </document>

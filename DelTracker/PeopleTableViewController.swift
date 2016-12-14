@@ -42,13 +42,16 @@ class PeopleTableViewController: UITableViewController {
 		let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! PersonTableViewCell
 		let person = people[indexPath.row]
 		cell.personName.text = person.name
+		let backgroundView = UIView()
+		backgroundView.backgroundColor = UIColor.darkGray
+		cell.selectedBackgroundView = backgroundView
 		return cell
 	}
 	// Override to support conditional editing of the table view.
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 		// Return false if you do not want the specified item to be editable.
 		return true
-	}	
+	}
 	// Override to support editing the table view.
 	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
@@ -85,7 +88,6 @@ class PeopleTableViewController: UITableViewController {
 				personDetailViewController.person = selectedPerson
 			}
 		} else if segue.identifier == "addItem" {
-			print("Adding new Person.")
 		}
 	}
 	
@@ -94,7 +96,7 @@ class PeopleTableViewController: UITableViewController {
 	func savePeople() {
 		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(people, toFile: Person.ArchiveURL.path)
 		if !isSuccessfulSave {
-			print("Failed to save people...")
+			print("save Failed")
 		}
 	}
 	func loadPeople() -> [Person]? {

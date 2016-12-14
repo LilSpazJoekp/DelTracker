@@ -33,7 +33,6 @@ class Person: NSObject, NSCoding {
 	
 	func encode(with aCoder: NSCoder) {
 		aCoder.encode(name, forKey: PropertyKey.nameKey)
-		
 	}
 	required convenience init?(coder aDecoder: NSCoder) {
 		let name = aDecoder.decodeObject(forKey: PropertyKey.nameKey) as! String

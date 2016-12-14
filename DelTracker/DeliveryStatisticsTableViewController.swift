@@ -34,58 +34,75 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 	@IBOutlet var totalAmountGivenLabel: UILabel!
 	@IBOutlet var totalTipsLabel: UILabel!
 	@IBOutlet var paidoutLabel: UILabel!
-	@IBOutlet var shouldRecieveLabel: UILabel!
+	@IBOutlet var amountShouldRecieveTotalsLabel: UILabel!
 	@IBOutlet var salesAverageLabel: UILabel!
 	@IBOutlet var salesMinLabel: UILabel!
 	@IBOutlet var salesMaxLabel: UILabel!
-	@IBOutlet var tipsAverageLabel: UILabel!
-	@IBOutlet var tipsMinLabel: UILabel!
-	@IBOutlet var tipsMaxLabel: UILabel!
-	@IBOutlet var noTipCountLabel: UILabel!
-	@IBOutlet var startingBankField: CurrencyField!
-	@IBOutlet var bankBalanceLabel: UILabel!
-	@IBOutlet var totalDropsLabel: UILabel!
-	@IBOutlet var whoMadeBankLabel: UILabel!
-	@IBOutlet var whoClosedBankLabel: UILabel!
-	@IBOutlet var actualBalanceLabel: UILabel!
-	@IBOutlet var actuallyRecievedField: CurrencyField!
-	@IBOutlet var differenceLabel: UILabel!
 	@IBOutlet var cashSalesLabel: UILabel!
 	@IBOutlet var checkSalesLabel: UILabel!
 	@IBOutlet var creditSalesLabel: UILabel!
 	@IBOutlet var chargeSalesLabel: UILabel!
 	@IBOutlet var otherSalesLabel: UILabel!
+	@IBOutlet var tipsAverageLabel: UILabel!
+	@IBOutlet var tipsMinLabel: UILabel!
+	@IBOutlet var tipsMaxLabel: UILabel!
+	@IBOutlet var noTipCountLabel: UILabel!
+	@IBOutlet var noTipSalesLabel: UILabel!
+	@IBOutlet var currentDeliverDayDateLabel: UILabel!
+	@IBOutlet var startingBankField: CurrencyField!
+	@IBOutlet var bankBalanceLabel: UILabel!
+	@IBOutlet var totalDropsLabel: UILabel!
+	@IBOutlet var whoMadeBankLabel: UILabel!
+	@IBOutlet var whoClosedBankLabel: UILabel!
+	@IBOutlet var amountShouldRecieveBankDetailsLabel: UILabel!
+	@IBOutlet var actuallyRecievedField: CurrencyField!
+	@IBOutlet var differenceLabel: UILabel!
 	var deliveryDays = [DeliveryDay]()
 	var deliveryDay: DeliveryDay?
 	var whoMadeBankLoad: WhoMadeBankTableViewController?
 	var deliveryDayViewController: DeliveryDayViewController?
 	var deliveries = [Delivery]()
 	var drops = [Drop]()
-	var ticketAmountFinal: Double = 0.0
-	var amountGivenFinal: Double = 0.0
-	var cashTipsFinal: Double = 0.0
-	var totalTipsFinal: Double = 0.0
-	var totalDropsFinal: Double = 0.0
-	var totalDropsArray: [Double] = []
 	var ticketAmountArray: [Double] = []
+	var ticketAmountFinal: Double = 0.0
 	var amountGivenArray: [Double] = []
-	var noTipArray: [String] = []
+	var amountGivenFinal: Double = 0.0
 	var cashTipsArray: [Double] = []
+	var cashTipsFinal: Double = 0.0
 	var totalTipsArray: [Double] = []
+	var totalTipsFinal: Double = 0.0
+	var totalDropsArray: [Double] = []
+	var totalDropsFinal: Double = 0.0
+	var noTipArray: [String] = []
 	var noTipArrayCount = 0
+	var cashSalesArray: [Double] = []
+	var cashSalesFinal: Double = 0.0
+	var checkSalesArray: [Double] = []
+	var checkSalesFinal: Double = 0.0
+	var creditSalesArray: [Double] = []
+	var creditSalesFinal: Double = 0.0
+	var chargeSalesArray: [Double] = []
+	var chargeSalesFinal: Double = 0.0
+	var chargeGivenArray: [Double] = []
+	var chargeGivenFinal: Double = 0.0
+	var otherSalesArray: [Double] = []
+	var otherSalesFinal: Double = 0.0
+	var noTipSalesArray: [Double] = []
+	var noTipSalesFinal: Double = 0.0
+	var whoMadeBank: String = ""
+	var whoClosedBank: String = ""
 	override func viewDidLoad() {
-		print("viewDidload")
 		super.viewDidLoad()
 		actuallyRecievedField.delegate = self
-		print(deliveryDay)
-		
 		if let savedDeliveryDays = loadDeliveryDays() {
 			deliveryDays += savedDeliveryDays
 		}
+	
 		if DeliveryDayTableViewController.status != "adding" {
-			whoMadeBankLabel.text = DeliveryDayViewController.whoMadeBankName
-			whoClosedBankLabel.text = DeliveryDayViewController.whoClosedBankName
-			actuallyRecievedField.text = DeliveryDayViewController.totalRecievedValue
+			let selectedDeliveryDay = deliveryDays[Int(DeliveryDayTableViewController.status)!]
+			whoMadeBank = selectedDeliveryDay.whoMadeBankName
+			whoClosedBank = selectedDeliveryDay.whoClosedBankName
+			actuallyRecievedField.text = selectedDeliveryDay.totalRecievedValue
 		}
 	}
 	override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int)
@@ -127,43 +144,40 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 			let deliveryCountValue = String(deliveries.count)
 			let deliveryDateValue = String(DeliveryDayViewController.selectedDateGlobal) ?? "010116"
 			let totalTipsValue = "$" + "\(String(format: "%.2f", totalTipsFinal))"
-			let whoMadeBankName = whoMadeBankLabel.text
-			let whoClosedBankName = whoClosedBankLabel.text
+			let whoMadeBankName = self.whoMadeBank
+			let whoClosedBankName = self.whoClosedBank
 			let totalRecievedValue = actuallyRecievedField.text
-			
-			deliveryDay = DeliveryDay(deliveryDateValue: deliveryDateValue, deliveryDayCountValue: deliveryCountValue, totalTipsValue: totalTipsValue, totalRecievedValue: totalRecievedValue!, whoMadeBankName: whoMadeBankName!, whoClosedBankName: whoClosedBankName!)
-			
+			let manual = false
+			deliveryDay = DeliveryDay(deliveryDateValue: deliveryDateValue, deliveryDayCountValue: deliveryCountValue, totalTipsValue: totalTipsValue, totalRecievedValue: totalRecievedValue!, whoMadeBankName: whoMadeBankName, whoClosedBankName: whoClosedBankName, manual: manual)
 		}
 	}
-	var whoMadeBankSelectedName = [WhoMadeBank]()
+	
 	@IBAction func unwindToDeliveryStatisticsTableList(_ sender: UIStoryboardSegue) {
 		if let sourceViewController = sender.source as? DeliveryDayViewController, let deliveryDay = sourceViewController.deliveryDay {
 			if DeliveryDayTableViewController.status != "adding" {
 				let selectedIndexPath = Int(DeliveryDayTableViewController.status)
-				print(true)
 				deliveryDays[selectedIndexPath!] = deliveryDay
-			} else {
-				print(false)
 			}
 			saveDeliveryDays()
-			print(sender.source)
 		} else if let sourceViewController = sender.source as? WhoMadeBankTableViewController, let name = sourceViewController.whoMadeBank {
-			whoMadeBankLabel.text = name.name
+			self.whoMadeBank = name.name
 		} else if let sourceViewController = sender.source as? WhoClosedBankTableViewController, let name = sourceViewController.whoClosedBank {
-			whoClosedBankLabel.text = name.name
+			self.whoClosedBank = name.name
 		}
 	}
 	override func viewDidAppear(_ animated: Bool) {
-		print("viewDidAppear")
-		print("whoMadeBankLoad?.whoMadeBank" + "\(deliveryDay?.whoMadeBankName)")
-		//let whoClosedBankName = WhoClosedBankTableViewController.wh
-		//whoClosedBankLabel.text = WhoClosedBankTableViewController.whoDidBag ?? "None"
 		ticketAmountArray.removeAll()
 		amountGivenArray.removeAll()
 		cashTipsArray.removeAll()
 		totalTipsArray.removeAll()
 		noTipArray.removeAll()
 		totalDropsArray.removeAll()
+		cashSalesArray.removeAll()
+		cashSalesArray.removeAll()
+		creditSalesArray.removeAll()
+		chargeSalesArray.removeAll()
+		otherSalesArray.removeAll()
+		noTipSalesArray.removeAll()
 		if let savedDeliveries = loadDeliveries() {
 			deliveries = savedDeliveries
 			for (index, _) in deliveries.enumerated() {
@@ -174,6 +188,7 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 				ticketAmountArray.append(ticketAmountRounded)
 				let ticketAmountTotaled = ticketAmountArray.reduce(0, +)
 				self.ticketAmountFinal = ticketAmountTotaled
+				
 				// Sum of amountGiven
 				var amountGivenDropped = delivery.amountGivenValue
 				amountGivenDropped.remove(at: (delivery.amountGivenValue.startIndex))
@@ -181,6 +196,7 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 				amountGivenArray.append(amountGivenRounded)
 				let amountGivenTotaled = amountGivenArray.reduce(0, +)
 				self.amountGivenFinal = amountGivenTotaled
+				
 				// Sum of cashTips
 				var cashTipsDropped = delivery.cashTipsValue
 				cashTipsDropped.remove(at: (delivery.cashTipsValue.startIndex))
@@ -188,6 +204,7 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 				cashTipsArray.append(cashTipsRounded)
 				let cashTipsTotaled = cashTipsArray.reduce(0, +)
 				self.cashTipsFinal = cashTipsTotaled
+				
 				// Sum of totalTips
 				var totalTipsDropped = delivery.totalTipsValue
 				totalTipsDropped.remove(at: (delivery.totalTipsValue.startIndex))
@@ -195,8 +212,68 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 				totalTipsArray.append(totalTipsRounded)
 				let totalTipsTotaled = totalTipsArray.reduce(0, +)
 				self.totalTipsFinal = totalTipsTotaled
+				
 				//NoTipSwitchArray
 				noTipArray.append(delivery.noTipSwitchValue)
+				
+				//Payment Method Sales Total
+				
+				if delivery.paymentMethodValue == "1" {
+					var ticketAmountDropped = delivery.ticketAmountValue
+					ticketAmountDropped.remove(at: (delivery.ticketAmountValue.startIndex))
+					let ticketAmountRounded = round(Double(ticketAmountDropped)! * 100) / 100
+					cashSalesArray.append(ticketAmountRounded)
+					let cashSalesTotaled = cashSalesArray.reduce(0, +)
+					self.cashSalesFinal = cashSalesTotaled
+					print("Delivery: " + "\(self.cashSalesFinal)")
+				} else if delivery.paymentMethodValue == "2" {
+					var ticketAmountDropped = delivery.ticketAmountValue
+					ticketAmountDropped.remove(at: (delivery.ticketAmountValue.startIndex))
+					let ticketAmountRounded = round(Double(ticketAmountDropped)! * 100) / 100
+					checkSalesArray.append(ticketAmountRounded)
+					let checkSalesTotaled = checkSalesArray.reduce(0, +)
+					self.checkSalesFinal = checkSalesTotaled
+					print("checkSalesFinal: " + "\(self.checkSalesFinal)")
+				} else if delivery.paymentMethodValue == "3" {
+					var ticketAmountDropped = delivery.ticketAmountValue
+					ticketAmountDropped.remove(at: (delivery.ticketAmountValue.startIndex))
+					let ticketAmountRounded = round(Double(ticketAmountDropped)! * 100) / 100
+					creditSalesArray.append(ticketAmountRounded)
+					let creditSalesTotaled = creditSalesArray.reduce(0, +)
+					self.creditSalesFinal = creditSalesTotaled
+					print("creditSalesFinal: " + "\(self.creditSalesFinal)")
+				} else if delivery.paymentMethodValue == "4" {
+					var ticketAmountDropped = delivery.ticketAmountValue
+					ticketAmountDropped.remove(at: (delivery.ticketAmountValue.startIndex))
+					let ticketAmountRounded = round(Double(ticketAmountDropped)! * 100) / 100
+					chargeSalesArray.append(ticketAmountRounded)
+					let chargeSalesTotaled = chargeSalesArray.reduce(0, +)
+					self.chargeSalesFinal = chargeSalesTotaled
+					var amountGivenDropped = delivery.amountGivenValue
+					amountGivenDropped.remove(at: (delivery.amountGivenValue.startIndex))
+					let amountGivenRounded = round(Double(amountGivenDropped)! * 100) / 100
+					chargeGivenArray.append(amountGivenRounded)
+					let chargeGivenTotaled = chargeGivenArray.reduce(0, +)
+					self.chargeGivenFinal = chargeGivenTotaled
+					print("chargeSalesFinal: " + "\(self.chargeSalesFinal)")
+				} else if delivery.paymentMethodValue == "5" {
+					var ticketAmountDropped = delivery.ticketAmountValue
+					ticketAmountDropped.remove(at: (delivery.ticketAmountValue.startIndex))
+					let ticketAmountRounded = round(Double(ticketAmountDropped)! * 100) / 100
+					otherSalesArray.append(ticketAmountRounded)
+					let otherSalesTotaled = otherSalesArray.reduce(0, +)
+					self.otherSalesFinal = otherSalesTotaled
+					print("otherSalesFinal: " + "\(self.otherSalesFinal)")
+				}
+				if delivery.noTipSwitchValue == "true" {
+					var ticketAmountDropped = delivery.ticketAmountValue
+					ticketAmountDropped.remove(at: (delivery.ticketAmountValue.startIndex))
+					let ticketAmountRounded = round(Double(ticketAmountDropped)! * 100) / 100
+					noTipSalesArray.append(ticketAmountRounded)
+					let noTipSalesTotaled = noTipSalesArray.reduce(0, +)
+					self.noTipSalesFinal = noTipSalesTotaled
+					print("noTipSalesFinal: " + "\(self.noTipSalesFinal)")
+				}
 			}
 		}
 		if let savedDrops = loadDrops() {
@@ -209,24 +286,13 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 				totalDropsArray.append(totalDropsRounded)
 				let totalDropsTotaled = totalDropsArray.reduce(0, +)
 				self.totalDropsFinal = totalDropsTotaled
-				print("totalDropsFinal")
 			}
 		}
-		deliveriesCount.text = "0"
-		totalSalesLabel.text = "0"
-		totalAmountGivenLabel.text = "0"
-		totalTipsLabel.text = "0"
-		paidoutLabel.text = "0"
-		shouldRecieveLabel.text = "0"
-		salesMaxLabel.text = "0"
-		salesMinLabel.text = "0"
-		salesAverageLabel.text = "0"
-		tipsMaxLabel.text = "0"
-		tipsMinLabel.text = "0"
-		tipsAverageLabel.text = "0"
-		totalDropsLabel.text = "0"
-		bankBalanceLabel.text = "0"
-		noTipCountLabel.text = "0"
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "MMddyy"
+		let dateFormatted = dateFormatter.date(from: DeliveryDayViewController.selectedDateGlobal)
+		dateFormatter.dateFormat = "MM/dd/yy"
+		let dateFormattedFinal = dateFormatter.string(from: dateFormatted!)
 		var startingBankDropped: String = startingBankField.text ?? "$0.00"
 		startingBankDropped.remove(at: (startingBankField.text?.startIndex)!)
 		let ticketAmountAverage = ticketAmountArray.reduce(0.0) {
@@ -236,8 +302,8 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 			return $0 + $1/Double(totalTipsArray.count)
 		}
 		let paidoutTotal = Double(deliveries.count) * 1.25
-		let amountShouldReceive = amountGivenFinal - ticketAmountFinal + paidoutTotal + cashTipsFinal
-		let bankBalance = ticketAmountFinal + Double(startingBankDropped)! - totalDropsFinal
+		let amountShouldReceive = (amountGivenFinal - chargeGivenFinal) - (cashSalesFinal + checkSalesFinal + creditSalesFinal + otherSalesFinal) + paidoutTotal + cashTipsFinal
+		let bankBalance = (cashSalesFinal + checkSalesFinal + creditSalesFinal + otherSalesFinal) + Double(startingBankDropped)! - totalDropsFinal
 		if noTipArray.contains("true") {
 			let noTipArrayFilter = noTipArray.filter {
 				el in el == "true"
@@ -246,25 +312,35 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 		} else {
 			self.noTipArrayCount = 0
 		}
-		deliveriesCount.text = String(deliveries.count)
-		totalSalesLabel.text = "$" + "\(String(format: "%.2f", ticketAmountFinal))"
-		totalAmountGivenLabel.text = "$" + "\(String(format: "%.2f", amountGivenFinal))"
-		totalTipsLabel.text = "$" + "\(String(format: "%.2f", totalTipsFinal))"
-		paidoutLabel.text = "$" + "\(String(format: "%.2f", paidoutTotal))"
-		shouldRecieveLabel.text = "$" + "\(String(format: "%.2f", amountShouldReceive))"
 		if deliveries.count != 0 {
+			deliveriesCount.text = String(deliveries.count)
+			totalSalesLabel.text = "$" + "\(String(format: "%.2f", ticketAmountFinal))"
+			totalAmountGivenLabel.text = "$" + "\(String(format: "%.2f", amountGivenFinal))"
+			totalTipsLabel.text = "$" + "\(String(format: "%.2f", totalTipsFinal))"
+			paidoutLabel.text = "$" + "\(String(format: "%.2f", paidoutTotal))"
+			amountShouldRecieveTotalsLabel.text = "$" + "\(String(format: "%.2f", amountShouldReceive))"
 			if ticketAmountFinal != 0 {
+				salesAverageLabel.text = "$" + "\(String(format: "%.2f", ticketAmountAverage))"
 				salesMaxLabel.text = "$" + "\(String(format: "%.2f", ticketAmountArray.max()!))"
 				salesMinLabel.text = "$" + "\(String(format: "%.2f", ticketAmountArray.min()!))"
-				salesAverageLabel.text = "$" + "\(String(format: "%.2f", ticketAmountAverage))"
+				cashSalesLabel.text = "$" + "\(String(format: "%.2f", cashSalesFinal))"
+				checkSalesLabel.text = "$" + "\(String(format: "%.2f", checkSalesFinal))"
+				creditSalesLabel.text = "$" + "\(String(format: "%.2f", creditSalesFinal))"
+				chargeSalesLabel.text = "$" + "\(String(format: "%.2f", chargeSalesFinal))"
+				otherSalesLabel.text = "$" + "\(String(format: "%.2f", otherSalesFinal))"
+				tipsAverageLabel.text = "$" + "\(String(format: "%.2f", totalTipsAverage))"
 				tipsMaxLabel.text = "$" + "\(String(format: "%.2f", totalTipsArray.max()!))"
 				tipsMinLabel.text = "$" + "\(String(format: "%.2f", totalTipsArray.min()!))"
-				tipsAverageLabel.text = "$" + "\(String(format: "%.2f", totalTipsAverage))"
+				noTipCountLabel.text = String(self.noTipArrayCount)
+				noTipSalesLabel.text = "$" + "\(String(format: "%.2f", noTipSalesFinal))"
 			}
+			currentDeliverDayDateLabel.text = dateFormattedFinal
+			bankBalanceLabel.text = "$" + "\(String(format: "%.2f", bankBalance))"
+			totalDropsLabel.text = "$" + "\(String(format: "%.2f", totalDropsFinal))"
+			whoMadeBankLabel.text = whoMadeBank
+			whoClosedBankLabel.text = whoClosedBank
+			amountShouldRecieveBankDetailsLabel.text = "$" + "\(String(format: "%.2f", amountShouldReceive))"
 		}
-		totalDropsLabel.text = "$" + "\(String(format: "%.2f", totalDropsFinal))"
-		bankBalanceLabel.text = "$" + "\(String(format: "%.2f", bankBalance))"
-		noTipCountLabel.text = String(self.noTipArrayCount)
 	}
 	func removeFirstCharactersFrom(inputString: (String)) -> String {
 		var tempString = inputString
@@ -283,13 +359,13 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 	func saveDeliveries() {
 		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(deliveries, toFile: Delivery.ArchiveURL.path)
 		if !isSuccessfulSave {
-			print("Failed to save deliveries...")
+			print("save Failed")
 		}
 	}
 	func saveDeliveryDays() {
 		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(deliveryDays, toFile: DeliveryDay.ArchiveURL.path)
 		if !isSuccessfulSave {
-			print("Failed to save deliveryDays...")
+			print("save Failed")
 		}
 	}
 	func loadDeliveries() -> [Delivery]? {

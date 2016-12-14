@@ -74,6 +74,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			}
 		}
 	}
+	
 	// MARK: - Storyboard Outlets
 	
 	@IBOutlet var ticketNumberField: UITextField!
@@ -136,7 +137,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		}
 	}
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		print(DeliveryDayViewController.selectedDateGlobal)
 		if timeOverrideSwitch.isOn {
 			deliveryTime.setDate(NSDate() as Date, animated: true)
 			setDeliveryTime()
@@ -291,7 +291,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		deliveryTime.setValue(UIColor.white, forKey: "textColor")
 	}
 	
-	
 	// Keyboard Double Zero Key
 	let doubleZero = UIButton(type: UIButtonType.custom)
 	
@@ -309,7 +308,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			cashTipsField?.resignFirstResponder()
 			amountGivenField.becomeFirstResponder()
 			amountGivenField.selectedTextRange = amountGivenField.textRange(from: amountGivenField.beginningOfDocument, to: amountGivenField.endOfDocument)
-			
 		}
 	}
 	func goToNextField() {
@@ -378,10 +376,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			self.doubleZero.frame = CGRect(x: 0, y: (keyBoardWindow?.frame.size.height)!-57, width: 137, height: 57)
 			keyBoardWindow?.addSubview(self.doubleZero)
 			keyBoardWindow?.bringSubview(toFront: self.doubleZero)
-			UIView.animate(withDuration: (((note.userInfo! as NSDictionary).object(forKey: UIKeyboardAnimationCurveUserInfoKey) as AnyObject).doubleValue)!, delay: 0, options: UIViewAnimationOptions.curveEaseIn, animations: { () -> Void in
-				self.view.frame = self.view.frame.offsetBy(dx: 0, dy: 0)
-			}, completion: { (complete) -> Void in
-			})
+			UIView.animate(withDuration: (((note.userInfo! as NSDictionary).object(forKey: UIKeyboardAnimationCurveUserInfoKey) as AnyObject).doubleValue)!, delay: 0, options: UIViewAnimationOptions.curveEaseIn, animations: { () -> Void in self.view.frame = self.view.frame.offsetBy(dx: 0, dy: 0) }, completion: { (complete) -> Void in })
 		}
 	}
 	func removeFirstCharacterAndCalculate() {

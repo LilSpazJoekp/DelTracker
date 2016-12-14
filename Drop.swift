@@ -23,7 +23,6 @@ class Drop: NSObject, NSCoding {
 	
 	struct DeliveryDropKey {
 		static let deliveryDropAmountKey = "deliveryDropAmount"
-		
 	}
 	init?(deliveryDropAmount: String) {
 		self.deliveryDropAmount = deliveryDropAmount

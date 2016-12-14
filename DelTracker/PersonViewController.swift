@@ -44,6 +44,6 @@ class PersonViewController: UIViewController, UITextFieldDelegate, UIToolbarDele
 		if personSaveButton === sender as AnyObject? {
 			let personTextFieldValue = personTextField.text ?? ""
 			person = Person(name: personTextFieldValue)
-		}  
+		}
 	}
 }

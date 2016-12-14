@@ -80,7 +80,7 @@ class WhoMadeBankTableViewController: UITableViewController, UIPickerViewDelegat
 		if savePerson === sender as AnyObject? {
 			if people.count != 0 {
 				let selectedPerson = "\(peopleArray[personPicker.selectedRow(inComponent: 0)])"
-				print(DeliveryDayViewController.selectedDateGlobal)
+				
 				let name = selectedPerson
 				whoMadeBank = WhoMadeBank(name: name)
 			}

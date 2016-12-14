@@ -1,5 +1,5 @@
 //
-//  WhoClosedBank.swift
+//  WhoMadeBank.swift
 //  DelTracker
 //
 //  Created by Joel Payne on 12/8/16.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WhoClosedBank: NSObject, NSCoding {
+class WhoMadeBank: NSObject, NSCoding {
 	
 	// MARK: Properties
 	
@@ -18,15 +18,17 @@ class WhoClosedBank: NSObject, NSCoding {
 	// MARK: Archiving Paths
 	
 	static let DocumentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-	static var ArchiveURL = DocumentsDirectory.appendingPathComponent("WhoClosedBank" + "\(DeliveryDayViewController.selectedDateGlobal)")
+	static var ArchiveURL = DocumentsDirectory.appendingPathComponent("WhoMadeBank" + "\(DeliveryDayViewController.selectedDateGlobal)")
 	
 	// MARK: Types
 	
 	struct PropertyKey {
 		static let nameKey = "name"
+		
 	}
 	init?(name: String) {
 		self.name = name
+		
 		super.init()
 	}
 	
@@ -34,6 +36,7 @@ class WhoClosedBank: NSObject, NSCoding {
 	
 	func encode(with aCoder: NSCoder) {
 		aCoder.encode(name, forKey: PropertyKey.nameKey)
+		
 	}
 	required convenience init?(coder aDecoder: NSCoder) {
 		let name = aDecoder.decodeObject(forKey: PropertyKey.nameKey) as! String

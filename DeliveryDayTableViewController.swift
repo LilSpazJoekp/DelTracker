@@ -10,14 +10,42 @@ import UIKit
 
 class DeliveryDayTableViewController: UITableViewController {
 	@IBOutlet var table: UITableView!
+	@IBOutlet var editButton: UIBarButtonItem!
+	@IBOutlet var deleteButton: UIBarButtonItem!
+	@IBAction func deleteAction(_ sender: Any) {
+		/*
+		let indexPath =	tableView.indexPathsForSelectedRows
+		removeDelivery(deliveryDate: deliveryDay.deliveryDateValue)
+		deliveryDays.remove(at: indexPath.row)
+		saveDeliveryDays()
+		tableView.deleteRows(at: [indexPath], with: .fade)
+		*/
+	}
+	@IBAction func editButton(_ sender: Any) {
+		if !table.isEditing {
+			table.setEditing(true, animated: true)
+			editButton.title = "Done"
+			editButton.style = UIBarButtonItemStyle.done
+			deleteButton.isEnabled = false
+			deleteButton.tintColor = UIColor.red
+			deleteButton.title = "Delete(0)"
+		} else if table.isEditing {
+			table.setEditing(false, animated: true)
+			editButton.title = "Edit"
+			editButton.style = UIBarButtonItemStyle.plain
+			deleteButton.isEnabled = false
+			deleteButton.tintColor = UIColor.clear
+		}
+	}
 	var deliveryDayView: DeliveryDayViewController?
 	var deliveryDays = [DeliveryDay]()
 	static var status: String = ""
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.clearsSelectionOnViewWillAppear = true
-		self.navigationItem.leftBarButtonItem = self.editButtonItem
-		
+		//self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(deleteAction(_:)))
+		deleteButton.isEnabled = false
+		deleteButton.tintColor = UIColor.clear
 		self.navigationItem.leftBarButtonItem?.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
 		if let savedDeliveryDays = loadDeliveryDays() {
 			deliveryDays += savedDeliveryDays
@@ -45,27 +73,50 @@ class DeliveryDayTableViewController: UITableViewController {
 		cell.deliveryCount?.text = deliveryDay.deliveryDayCountValue
 		cell.totalTips?.text = deliveryDay.totalTipsValue
 		cell.totalPay?.text = deliveryDay.totalRecievedValue
+		let backgroundView = UIView()
+		backgroundView.backgroundColor = UIColor.darkGray
+		cell.selectedBackgroundView = backgroundView
 		return cell
 	}
 	override func viewDidAppear(_ animated: Bool) {
 		table.reloadSections(IndexSet.init(integer: 0), with: .fade)
 	}
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		
 		return true
 	}
-	
+	//didunselect row at
+	//editingdidend
+	//set delete to 0
+	//stop delete flashing
+	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+		setDeleteButtonCount()
+	}
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		setDeleteButtonCount()
+	}
+	func setDeleteButtonCount() {
+		if tableView.isEditing {
+			if !deleteButton.isEnabled {
+				deleteButton.isEnabled = true
+				deleteButton.tintColor = UIColor.red
+				deleteButton.title = "Delete(" + "\(tableView.indexPathsForSelectedRows?.count ?? 0)" + ")"
+			} else if deleteButton.isEnabled {
+				deleteButton.title = "Delete(" + "\(tableView.indexPathsForSelectedRows?.count ?? 0)" + ")"
+			}
+			if tableView.indexPathsForSelectedRows?.count == nil {
+				deleteButton.isEnabled = false
+			}
+		}
+	}
 	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-		tableView.cellForRow(at: indexPath)?.isUserInteractionEnabled = false
 		if editingStyle == .delete {
 			let deliveryDay = deliveryDays[indexPath.row]
 			removeDelivery(deliveryDate: deliveryDay.deliveryDateValue)
-			print(deliveryDay.deliveryDateValue)
+			
 			deliveryDays.remove(at: indexPath.row)
 			saveDeliveryDays()
 			tableView.deleteRows(at: [indexPath], with: .fade)
 		} else if editingStyle == .insert {
-			
 		}
 	}
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
@@ -75,20 +126,17 @@ class DeliveryDayTableViewController: UITableViewController {
 		saveDeliveryDays()
 	}
 	override func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
-		
 	}
 	
 	// MARK: - Navigation
 	
 	@IBAction func unwindToDeliveryDayList(_ sender: UIStoryboardSegue) {
 		if let sourceViewController = sender.source as? DeliveryStatisticsTableViewController, let deliveryDay = sourceViewController.deliveryDay {
-			print(true)
+			
 			if let selectedIndexPath = tableView.indexPathForSelectedRow {
-				print(true)
 				deliveryDays[selectedIndexPath.row] = deliveryDay
 				tableView.reloadRows(at: [selectedIndexPath], with: .right)
 			} else {
-				print(false)
 				let newIndexPath = IndexPath(row: deliveryDays.count, section: 0)
 				deliveryDays.append(deliveryDay)
 				tableView.insertRows(at: [newIndexPath], with: .bottom)
@@ -98,13 +146,6 @@ class DeliveryDayTableViewController: UITableViewController {
 	}
 	override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
 		if !tableView.isEditing {
-			if identifier == "showDetail" {
-				performSegue(withIdentifier: "showDetail", sender: AnyObject.self)
-				return true
-			} else if identifier == "addItem" {
-				performSegue(withIdentifier: "addItem", sender: AnyObject.self)
-				return true
-			}
 			return true
 		} else {
 			return false
@@ -121,7 +162,7 @@ class DeliveryDayTableViewController: UITableViewController {
 					DeliveryDayTableViewController.status = String(indexPath.row)
 				}
 			} else if segue.identifier == "addItem" {
-				print("Adding new DeliveryDay.")
+				
 				DeliveryDayTableViewController.status = "adding"
 			}
 		}
@@ -131,7 +172,7 @@ class DeliveryDayTableViewController: UITableViewController {
 	func saveDeliveryDays() {
 		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(deliveryDays, toFile: DeliveryDay.ArchiveURL.path)
 		if !isSuccessfulSave {
-			print("Failed to save deliveryDays...")
+			print("save Failed")
 		}
 	}
 	func loadDeliveryDays() -> [DeliveryDay]? {
@@ -151,7 +192,8 @@ func removeDelivery(deliveryDate: String) {
 		try fileManager.removeItem(atPath: filePath)
 	} catch let error as NSError {
 		print(error.debugDescription)
-	}}
+	}
+}
 func removeFile(fileName: String) {
 	let fileManager = FileManager.default
 	let nsDocumentDirectory = FileManager.SearchPathDirectory.documentDirectory

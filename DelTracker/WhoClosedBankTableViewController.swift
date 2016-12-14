@@ -89,7 +89,7 @@ class WhoClosedBankTableViewController: UITableViewController, UIPickerViewDeleg
 	func saveWhoClosedBank() {
 		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(selectedPerson, toFile: WhoClosedBank.ArchiveURL.path)
 		if !isSuccessfulSave {
-			print("Failed to save whoClosedBank...")
+			
 		}
 	}
 	func loadWhoClosedBank() -> [WhoClosedBank]? {
