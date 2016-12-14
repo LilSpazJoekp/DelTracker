@@ -136,6 +136,7 @@ class AddManualDeliveryDayViewController: UIViewController, UIPickerViewDelegate
 		return Double(inputDropped)!
 	}
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?){
+		setPeople()
 		let deliveryCountValue = numberOfDeliveriesField.text
 		let deliveryDateValue = String(DeliveryDayViewController.selectedDateGlobal) ?? "010116"
 		let totalTipsValue = self.totalTipsLabel.text

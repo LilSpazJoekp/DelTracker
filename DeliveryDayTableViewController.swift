@@ -61,9 +61,10 @@ class DeliveryDayTableViewController: UITableViewController {
 		return deliveryDays.count
 	}
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cellIdentifier = "deliveryDayCell"
-		let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! DeliveryDayTableViewCell
 		let deliveryDay = deliveryDays[indexPath.row]
+		if deliveryDay.manual {
+		let cellIdentifier = "manualDeliveryDayCell"
+		let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! ManualDeliveryDayTableViewCell
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "MMddyy"
 		let dateFormatted = dateFormatter.date(from: String(deliveryDay.deliveryDateValue))
@@ -77,6 +78,24 @@ class DeliveryDayTableViewController: UITableViewController {
 		backgroundView.backgroundColor = UIColor.darkGray
 		cell.selectedBackgroundView = backgroundView
 		return cell
+		} else if !deliveryDay.manual {
+			let cellIdentifier = "deliveryDayCell"
+			let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! DeliveryDayTableViewCell
+			let dateFormatter = DateFormatter()
+			dateFormatter.dateFormat = "MMddyy"
+			let dateFormatted = dateFormatter.date(from: String(deliveryDay.deliveryDateValue))
+			dateFormatter.dateFormat = "MM/dd/yy"
+			let dateFormattedFinal = dateFormatter.string(from: dateFormatted!)
+			cell.dateLabel?.text = dateFormattedFinal
+			cell.deliveryCount?.text = deliveryDay.deliveryDayCountValue
+			cell.totalTips?.text = deliveryDay.totalTipsValue
+			cell.totalPay?.text = deliveryDay.totalRecievedValue
+			let backgroundView = UIView()
+			backgroundView.backgroundColor = UIColor.darkGray
+			cell.selectedBackgroundView = backgroundView
+			return cell
+
+		}
 	}
 	override func viewDidAppear(_ animated: Bool) {
 		table.reloadSections(IndexSet.init(integer: 0), with: .fade)
@@ -84,9 +103,7 @@ class DeliveryDayTableViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 		return true
 	}
-	//didunselect row at
-	//editingdidend
-	//set delete to 0
+	
 	//stop delete flashing
 	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
 		setDeleteButtonCount()
@@ -125,14 +142,11 @@ class DeliveryDayTableViewController: UITableViewController {
 		deliveryDays.insert(tempItemToMove, at: to.row)
 		saveDeliveryDays()
 	}
-	override func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
-	}
 	
 	// MARK: - Navigation
 	
 	@IBAction func unwindToDeliveryDayList(_ sender: UIStoryboardSegue) {
 		if let sourceViewController = sender.source as? DeliveryStatisticsTableViewController, let deliveryDay = sourceViewController.deliveryDay {
-			
 			if let selectedIndexPath = tableView.indexPathForSelectedRow {
 				deliveryDays[selectedIndexPath.row] = deliveryDay
 				tableView.reloadRows(at: [selectedIndexPath], with: .right)
@@ -141,9 +155,19 @@ class DeliveryDayTableViewController: UITableViewController {
 				deliveryDays.append(deliveryDay)
 				tableView.insertRows(at: [newIndexPath], with: .bottom)
 			}
-			saveDeliveryDays()
+		} else if let sourceViewController = sender.source as? AddManualDeliveryDayViewController, let deliveryDay = sourceViewController.deliveryDay {
+			if let selectedIndexPath = tableView.indexPathForSelectedRow {
+				deliveryDays[selectedIndexPath.row] = deliveryDay
+				tableView.reloadRows(at: [selectedIndexPath], with: .right)
+			} else {
+				let newIndexPath = IndexPath(row: deliveryDays.count, section: 0)
+				deliveryDays.append(deliveryDay)
+				tableView.insertRows(at: [newIndexPath], with: .bottom)
+			}
 		}
+		saveDeliveryDays()
 	}
+	
 	override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
 		if !tableView.isEditing {
 			return true

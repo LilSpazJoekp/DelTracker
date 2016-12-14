@@ -65,7 +65,6 @@ class DeliveryDayViewController: UIViewController, UINavigationControllerDelegat
 		}
 		setArchiveURLPath()
 	}
-	
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if saveDayButton === sender as AnyObject? {
 			if let savedDeliveryDays = loadDeliveryDays() {

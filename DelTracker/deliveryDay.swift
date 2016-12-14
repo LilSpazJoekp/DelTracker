@@ -19,6 +19,7 @@ class DeliveryDay: NSObject, NSCoding {
 	var totalRecievedValue: String
 	var whoMadeBankName: String
 	var whoClosedBankName: String
+	var manual: Bool
 	
 	// MARK: Archiving Paths
 	
@@ -34,14 +35,16 @@ class DeliveryDay: NSObject, NSCoding {
 		static let totalRecievedValueKey = "totalRecievedValue"
 		static let whoMadeBankNameKey = "whoMadeBankName"
 		static let whoClosedBankNameKey = "whoClosedBankName"
+		static let manualKey = "manual"
 	}
-	init?(deliveryDateValue: String, deliveryDayCountValue: String, totalTipsValue: String, totalRecievedValue: String, whoMadeBankName: String, whoClosedBankName: String) {
+	init?(deliveryDateValue: String, deliveryDayCountValue: String, totalTipsValue: String, totalRecievedValue: String, whoMadeBankName: String, whoClosedBankName: String, manual: Bool) {
 		self.deliveryDateValue = deliveryDateValue
 		self.deliveryDayCountValue = deliveryDayCountValue
 		self.totalTipsValue = totalTipsValue
 		self.totalRecievedValue = totalRecievedValue
 		self.whoMadeBankName = whoMadeBankName
 		self.whoClosedBankName = whoClosedBankName
+		self.manual = manual
 		super.init()
 	}
 	
@@ -54,7 +57,8 @@ class DeliveryDay: NSObject, NSCoding {
 		aCoder.encode(totalRecievedValue, forKey: PropertyKey.totalRecievedValueKey)
 		aCoder.encode(whoMadeBankName, forKey: PropertyKey.whoMadeBankNameKey)
 		aCoder.encode(whoClosedBankName, forKey: PropertyKey.whoClosedBankNameKey)
-			}
+		aCoder.encode(manual, forKey: PropertyKey.manualKey)
+	}
 	required convenience init?(coder aDecoder: NSCoder) {
 		let deliveryDateValue = aDecoder.decodeObject(forKey: PropertyKey.deliveryDateValueKey) as! String
 		let deliveryDayCountValue = aDecoder.decodeObject(forKey: PropertyKey.deliveryDayCountValueKey) as! String
@@ -62,6 +66,7 @@ class DeliveryDay: NSObject, NSCoding {
 		let totalRecievedValue = aDecoder.decodeObject(forKey: PropertyKey.totalRecievedValueKey) as! String
 		let whoMadeBankName = aDecoder.decodeObject(forKey: PropertyKey.whoMadeBankNameKey) as! String
 		let whoClosedBankName = aDecoder.decodeObject(forKey: PropertyKey.whoClosedBankNameKey) as! String
-		self.init(deliveryDateValue: deliveryDateValue, deliveryDayCountValue: deliveryDayCountValue, totalTipsValue: totalTipsValue, totalRecievedValue: totalRecievedValue, whoMadeBankName: whoMadeBankName, whoClosedBankName: whoClosedBankName)
+		let manual = aDecoder.decodeObject(forKey: PropertyKey.manualKey) as? Bool ?? false
+		self.init(deliveryDateValue: deliveryDateValue, deliveryDayCountValue: deliveryDayCountValue, totalTipsValue: totalTipsValue, totalRecievedValue: totalRecievedValue, whoMadeBankName: whoMadeBankName, whoClosedBankName: whoClosedBankName, manual: manual)
 	}
 }
