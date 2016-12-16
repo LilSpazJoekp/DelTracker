@@ -1,3 +1,4 @@
+
 //
 //  DeliveryDayTableViewController.swift
 //  DelTracker
@@ -13,13 +14,23 @@ class DeliveryDayTableViewController: UITableViewController {
 	@IBOutlet var editButton: UIBarButtonItem!
 	@IBOutlet var deleteButton: UIBarButtonItem!
 	@IBAction func deleteAction(_ sender: Any) {
-		/*
-		let indexPath =	tableView.indexPathsForSelectedRows
-		removeDelivery(deliveryDate: deliveryDay.deliveryDateValue)
-		deliveryDays.remove(at: indexPath.row)
+		indexPathsToDelete.removeAll()
+		for (_, path) in selectedIndicies.enumerated() {
+			print(path)
+			let indexPath: IndexPath = [0, path]
+			indexPathsToDelete.append(indexPath)
+			print(indexPathsToDelete)
+		let deliveryDay = deliveryDays[path]
+			removeDelivery(deliveryDate: deliveryDay.deliveryDateValue)
+			deliveryDays.remove(at: path)
+		}
+		table.deleteRows(at: indexPathsToDelete, with: .fade)
 		saveDeliveryDays()
-		tableView.deleteRows(at: [indexPath], with: .fade)
-		*/
+		table.setEditing(false, animated: true)
+		editButton.title = "Edit"
+		editButton.style = UIBarButtonItemStyle.plain
+		deleteButton.isEnabled = false
+		deleteButton.tintColor = UIColor.clear
 	}
 	@IBAction func editButton(_ sender: Any) {
 		if !table.isEditing {
@@ -39,6 +50,9 @@ class DeliveryDayTableViewController: UITableViewController {
 	}
 	var deliveryDayView: DeliveryDayViewController?
 	var deliveryDays = [DeliveryDay]()
+	var selectedIndicies: [Int] = []
+	var deselectedIndexPath: Int?
+	var indexPathsToDelete: [IndexPath] = []
 	static var status: String = ""
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -62,9 +76,8 @@ class DeliveryDayTableViewController: UITableViewController {
 	}
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let deliveryDay = deliveryDays[indexPath.row]
-		if deliveryDay.manual {
-		let cellIdentifier = "manualDeliveryDayCell"
-		let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! ManualDeliveryDayTableViewCell
+		let cellIdentifier = "deliveryDayCell"
+		let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! DeliveryDayTableViewCell
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "MMddyy"
 		let dateFormatted = dateFormatter.date(from: String(deliveryDay.deliveryDateValue))
@@ -78,24 +91,6 @@ class DeliveryDayTableViewController: UITableViewController {
 		backgroundView.backgroundColor = UIColor.darkGray
 		cell.selectedBackgroundView = backgroundView
 		return cell
-		} else if !deliveryDay.manual {
-			let cellIdentifier = "deliveryDayCell"
-			let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! DeliveryDayTableViewCell
-			let dateFormatter = DateFormatter()
-			dateFormatter.dateFormat = "MMddyy"
-			let dateFormatted = dateFormatter.date(from: String(deliveryDay.deliveryDateValue))
-			dateFormatter.dateFormat = "MM/dd/yy"
-			let dateFormattedFinal = dateFormatter.string(from: dateFormatted!)
-			cell.dateLabel?.text = dateFormattedFinal
-			cell.deliveryCount?.text = deliveryDay.deliveryDayCountValue
-			cell.totalTips?.text = deliveryDay.totalTipsValue
-			cell.totalPay?.text = deliveryDay.totalRecievedValue
-			let backgroundView = UIView()
-			backgroundView.backgroundColor = UIColor.darkGray
-			cell.selectedBackgroundView = backgroundView
-			return cell
-
-		}
 	}
 	override func viewDidAppear(_ animated: Bool) {
 		table.reloadSections(IndexSet.init(integer: 0), with: .fade)
@@ -103,13 +98,30 @@ class DeliveryDayTableViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 		return true
 	}
-	
 	//stop delete flashing
-	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-		setDeleteButtonCount()
-	}
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		setDeleteButtonCount()
+		selectedIndicies.append(indexPath.row)
+		if selectedIndicies.count != 0 {
+			print(selectedIndicies)
+		}
+	}
+	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+		setDeleteButtonCount()
+		if selectedIndicies.count != 0 {
+			if selectedIndicies.contains(indexPath.row) {
+				
+				let selectedIndicesFiltered = selectedIndicies.filter {
+					el in el == indexPath.row
+				}
+				for (index, _) in selectedIndicesFiltered.enumerated() {
+					deselectedIndexPath = selectedIndicesFiltered[index]
+				}
+				print(deselectedIndexPath!)
+				selectedIndicies.remove(at: selectedIndicies.index(of: Int(deselectedIndexPath!))!)
+				print(selectedIndicies)
+			}
+		}
 	}
 	func setDeleteButtonCount() {
 		if tableView.isEditing {
@@ -129,11 +141,9 @@ class DeliveryDayTableViewController: UITableViewController {
 		if editingStyle == .delete {
 			let deliveryDay = deliveryDays[indexPath.row]
 			removeDelivery(deliveryDate: deliveryDay.deliveryDateValue)
-			
 			deliveryDays.remove(at: indexPath.row)
 			saveDeliveryDays()
 			tableView.deleteRows(at: [indexPath], with: .fade)
-		} else if editingStyle == .insert {
 		}
 	}
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
@@ -155,19 +165,9 @@ class DeliveryDayTableViewController: UITableViewController {
 				deliveryDays.append(deliveryDay)
 				tableView.insertRows(at: [newIndexPath], with: .bottom)
 			}
-		} else if let sourceViewController = sender.source as? AddManualDeliveryDayViewController, let deliveryDay = sourceViewController.deliveryDay {
-			if let selectedIndexPath = tableView.indexPathForSelectedRow {
-				deliveryDays[selectedIndexPath.row] = deliveryDay
-				tableView.reloadRows(at: [selectedIndexPath], with: .right)
-			} else {
-				let newIndexPath = IndexPath(row: deliveryDays.count, section: 0)
-				deliveryDays.append(deliveryDay)
-				tableView.insertRows(at: [newIndexPath], with: .bottom)
-			}
 		}
 		saveDeliveryDays()
 	}
-	
 	override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
 		if !tableView.isEditing {
 			return true
@@ -191,6 +191,7 @@ class DeliveryDayTableViewController: UITableViewController {
 			}
 		}
 	}
+	
 	// MARK: NSCoding
 	
 	func saveDeliveryDays() {
@@ -202,44 +203,48 @@ class DeliveryDayTableViewController: UITableViewController {
 	func loadDeliveryDays() -> [DeliveryDay]? {
 		return NSKeyedUnarchiver.unarchiveObject(withFile: DeliveryDay.ArchiveURL.path) as? [DeliveryDay]
 	}
-}
-func removeDelivery(deliveryDate: String) {
-	let fileManager = FileManager.default
-	let nsDocumentDirectory = FileManager.SearchPathDirectory.documentDirectory
-	let nsUserDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-	let paths = NSSearchPathForDirectoriesInDomains(nsDocumentDirectory, nsUserDomainMask, true)
-	guard let dirPath = paths.first else {
-		return
+	func removeDeliveries() {
+		
+		
 	}
-	let filePath = "\(dirPath)/\(deliveryDate)"
-	do {
-		try fileManager.removeItem(atPath: filePath)
-	} catch let error as NSError {
-		print(error.debugDescription)
+	func removeDelivery(deliveryDate: String) {
+		let fileManager = FileManager.default
+		let nsDocumentDirectory = FileManager.SearchPathDirectory.documentDirectory
+		let nsUserDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+		let paths = NSSearchPathForDirectoriesInDomains(nsDocumentDirectory, nsUserDomainMask, true)
+		guard let dirPath = paths.first else {
+			return
+		}
+		let filePath = "\(dirPath)/\(deliveryDate)"
+		do {
+			try fileManager.removeItem(atPath: filePath)
+		} catch let error as NSError {
+			print(error.debugDescription)
+		}
 	}
-}
-func removeFile(fileName: String) {
-	let fileManager = FileManager.default
-	let nsDocumentDirectory = FileManager.SearchPathDirectory.documentDirectory
-	let nsUserDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-	let paths = NSSearchPathForDirectoriesInDomains(nsDocumentDirectory, nsUserDomainMask, true)
-	guard let dirPath = paths.first else {
-		return
+	func removeFile(fileName: String) {
+		let fileManager = FileManager.default
+		let nsDocumentDirectory = FileManager.SearchPathDirectory.documentDirectory
+		let nsUserDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+		let paths = NSSearchPathForDirectoriesInDomains(nsDocumentDirectory, nsUserDomainMask, true)
+		guard let dirPath = paths.first else {
+			return
+		}
+		let filePath = "\(dirPath)/\(fileName)"
+		do {
+			try fileManager.removeItem(atPath: filePath)
+		} catch let error as NSError {
+			print(error.debugDescription)
+		}
+		printDirectoryContents()
 	}
-	let filePath = "\(dirPath)/\(fileName)"
-	do {
-		try fileManager.removeItem(atPath: filePath)
-	} catch let error as NSError {
-		print(error.debugDescription)
-	}
-	printDirectoryContents()
-}
-func printDirectoryContents() {
-	let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-	do {
-		let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil, options: [])
-		print(directoryContents)
-	} catch let error as NSError {
-		print(error.localizedDescription)
+	func printDirectoryContents() {
+		let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+		do {
+			let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil, options: [])
+			print(directoryContents)
+		} catch let error as NSError {
+			print(error.localizedDescription)
+		}
 	}
 }

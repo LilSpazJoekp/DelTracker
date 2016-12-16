@@ -112,7 +112,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		configureDoubleZeroButtonKey()
 		addBarButtons()
 		configureQuickTipSegmentControl()
-		setDeliveryTime()
+		deliveryTime.setValue(UIColor.white, forKey: "textColor")
 		if delivery != nil {
 			navigationItem.title = "Edit Delivery"
 		}
@@ -138,7 +138,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	}
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if timeOverrideSwitch.isOn {
-			deliveryTime.setDate(NSDate() as Date, animated: true)
 			setDeliveryTime()
 		} else if self.navigationItem.title == "Add Delivery" {
 			deliveryTime.setDate(NSDate() as Date, animated: true)
@@ -148,8 +147,10 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			if timeOverrideSwitch.isOn {
 				setDeliveryTime()
 			} else if self.navigationItem.title == "Add Delivery" {
+				deliveryTime.setDate(NSDate() as Date, animated: true)
 				setDeliveryTime()
 			}
+			
 			let ticketNumberValue = ticketNumberField.text ?? ""
 			let ticketAmountValue = ticketAmountField.text ?? ""
 			let noTipSwitchValue = String(noTipSwitch.isOn)

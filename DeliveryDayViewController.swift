@@ -14,21 +14,14 @@ class DeliveryDayViewController: UIViewController, UINavigationControllerDelegat
 	}
 	@IBAction func daySaveButton(_ sender: UIBarButtonItem) {
 		setArchiveURLPath()
+		performSegue(withIdentifier: "edit", sender: saveDayButton)
 	}
 	@IBAction func cancelButton(_ sender: UIBarButtonItem) {
 		dismiss(animated: true, completion: nil)
 	}
-	@IBAction func addDaySaveButton(_ sender: Any) {
-		setArchiveURLPath()
-	}
-	@IBAction func addWithoutDeliveriesSwitchChanged(_ sender: Any) {
-		addDayButton.isEnabled = addWithoutDeliveriesSwitch.isOn
-	}
 	@IBOutlet var deliveryDatePicker: UIDatePicker!
 	@IBOutlet var addDayButton: UIBarButtonItem!
 	@IBOutlet var saveDayButton: AnyObject?
-	@IBOutlet var addWithoutDeliveriesLabel: UILabel!
-	@IBOutlet var addWithoutDeliveriesSwitch: UISwitch!
 	var deliveryTableViewController: DeliveryTableViewController? = nil
 	var delivery: Delivery?
 	var deliveryDay: DeliveryDay?
@@ -45,10 +38,6 @@ class DeliveryDayViewController: UIViewController, UINavigationControllerDelegat
 	}
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		if deliveryDay != nil {
-			addWithoutDeliveriesLabel.alpha = 0
-			addWithoutDeliveriesSwitch.alpha = 0
-		}
 		deliveryDatePicker.setValue(UIColor.white, forKey: "textColor")
 	}
 	override func viewDidAppear(_ animated: Bool) {
@@ -57,8 +46,6 @@ class DeliveryDayViewController: UIViewController, UINavigationControllerDelegat
 			dateFormatter.dateFormat = "MMddyy"
 			let date = dateFormatter.date(from: deliveryDay.deliveryDateValue)
 			deliveryDatePicker.setDate(date!, animated: true)
-			addWithoutDeliveriesLabel.alpha = 0
-			addWithoutDeliveriesSwitch.alpha = 0
 			if let savedDeliveryDays = loadDeliveryDays() {
 				deliveryDays += savedDeliveryDays
 			}
