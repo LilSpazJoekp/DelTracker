@@ -8,8 +8,9 @@
 
 import UIKit
 import CoreData
+import AVFoundation
 
-class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, UIToolbarDelegate, UINavigationControllerDelegate {
+class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, UIToolbarDelegate, UINavigationControllerDelegate, BarcodeDelegate {
 	
 	// MARK: - Storyboard Actions
 	
@@ -63,7 +64,8 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	}
 	@IBAction func overrideDeliveryTimeChanged(_ sender: UISwitch) {
 		if timeOverrideSwitch.isOn {
-			deliveryTime.setDate(NSDate() as Date, animated: true)
+			deliveryTime.isEnabled = true
+			setTimeToNowButton?.isEnabled = true
 		} else {
 			if let delivery = delivery {
 				let dateFormatter = DateFormatter()
@@ -74,6 +76,14 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			}
 		}
 	}
+	@IBAction func setTimeToNowBarButton(_ sender: Any) {
+		deliveryTime.setDate(NSDate() as Date, animated: true)
+	}
+	@IBAction func toggle(_ sender: Any) {
+		toggleFlash()
+	}
+	
+	
 	
 	// MARK: - Storyboard Outlets
 	
@@ -86,6 +96,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	@IBOutlet var totalTips: UILabel!
 	@IBOutlet var paymentMethodPicker: UIPickerView!
 	@IBOutlet var saveDelivery: AnyObject?
+	@IBOutlet var setTimeToNowButton: UIBarButtonItem?
 	@IBOutlet var timeOverrideSwitch: UISwitch!
 	@IBOutlet var deliveryTime: UIDatePicker!
 	var delivery: Delivery?
@@ -131,18 +142,14 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			dateFormatter.dateFormat = "hh:mm:ss a"
 			if let date = dateFormatter.date(from: delivery.deliveryTimeValue) {
 				deliveryTime.setDate(date, animated: true)
+				deliveryTime.isEnabled = false
+				setTimeToNowButton?.isEnabled = false
 			}
 		} else {
-			ticketNumberField.becomeFirstResponder()
+			
 		}
 	}
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if timeOverrideSwitch.isOn {
-			setDeliveryTime()
-		} else if self.navigationItem.title == "Add Delivery" {
-			deliveryTime.setDate(NSDate() as Date, animated: true)
-			setDeliveryTime()
-		}
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {		
 		if saveDelivery === sender as AnyObject? {
 			if timeOverrideSwitch.isOn {
 				setDeliveryTime()
@@ -150,7 +157,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 				deliveryTime.setDate(NSDate() as Date, animated: true)
 				setDeliveryTime()
 			}
-			
+			setDeliveryTime()
 			let ticketNumberValue = ticketNumberField.text ?? ""
 			let ticketAmountValue = ticketAmountField.text ?? ""
 			let noTipSwitchValue = String(noTipSwitch.isOn)
@@ -160,6 +167,26 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			let deliveryTimeValue = selectedTime
 			let paymentMethodValue = String(paymentMethodPicker.selectedRow(inComponent: 0))
 			delivery = Delivery(ticketNumberValue: ticketNumberValue, ticketAmountValue: ticketAmountValue, noTipSwitchValue: noTipSwitchValue, amountGivenValue: amountGivenValue, cashTipsValue: cashTipsValue, totalTipsValue: totalTipsValue, paymentMethodValue: paymentMethodValue, deliveryTimeValue: deliveryTimeValue)
+		}
+		let barcodeViewController: BarcodeViewController = segue.destination as! BarcodeViewController
+		barcodeViewController.delegate = self
+	}	
+	func barcodeRead(barcode: String) {
+		self.ticketNumberField.delegate = self
+		ticketNumberField.text = barcode
+		print(barcode)
+	}
+	func toggleFlash() {
+		if let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo), device.hasTorch {
+			do {
+				try device.lockForConfiguration()
+				let torchOn = !device.isTorchActive
+				try device.setTorchModeOnWithLevel(1.0)
+				device.torchMode = torchOn ? .on : .off
+				device.unlockForConfiguration()
+			} catch {
+				print("error")
+			}
 		}
 	}
 	

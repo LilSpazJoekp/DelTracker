@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		EE19BDAC1E03134E003986AE /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE19BDAB1E03134E003986AE /* TabBarViewController.swift */; };
+		EE19BDAE1E043BFD003986AE /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE19BDAD1E043BFD003986AE /* ScannerViewController.swift */; };
 		EE35BB9D1DF9A70C00F850B7 /* WhoClosedBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35BB9C1DF9A70C00F850B7 /* WhoClosedBank.swift */; };
 		EE35BB9F1DF9B9C200F850B7 /* WhoClosedBankTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35BB9E1DF9B9C200F850B7 /* WhoClosedBankTableViewController.swift */; };
 		EE5BEAF91DF9A40C00967172 /* WhoMadeBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5BEAF81DF9A40C00967172 /* WhoMadeBank.swift */; };
@@ -59,6 +60,7 @@
 
 /* Begin PBXFileReference section */
 		EE19BDAB1E03134E003986AE /* TabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		EE19BDAD1E043BFD003986AE /* ScannerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
 		EE35BB9C1DF9A70C00F850B7 /* WhoClosedBank.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = WhoClosedBank.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		EE35BB9E1DF9B9C200F850B7 /* WhoClosedBankTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = WhoClosedBankTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		EE5BEAF81DF9A40C00967172 /* WhoMadeBank.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = WhoMadeBank.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -169,6 +171,7 @@
 				EEC6357C1DEBDABF009D713F /* Assets.xcassets */,
 				EEC6357E1DEBDABF009D713F /* LaunchScreen.storyboard */,
 				EEC635811DEBDABF009D713F /* Info.plist */,
+				EE19BDAD1E043BFD003986AE /* ScannerViewController.swift */,
 				EEC635791DEBDABF009D713F /* DelTracker.xcdatamodeld */,
 			);
 			path = DelTracker;
@@ -389,6 +392,7 @@
 				EED2DAD11DF8ABA500FF8C1D /* PersonViewController.swift in Sources */,
 				EEF0118F1DF0DEA600CEC323 /* DropViewController.swift in Sources */,
 				EEF011891DF07EB200CEC323 /* Drop.swift in Sources */,
+				EE19BDAE1E043BFD003986AE /* ScannerViewController.swift in Sources */,
 				EE5BEAF91DF9A40C00967172 /* WhoMadeBank.swift in Sources */,
 				EED2DAC91DF50AC100FF8C1D /* DeliveryDay.swift in Sources */,
 				EED2DAD31DF8ABF700FF8C1D /* PeopleTableViewController.swift in Sources */,
