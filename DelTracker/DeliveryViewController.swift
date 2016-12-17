@@ -81,9 +81,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	}
 	@IBAction func toggle(_ sender: Any) {
 		toggleFlash()
-	}
-	
-	
+	}	
 	
 	// MARK: - Storyboard Outlets
 	
