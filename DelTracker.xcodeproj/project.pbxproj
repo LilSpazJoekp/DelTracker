@@ -35,6 +35,7 @@
 		EED2DACF1DF8AB5F00FF8C1D /* WhoMadeBankTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED2DACE1DF8AB5F00FF8C1D /* WhoMadeBankTableViewController.swift */; };
 		EED2DAD11DF8ABA500FF8C1D /* PersonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED2DAD01DF8ABA500FF8C1D /* PersonViewController.swift */; };
 		EED2DAD31DF8ABF700FF8C1D /* PeopleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED2DAD21DF8ABF700FF8C1D /* PeopleTableViewController.swift */; };
+		EEDF1A7C1E09CBCA00545E46 /* TicketPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDF1A7B1E09CBCA00545E46 /* TicketPhotoViewController.swift */; };
 		EEF011851DF07DFE00CEC323 /* DropTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF011841DF07DFE00CEC323 /* DropTableViewController.swift */; };
 		EEF011891DF07EB200CEC323 /* Drop.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF011881DF07EB200CEC323 /* Drop.swift */; };
 		EEF0118D1DF087F000CEC323 /* DropTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF0118C1DF087F000CEC323 /* DropTableViewCell.swift */; };
@@ -93,6 +94,7 @@
 		EED2DACE1DF8AB5F00FF8C1D /* WhoMadeBankTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = WhoMadeBankTableViewController.swift; path = ../WhoMadeBankTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		EED2DAD01DF8ABA500FF8C1D /* PersonViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonViewController.swift; sourceTree = "<group>"; };
 		EED2DAD21DF8ABF700FF8C1D /* PeopleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PeopleTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		EEDF1A7B1E09CBCA00545E46 /* TicketPhotoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TicketPhotoViewController.swift; sourceTree = "<group>"; };
 		EEF011841DF07DFE00CEC323 /* DropTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = DropTableViewController.swift; path = ../DropTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		EEF011881DF07EB200CEC323 /* Drop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Drop.swift; path = ../Drop.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		EEF0118C1DF087F000CEC323 /* DropTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DropTableViewCell.swift; path = ../DropTableViewCell.swift; sourceTree = "<group>"; };
@@ -171,7 +173,6 @@
 				EEC6357C1DEBDABF009D713F /* Assets.xcassets */,
 				EEC6357E1DEBDABF009D713F /* LaunchScreen.storyboard */,
 				EEC635811DEBDABF009D713F /* Info.plist */,
-				EE19BDAD1E043BFD003986AE /* ScannerViewController.swift */,
 				EEC635791DEBDABF009D713F /* DelTracker.xcdatamodeld */,
 			);
 			path = DelTracker;
@@ -217,6 +218,8 @@
 				EEC635A71DEBDC3B009D713F /* DeliveryTableViewCell.swift */,
 				EEC635A51DEBDBF7009D713F /* DeliveryTableViewController.swift */,
 				EEC635741DEBDABF009D713F /* DeliveryViewController.swift */,
+				EEDF1A7B1E09CBCA00545E46 /* TicketPhotoViewController.swift */,
+				EE19BDAD1E043BFD003986AE /* ScannerViewController.swift */,
 			);
 			name = DeliveryView;
 			sourceTree = "<group>";
@@ -397,6 +400,7 @@
 				EED2DAC91DF50AC100FF8C1D /* DeliveryDay.swift in Sources */,
 				EED2DAD31DF8ABF700FF8C1D /* PeopleTableViewController.swift in Sources */,
 				EEC635AA1DEBDD11009D713F /* TextFieldMaxLengths.swift in Sources */,
+				EEDF1A7C1E09CBCA00545E46 /* TicketPhotoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -21,6 +21,7 @@ class Delivery: NSObject, NSCoding {
 	var totalTipsValue: String
 	var paymentMethodValue: String
 	var deliveryTimeValue: String
+	var ticketPhotoValue: UIImage?
 	
 	// MARK: Archiving Paths
 	
@@ -38,8 +39,9 @@ class Delivery: NSObject, NSCoding {
 		static let totalTipsValueKey = "totalTipsValue"
 		static let paymentMethodValueKey = "paymentMethodValue"
 		static let deliveryTimeValueKey = "deliveryTimeValue"
+		static let ticketPhotoValueKey = "ticketPhotoValue"
 	}
-	init?(ticketNumberValue: String, ticketAmountValue: String, noTipSwitchValue: String, amountGivenValue: String, cashTipsValue: String, totalTipsValue: String, paymentMethodValue: String, deliveryTimeValue: String) {
+	init?(ticketNumberValue: String, ticketAmountValue: String, noTipSwitchValue: String, amountGivenValue: String, cashTipsValue: String, totalTipsValue: String, paymentMethodValue: String, deliveryTimeValue: String, ticketPhotoValue: UIImage?) {
 		self.ticketNumberValue = ticketNumberValue
 		self.ticketAmountValue = ticketAmountValue
 		self.noTipSwitchValue = noTipSwitchValue
@@ -48,6 +50,7 @@ class Delivery: NSObject, NSCoding {
 		self.totalTipsValue = totalTipsValue
 		self.paymentMethodValue = paymentMethodValue
 		self.deliveryTimeValue = deliveryTimeValue
+		self.ticketPhotoValue = ticketPhotoValue
 		super.init()
 	}
 	
@@ -62,6 +65,7 @@ class Delivery: NSObject, NSCoding {
 		aCoder.encode(totalTipsValue, forKey: PropertyKey.totalTipsValueKey)
 		aCoder.encode(paymentMethodValue, forKey: PropertyKey.paymentMethodValueKey)
 		aCoder.encode(deliveryTimeValue, forKey: PropertyKey.deliveryTimeValueKey)
+		aCoder.encode(ticketPhotoValue, forKey: PropertyKey.ticketPhotoValueKey)
 	}
 	required convenience init?(coder aDecoder: NSCoder) {
 		let ticketNumberValue = aDecoder.decodeObject(forKey: PropertyKey.ticketNumberValueKey) as! String
@@ -72,6 +76,7 @@ class Delivery: NSObject, NSCoding {
 		let totalTipsValue = aDecoder.decodeObject(forKey: PropertyKey.totalTipsValueKey) as! String
 		let paymentMethodValue = aDecoder.decodeObject(forKey: PropertyKey.paymentMethodValueKey) as! String
 		let deliveryTimeValue = aDecoder.decodeObject(forKey: PropertyKey.deliveryTimeValueKey) as? String ?? ""
-		self.init(ticketNumberValue: ticketNumberValue, ticketAmountValue: ticketAmountValue, noTipSwitchValue: noTipSwitchValue, amountGivenValue: amountGivenValue, cashTipsValue: cashTipsValue, totalTipsValue: totalTipsValue, paymentMethodValue: paymentMethodValue, deliveryTimeValue: deliveryTimeValue)
+		let ticketPhotoValue = aDecoder.decodeObject(forKey: PropertyKey.ticketPhotoValueKey) as? UIImage
+		self.init(ticketNumberValue: ticketNumberValue, ticketAmountValue: ticketAmountValue, noTipSwitchValue: noTipSwitchValue, amountGivenValue: amountGivenValue, cashTipsValue: cashTipsValue, totalTipsValue: totalTipsValue, paymentMethodValue: paymentMethodValue, deliveryTimeValue: deliveryTimeValue, ticketPhotoValue: ticketPhotoValue)
 	}
 }

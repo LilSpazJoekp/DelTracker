@@ -81,11 +81,12 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	}
 	@IBAction func toggle(_ sender: Any) {
 		toggleFlash()
-	}	
+	}
 	
 	// MARK: - Storyboard Outlets
 	
 	@IBOutlet var ticketNumberField: UITextField!
+	@IBOutlet var viewTicketPhoto: UIButton!
 	@IBOutlet var ticketAmountField: CurrencyField!
 	@IBOutlet var quickTipSelector: UISegmentedControl!
 	@IBOutlet var noTipSwitch: UISwitch!
@@ -97,8 +98,11 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	@IBOutlet var setTimeToNowButton: UIBarButtonItem?
 	@IBOutlet var timeOverrideSwitch: UISwitch!
 	@IBOutlet var deliveryTime: UIDatePicker!
+	
 	var delivery: Delivery?
 	var selectedTime: String = ""
+	var light: Bool = false
+	static var ticketPhoto: UIImage? = nil
 	
 	// MARK: - View Life Cycle
 	
@@ -122,9 +126,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		addBarButtons()
 		configureQuickTipSegmentControl()
 		deliveryTime.setValue(UIColor.white, forKey: "textColor")
-		if delivery != nil {
-			navigationItem.title = "Edit Delivery"
-		}
 	}
 	override func viewDidAppear(_ animated: Bool) {
 		if let delivery = delivery {
@@ -135,6 +136,9 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			amountGivenField.text = delivery.amountGivenValue
 			cashTipsField?.text = delivery.cashTipsValue
 			totalTips.text = delivery.totalTipsValue
+			if let ticketPhoto = delivery.ticketPhotoValue {
+				DeliveryViewController.ticketPhoto = ticketPhoto
+			}
 			paymentMethodPicker.selectRow(Int(delivery.paymentMethodValue)!, inComponent: 0, animated: true)
 			let dateFormatter = DateFormatter()
 			dateFormatter.dateFormat = "hh:mm:ss a"
@@ -143,11 +147,18 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 				deliveryTime.isEnabled = false
 				setTimeToNowButton?.isEnabled = false
 			}
-		} else {
-			
+		}
+		if light {
+			 toggleFlash()
 		}
 	}
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {		
+	override func viewWillDisappear(_ animated: Bool) {
+		ticketNumberField.resignFirstResponder()
+		ticketAmountField.resignFirstResponder()
+		amountGivenField.resignFirstResponder()
+		cashTipsField?.resignFirstResponder()
+	}
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if saveDelivery === sender as AnyObject? {
 			if timeOverrideSwitch.isOn {
 				setDeliveryTime()
@@ -164,14 +175,27 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			let totalTipsValue = totalTips.text ?? ""
 			let deliveryTimeValue = selectedTime
 			let paymentMethodValue = String(paymentMethodPicker.selectedRow(inComponent: 0))
-			delivery = Delivery(ticketNumberValue: ticketNumberValue, ticketAmountValue: ticketAmountValue, noTipSwitchValue: noTipSwitchValue, amountGivenValue: amountGivenValue, cashTipsValue: cashTipsValue, totalTipsValue: totalTipsValue, paymentMethodValue: paymentMethodValue, deliveryTimeValue: deliveryTimeValue)
+			delivery = Delivery(ticketNumberValue: ticketNumberValue, ticketAmountValue: ticketAmountValue, noTipSwitchValue: noTipSwitchValue, amountGivenValue: amountGivenValue, cashTipsValue: cashTipsValue, totalTipsValue: totalTipsValue, paymentMethodValue: paymentMethodValue, deliveryTimeValue: deliveryTimeValue, ticketPhotoValue: DeliveryViewController.ticketPhoto)
 		}
-		let barcodeViewController: BarcodeViewController = segue.destination as! BarcodeViewController
-		barcodeViewController.delegate = self
-	}	
-	func barcodeRead(barcode: String) {
+		if segue.identifier == "viewPhoto" {
+			let ticketPhotoViewController = segue.destination as! TicketPhotoViewController
+			if let ticketPhoto = DeliveryViewController.ticketPhoto {
+				ticketPhotoViewController.ticketPhoto = ticketPhoto
+			}
+		} else if segue.identifier == "scan" {
+			let barcodeViewController: BarcodeViewController = segue.destination as! BarcodeViewController
+			barcodeViewController.delegate = self
+		}
+	}
+	func barcodeRead(barcode: String, light: Bool, photo: UIImage?) {
 		self.ticketNumberField.delegate = self
+		if light {
+			self.light = light
+		}
+		DeliveryViewController.ticketPhoto = photo
 		ticketNumberField.text = barcode
+		viewTicketPhoto.isEnabled = true
+		ticketAmountField.becomeFirstResponder()
 		print(barcode)
 	}
 	func toggleFlash() {

@@ -218,7 +218,7 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?){
 		ticketAmountArray.removeAll()
 		amountGivenArray.removeAll()
-		totalTipsArray.removeAll()
+		totalTipsArray.removeAll()		
 		if let savedDeliveries = loadDeliveries() {
 			deliveries = savedDeliveries
 			for (index, _) in deliveries.enumerated() {
@@ -485,12 +485,6 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 	func loadDeliveryDays() -> [DeliveryDay]? {
 		return NSKeyedUnarchiver.unarchiveObject(withFile: DeliveryDay.ArchiveURL.path) as? [DeliveryDay]
 	}
-	func saveDeliveries() {
-		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(deliveries, toFile: Delivery.ArchiveURL.path)
-		if !isSuccessfulSave {
-			print("save Failed")
-		}
-	}
 	func saveDeliveryDays() {
 		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(deliveryDays, toFile: DeliveryDay.ArchiveURL.path)
 		if !isSuccessfulSave {
@@ -500,7 +494,19 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 	func loadDeliveries() -> [Delivery]? {
 		return NSKeyedUnarchiver.unarchiveObject(withFile: Delivery.ArchiveURL.path) as? [Delivery]
 	}
+	func saveDeliveries() {
+		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(deliveries, toFile: Delivery.ArchiveURL.path)
+		if !isSuccessfulSave {
+			print("save Failed")
+		}
+	}
 	func loadDrops() -> [Drop]? {
 		return NSKeyedUnarchiver.unarchiveObject(withFile: Drop.ArchiveURL.path) as? [Drop]
+	}
+	func saveDrops() {
+		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(drops, toFile: Drop.ArchiveURL.path)
+		if !isSuccessfulSave {
+			print("save Failed")
+		}
 	}
 }

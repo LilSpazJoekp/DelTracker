@@ -16,13 +16,17 @@ class DeliveryDayTableViewController: UITableViewController {
 	@IBAction func deleteAction(_ sender: Any) {
 		indexPathsToDelete.removeAll()
 		for (_, path) in selectedIndicies.enumerated() {
-			print(path)
-			let indexPath: IndexPath = [0, path]
-			indexPathsToDelete.append(indexPath)
-			print(indexPathsToDelete)
-		let deliveryDay = deliveryDays[path]
-			removeDelivery(deliveryDate: deliveryDay.deliveryDateValue)
-			deliveryDays.remove(at: path)
+			let deliveryDay = deliveryDays[path]
+			if !deliveryDay.manual {
+				print(path)
+				let indexPath: IndexPath = [0, path]
+				indexPathsToDelete.append(indexPath)
+				print(indexPathsToDelete)
+				removeDelivery(deliveryDate: deliveryDay.deliveryDateValue)
+				deliveryDays.remove(at: path)
+			} else {
+				deliveryDays.remove(at: path)
+			}
 		}
 		table.deleteRows(at: indexPathsToDelete, with: .fade)
 		saveDeliveryDays()
@@ -39,7 +43,7 @@ class DeliveryDayTableViewController: UITableViewController {
 			editButton.style = UIBarButtonItemStyle.done
 			deleteButton.isEnabled = false
 			deleteButton.tintColor = UIColor.red
-			deleteButton.title = "Delete(0)"
+			deleteButton.setTitleWithOutAnimation(title: "Delete(0)")
 		} else if table.isEditing {
 			table.setEditing(false, animated: true)
 			editButton.title = "Edit"
@@ -57,7 +61,6 @@ class DeliveryDayTableViewController: UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.clearsSelectionOnViewWillAppear = true
-		//self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(deleteAction(_:)))
 		deleteButton.isEnabled = false
 		deleteButton.tintColor = UIColor.clear
 		self.navigationItem.leftBarButtonItem?.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
@@ -98,7 +101,6 @@ class DeliveryDayTableViewController: UITableViewController {
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 		return true
 	}
-	//stop delete flashing
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		setDeleteButtonCount()
 		selectedIndicies.append(indexPath.row)
@@ -110,7 +112,6 @@ class DeliveryDayTableViewController: UITableViewController {
 		setDeleteButtonCount()
 		if selectedIndicies.count != 0 {
 			if selectedIndicies.contains(indexPath.row) {
-				
 				let selectedIndicesFiltered = selectedIndicies.filter {
 					el in el == indexPath.row
 				}
@@ -128,9 +129,9 @@ class DeliveryDayTableViewController: UITableViewController {
 			if !deleteButton.isEnabled {
 				deleteButton.isEnabled = true
 				deleteButton.tintColor = UIColor.red
-				deleteButton.title = "Delete(" + "\(tableView.indexPathsForSelectedRows?.count ?? 0)" + ")"
+				deleteButton.setTitleWithOutAnimation(title: "Delete(" + "\(tableView.indexPathsForSelectedRows?.count ?? 0)" + ")")
 			} else if deleteButton.isEnabled {
-				deleteButton.title = "Delete(" + "\(tableView.indexPathsForSelectedRows?.count ?? 0)" + ")"
+				deleteButton.setTitleWithOutAnimation(title: "Delete(" + "\(tableView.indexPathsForSelectedRows?.count ?? 0)" + ")")
 			}
 			if tableView.indexPathsForSelectedRows?.count == nil {
 				deleteButton.isEnabled = false
@@ -161,8 +162,8 @@ class DeliveryDayTableViewController: UITableViewController {
 				deliveryDays[selectedIndexPath.row] = deliveryDay
 				tableView.reloadRows(at: [selectedIndexPath], with: .right)
 			} else {
-				let newIndexPath = IndexPath(row: deliveryDays.count, section: 0)
-				deliveryDays.append(deliveryDay)
+				let newIndexPath = IndexPath(row: 0, section: 0)
+				deliveryDays.insert(deliveryDay, at: 0)
 				tableView.insertRows(at: [newIndexPath], with: .bottom)
 			}
 		}
@@ -246,5 +247,13 @@ class DeliveryDayTableViewController: UITableViewController {
 		} catch let error as NSError {
 			print(error.localizedDescription)
 		}
+	}
+}
+extension UIBarButtonItem {
+	func setTitleWithOutAnimation(title: String?) {
+		UIView.setAnimationsEnabled(false)
+		self.title = title
+		
+		UIView.setAnimationsEnabled(true)
 	}
 }

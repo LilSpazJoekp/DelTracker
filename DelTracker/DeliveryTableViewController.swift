@@ -12,6 +12,23 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 	@IBOutlet var table: UITableView!
 	@IBOutlet var editButton: UIBarButtonItem!
 	@IBOutlet var deleteButton: UIBarButtonItem!
+	@IBAction func deleteAction(_ sender: UIBarButtonItem) {
+		indexPathsToDelete.removeAll()
+		for (_, path) in selectedIndicies.enumerated() {
+			print(path)
+			let indexPath: IndexPath = [0, path]
+			indexPathsToDelete.append(indexPath)
+			print(indexPathsToDelete)			
+			deliveries.remove(at: path)
+		}
+		table.deleteRows(at: indexPathsToDelete, with: .fade)
+		saveDeliveries()
+		table.setEditing(false, animated: true)
+		editButton.title = "Edit"
+		editButton.style = UIBarButtonItemStyle.plain
+		deleteButton.isEnabled = false
+		deleteButton.tintColor = UIColor.clear
+	}
 	@IBAction func editButton(_ sender: UIBarButtonItem) {
 		if !table.isEditing {
 			table.setEditing(true, animated: true)
@@ -19,7 +36,7 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 			editButton.style = UIBarButtonItemStyle.done
 			deleteButton.isEnabled = false
 			deleteButton.tintColor = UIColor.red
-			deleteButton.title = "Delete(0)"
+			deleteButton.setTitleWithOutAnimation(title: "Delete(0)")
 		} else if table.isEditing {
 			table.setEditing(false, animated: true)
 			editButton.title = "Edit"
@@ -28,7 +45,9 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 			deleteButton.tintColor = UIColor.clear
 		}
 	}
-	
+	var selectedIndicies: [Int] = []
+	var deselectedIndexPath: Int?
+	var indexPathsToDelete: [IndexPath] = []
 	var deliveries = [Delivery]()
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -75,18 +94,15 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 		cell.deliveryTimeCell.text = delivery.deliveryTimeValue
 		let backgroundView = UIView()
 		backgroundView.backgroundColor = UIColor.darkGray
-		cell.selectedBackgroundView = backgroundView		
+		cell.selectedBackgroundView = backgroundView	
 		return cell
 	}
 	override func viewDidAppear(_ animated: Bool) {
 		table.reloadSections(IndexSet.init(integer: 0), with: .fade)
 	}
-	// Override to support conditional editing of the table view.
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		// Return false if you do not want the specified item to be editable.
 		return true
 	}
-	// Override to support editing the table view.
 	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
 			deliveries.remove(at: indexPath.row)
@@ -101,28 +117,44 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 		deliveries.insert(tempItemToMove, at: to.row)
 		saveDeliveries()
 	}
-	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-		setDeleteButtonCount()
-	}
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		setDeleteButtonCount()
+		selectedIndicies.append(indexPath.row)
+		if selectedIndicies.count != 0 {
+			print(selectedIndicies)
+		}
 	}
-	
+	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+		setDeleteButtonCount()
+		if selectedIndicies.count != 0 {
+			if selectedIndicies.contains(indexPath.row) {
+				
+				let selectedIndicesFiltered = selectedIndicies.filter {
+					el in el == indexPath.row
+				}
+				for (index, _) in selectedIndicesFiltered.enumerated() {
+					deselectedIndexPath = selectedIndicesFiltered[index]
+				}
+				print(deselectedIndexPath!)
+				selectedIndicies.remove(at: selectedIndicies.index(of: Int(deselectedIndexPath!))!)
+				print(selectedIndicies)
+			}
+		}
+	}
 	func setDeleteButtonCount() {
 		if tableView.isEditing {
 			if !deleteButton.isEnabled {
 				deleteButton.isEnabled = true
 				deleteButton.tintColor = UIColor.red
-				deleteButton.title = "Delete(" + "\(tableView.indexPathsForSelectedRows?.count ?? 0)" + ")"
+				deleteButton.setTitleWithOutAnimation(title: "Delete(" + "\(tableView.indexPathsForSelectedRows?.count ?? 0)" + ")")
 			} else if deleteButton.isEnabled {
-				deleteButton.title = "Delete(" + "\(tableView.indexPathsForSelectedRows?.count ?? 0)" + ")"
+				deleteButton.setTitleWithOutAnimation(title: "Delete(" + "\(tableView.indexPathsForSelectedRows?.count ?? 0)" + ")")
 			}
 			if tableView.indexPathsForSelectedRows?.count == nil {
 				deleteButton.isEnabled = false
 			}
 		}
 	}
-	
 	
 	// MARK: - Navigation
 	
