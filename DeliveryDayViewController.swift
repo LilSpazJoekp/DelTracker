@@ -31,6 +31,7 @@ class DeliveryDayViewController: UIViewController, UINavigationControllerDelegat
 	static var totalRecievedValue: String = "$0.00"
 	static var whoMadeBankName: String = "None"
 	static var whoClosedBankName: String = "None"
+	static var manualStatus: Bool?
 	var selectedDate: String = ""
 	convenience required init(selectedDate: String) {
 		self.init(selectedDate: DeliveryDayViewController.selectedDateGlobal)
@@ -69,9 +70,10 @@ class DeliveryDayViewController: UIViewController, UINavigationControllerDelegat
 					DeliveryDayViewController.totalRecievedValue = (deliveryDay?.totalRecievedValue)!
 					DeliveryDayViewController.whoMadeBankName = (deliveryDay?.whoMadeBankName)!
 					DeliveryDayViewController.whoClosedBankName = (deliveryDay?.whoClosedBankName)!
+					DeliveryDayViewController.manualStatus = selectedDeliveryDay.manual
 					let whoMadeBankName = deliveryDay?.whoMadeBankName
 					let whoClosedBankName = deliveryDay?.whoClosedBankName
-					let manual = false
+					let manual = selectedDeliveryDay.manual
 					deliveryDay = DeliveryDay(deliveryDateValue: deliveryDateValue!, deliveryDayCountValue: deliveryDayCountValue!, totalTipsValue: totalTipsValue!, totalRecievedValue: totalRecievedValue!, whoMadeBankName: whoMadeBankName!, whoClosedBankName: whoClosedBankName!, manual: manual)
 				}
 			}

@@ -1,5 +1,5 @@
 //
-//  TabBarViewController.swift
+//  DeliveryTabBarViewController.swift
 //  DelTracker
 //
 //  Created by Joel Payne on 12/15/16.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TabBarViewController: UITabBarController {
+class DeliveryTabBarViewController: UITabBarController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()

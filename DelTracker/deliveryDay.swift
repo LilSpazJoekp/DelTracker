@@ -66,7 +66,7 @@ class DeliveryDay: NSObject, NSCoding {
 		let totalRecievedValue = aDecoder.decodeObject(forKey: PropertyKey.totalRecievedValueKey) as! String
 		let whoMadeBankName = aDecoder.decodeObject(forKey: PropertyKey.whoMadeBankNameKey) as! String
 		let whoClosedBankName = aDecoder.decodeObject(forKey: PropertyKey.whoClosedBankNameKey) as! String
-		let manual = aDecoder.decodeObject(forKey: PropertyKey.manualKey) as? Bool ?? false
+		let manual = aDecoder.decodeBool(forKey: PropertyKey.manualKey)
 		self.init(deliveryDateValue: deliveryDateValue, deliveryDayCountValue: deliveryDayCountValue, totalTipsValue: totalTipsValue, totalRecievedValue: totalRecievedValue, whoMadeBankName: whoMadeBankName, whoClosedBankName: whoClosedBankName, manual: manual)
 	}
 }

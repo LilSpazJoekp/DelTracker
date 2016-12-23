@@ -58,6 +58,7 @@ class DeliveryDayTableViewController: UITableViewController {
 	var deselectedIndexPath: Int?
 	var indexPathsToDelete: [IndexPath] = []
 	static var status: String = ""
+	static var manual: Bool?
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.clearsSelectionOnViewWillAppear = true
@@ -184,6 +185,7 @@ class DeliveryDayTableViewController: UITableViewController {
 					let indexPath = tableView.indexPath(for: selectedDeliveryDayCell)!
 					let selectedDeliveryDay = deliveryDays[indexPath.row]
 					deliveryDayDetailViewController.deliveryDay = selectedDeliveryDay
+					DeliveryDayViewController.manualStatus = selectedDeliveryDay.manual
 					DeliveryDayTableViewController.status = String(indexPath.row)
 				}
 			} else if segue.identifier == "addItem" {

@@ -10,30 +10,28 @@
 import UIKit
 
 class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldDelegate {
-	var tabBar: TabBarViewController?
+	var tabBar: DeliveryTabBarViewController?
 	@IBAction func manualDeliverySwitchChanged(_ sender: Any) {
 		deliveriesCount.isEnabled = manualDeliverySwitch.isOn
 		self.tabBarController?.tabBar.items![1].isEnabled = !manualDeliverySwitch.isOn
 		self.tabBarController?.tabBar.items![2].isEnabled = !manualDeliverySwitch.isOn
 		tableView.reloadData()
+		if manualDeliverySwitch.isOn {
+			addBarButtons()
+			previousBarButton.isEnabled = false
+			deliveriesCount.becomeFirstResponder()
+			deliveriesCount.selectedTextRange = deliveriesCount.textRange(from: deliveriesCount.beginningOfDocument, to: deliveriesCount.endOfDocument)
+		} else {
+			deliveriesCount.resignFirstResponder()
+		}
 	}
 	@IBAction func endEditing(_ sender: UITapGestureRecognizer) {
 		self.view.endEditing(true)
-		let numberOfDeliveries: Double = Double(deliveriesCount.text!)!
-		let totalPaidout = numberOfDeliveries * 1.25
-		let totalRecieved = removeFirstCharactersFrom(inputString: actuallyRecievedField.text!)
-		let totalTips = "\(Double(totalRecieved)! - totalPaidout)"
-		totalTipsLabel.text = "$" + "\(String(format: "%.2f", totalTips))"
-		paidoutLabel.text = "$" + "\(String(format: "%.2f", totalPaidout))"
+			calculateManual()
 	}
 	@IBAction func RecievedTextFieldEditingEnded(_ sender: UITextField) {
 		if manualDeliverySwitch.isOn {
-			let numberOfDeliveries: Double = Double(deliveriesCount.text!)!
-			let totalPaidout = numberOfDeliveries * 1.25
-			let totalRecieved = removeFirstCharactersFrom(inputString: actuallyRecievedField.text!)
-			let totalTips = "\(Double(totalRecieved)! - totalPaidout)"
-			totalTipsLabel.text = "$" + "\(String(format: "%.2f", totalTips))"
-			paidoutLabel.text = "$" + "\(String(format: "%.2f", totalPaidout))"
+			calculateManual()
 		} else {
 			let tips = self.amountGivenFinal - self.ticketAmountFinal + self.cashTipsFinal
 			let paidOut = Double(self.deliveries.count) * 1.25
@@ -131,17 +129,34 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.tabBarController?.tabBar.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
+		keyboardToolbar.backgroundColor = UIColor(red:0.09, green:0.11, blue:0.11, alpha:1.0)
 		actuallyRecievedField.delegate = self
+		deliveriesCount.delegate = self
 		if let savedDeliveryDays = loadDeliveryDays() {
 			deliveryDays += savedDeliveryDays
 		}
 		if DeliveryDayTableViewController.status != "adding" {
 			let selectedDeliveryDay = deliveryDays[Int(DeliveryDayTableViewController.status)!]
-			whoMadeBank = selectedDeliveryDay.whoMadeBankName
-			whoClosedBank = selectedDeliveryDay.whoClosedBankName
-			actuallyRecievedField.text = selectedDeliveryDay.totalRecievedValue
-			manualDeliverySwitch.isHidden = true
-			manualDeliveryDayLabel.isHidden = true
+			if selectedDeliveryDay.manual {
+				manualDeliverySwitch.isHidden = true
+				manualDeliveryDayLabel.isHidden = true
+				whoMadeBank = selectedDeliveryDay.whoMadeBankName
+				whoClosedBank = selectedDeliveryDay.whoClosedBankName
+				actuallyRecievedField.text = selectedDeliveryDay.totalRecievedValue
+				deliveriesCount.text = selectedDeliveryDay.deliveryDayCountValue
+				calculateManual()
+				manualDeliverySwitch.isOn = selectedDeliveryDay.manual
+				deliveriesCount.isEnabled = manualDeliverySwitch.isOn				
+				self.tabBarController?.tabBar.items![1].isEnabled = !manualDeliverySwitch.isOn
+				self.tabBarController?.tabBar.items![2].isEnabled = !manualDeliverySwitch.isOn
+				addBarButtons()
+			} else {
+				whoMadeBank = selectedDeliveryDay.whoMadeBankName
+				whoClosedBank = selectedDeliveryDay.whoClosedBankName
+				actuallyRecievedField.text = selectedDeliveryDay.totalRecievedValue
+				manualDeliverySwitch.isHidden = true
+				manualDeliveryDayLabel.isHidden = true				
+			}
 		}
 	}
 	override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int)
@@ -218,8 +233,22 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?){
 		ticketAmountArray.removeAll()
 		amountGivenArray.removeAll()
-		totalTipsArray.removeAll()		
-		if let savedDeliveries = loadDeliveries() {
+		totalTipsArray.removeAll()
+		if manualDeliverySwitch.isOn {
+			let numberOfDeliveries: Double = Double(deliveriesCount.text!)!
+			let totalPaidout = numberOfDeliveries * 1.25
+			let totalRecieved = removeFirstCharactersFrom(inputString: actuallyRecievedField.text!)
+			let totalTips = "\(Double(totalRecieved)! - totalPaidout)"
+			totalTipsLabel.text = "$" + totalTips
+			let deliveryCountValue = deliveriesCount.text ?? "0"
+			let deliveryDateValue = String(DeliveryDayViewController.selectedDateGlobal) ?? "010116"
+			let totalTipsValue = "$" + "\(String(format: "%.2f", Double(totalRecieved)! - totalPaidout))"
+			let whoMadeBankName = self.whoMadeBank
+			let whoClosedBankName = self.whoClosedBank
+			let totalRecievedValue = actuallyRecievedField.text ?? "$0.00"
+			let manual = true
+			deliveryDay = DeliveryDay(deliveryDateValue: deliveryDateValue, deliveryDayCountValue: deliveryCountValue, totalTipsValue: totalTipsValue, totalRecievedValue: totalRecievedValue, whoMadeBankName: whoMadeBankName, whoClosedBankName: whoClosedBankName, manual: manual)
+		} else if let savedDeliveries = loadDeliveries() {
 			deliveries = savedDeliveries
 			for (index, _) in deliveries.enumerated() {
 				let delivery = deliveries[index]
@@ -250,22 +279,8 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 			let whoMadeBankName = self.whoMadeBank
 			let whoClosedBankName = self.whoClosedBank
 			let totalRecievedValue = actuallyRecievedField.text
-			let manual = self.manualDeliverySwitch.isOn
+			let manual = false
 			deliveryDay = DeliveryDay(deliveryDateValue: deliveryDateValue, deliveryDayCountValue: deliveryCountValue, totalTipsValue: totalTipsValue, totalRecievedValue: totalRecievedValue!, whoMadeBankName: whoMadeBankName, whoClosedBankName: whoClosedBankName, manual: manual)
-		} else if manualDeliverySwitch.isOn {
-			let numberOfDeliveries: Double = Double(deliveriesCount.text!)!
-			let totalPaidout = numberOfDeliveries * 1.25
-			let totalRecieved = removeFirstCharactersFrom(inputString: actuallyRecievedField.text!)
-			let totalTips = "\(Double(totalRecieved)! - totalPaidout)"
-			totalTipsLabel.text = "$" + totalTips
-			let deliveryCountValue = deliveriesCount.text ?? "0"
-			let deliveryDateValue = String(DeliveryDayViewController.selectedDateGlobal) ?? "010116"
-			let totalTipsValue = "$" + "\(String(format: "%.2f", totalTips))"
-			let whoMadeBankName = self.whoMadeBank
-			let whoClosedBankName = self.whoClosedBank
-			let totalRecievedValue = actuallyRecievedField.text ?? "$0.00"
-			let manual = self.manualDeliverySwitch.isOn
-			deliveryDay = DeliveryDay(deliveryDateValue: deliveryDateValue, deliveryDayCountValue: deliveryCountValue, totalTipsValue: totalTipsValue, totalRecievedValue: totalRecievedValue, whoMadeBankName: whoMadeBankName, whoClosedBankName: whoClosedBankName, manual: manual)
 		}
 	}
 	@IBAction func unwindToDeliveryStatisticsTableList(_ sender: UIStoryboardSegue) {
@@ -460,7 +475,7 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 				} else {
 					differenceLabel.textColor = UIColor.white
 				}
-
+				
 			}
 			bankBalanceLabel.text = "$" + "\(String(format: "%.2f", bankBalance))"
 			totalDropsLabel.text = "$" + "\(String(format: "%.2f", totalDropsFinal))"
@@ -469,7 +484,49 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 		currentDeliverDayDateLabel.text = dateFormattedFinal
 		whoMadeBankLabel.text = whoMadeBank
 		whoClosedBankLabel.text = whoClosedBank
-		
+	}
+	func calculateManual() {
+		if manualDeliverySwitch.isOn {
+		let numberOfDeliveries: Double = Double(deliveriesCount.text!)!
+		let totalPaidout = numberOfDeliveries * 1.25
+		let totalRecieved = removeFirstCharactersFrom(inputString: actuallyRecievedField.text!)
+		let totalTips = Double(totalRecieved)! - totalPaidout
+		totalTipsLabel.text = "$" + "\(String(format: "%.2f", totalTips))"
+		paidoutLabel.text = "$" + "\(String(format: "%.2f", totalPaidout))"
+		}
+	}
+	let keyboardToolbar = UIToolbar()
+	let flexBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+	let previousBarButton = UIBarButtonItem(title: "Previous", style: UIBarButtonItemStyle.plain, target: self, action: #selector(DeliveryStatisticsTableViewController.goToPreviousField))
+	let nextBarButton = UIBarButtonItem(title: "Next", style: UIBarButtonItemStyle.plain, target: self, action: #selector(DeliveryStatisticsTableViewController.goToNextField))
+	func addBarButtons() {
+		nextBarButton.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
+		previousBarButton.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
+		keyboardToolbar.barTintColor = UIColor(red:0.09, green:0.11, blue:0.11, alpha:1.0)
+		keyboardToolbar.sizeToFit()
+		keyboardToolbar.items = [flexBarButton, previousBarButton, nextBarButton]
+		if manualDeliverySwitch.isOn {
+		deliveriesCount.inputAccessoryView = keyboardToolbar
+		actuallyRecievedField.inputAccessoryView = keyboardToolbar
+		}
+	}
+	func goToPreviousField(_:Any?) {
+		if actuallyRecievedField.isFirstResponder {
+			actuallyRecievedField.resignFirstResponder()
+			deliveriesCount.becomeFirstResponder()
+			deliveriesCount.selectedTextRange = deliveriesCount.textRange(from: deliveriesCount.beginningOfDocument, to: deliveriesCount.endOfDocument)
+			previousBarButton.isEnabled = false
+			nextBarButton.isEnabled = true
+		}
+	}
+	func goToNextField() {
+		if deliveriesCount.isFirstResponder {
+			deliveriesCount.resignFirstResponder()
+			actuallyRecievedField.becomeFirstResponder()
+			actuallyRecievedField.selectedTextRange = actuallyRecievedField.textRange(from: actuallyRecievedField.beginningOfDocument, to: actuallyRecievedField.endOfDocument)
+			previousBarButton.isEnabled = true
+			nextBarButton.isEnabled = false
+		}
 	}
 	func removeFirstCharactersFrom(inputString: (String)) -> String {
 		var tempString = inputString

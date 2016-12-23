@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 	@IBOutlet var table: UITableView!
@@ -52,7 +53,6 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.clearsSelectionOnViewWillAppear = true
-		//self.navigationItem.leftBarButtonItem = self.editButtonItem
 		if let savedDeliveries = loadDeliveries() {
 			deliveries += savedDeliveries
 		}
@@ -191,8 +191,34 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 		}
 	}
 	
-	//MARK: NSCoding
+	//MARK: CoreData
 	
+	func getContext () -> NSManagedObjectContext {
+		let appDelegate = UIApplication.shared.delegate as! AppDelegate
+		return appDelegate.persistentContainer.viewContext
+	}
+	func saveDelive (audioFileUrlString: String, textFileUrlString: String) {
+		let context = getContext()
+		
+		//retrieve the entity that we just created
+		let entity =  NSEntityDescription.entity(forEntityName: "Delivery", in: context)
+		
+		let transc = NSManagedObject(entity: entity!, insertInto: context)
+		
+		//set the entity values
+		transc.setValue(audioFileUrlString, forKey: "audioFileUrlString")
+		transc.setValue(textFileUrlString, forKey: "textFileUrlString")
+		
+		//save the object
+		do {
+			try context.save()
+			print("saved!")
+		} catch let error as NSError  {
+			print("Could not save \(error), \(error.userInfo)")
+		} catch {
+			
+		}
+	}
 	func saveDeliveries() {
 		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(deliveries, toFile: Delivery.ArchiveURL.path)
 		if !isSuccessfulSave {

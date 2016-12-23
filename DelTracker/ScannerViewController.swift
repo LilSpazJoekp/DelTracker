@@ -42,7 +42,7 @@ class BarcodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
 			let captureMetadataOutput = AVCaptureMetadataOutput()
 			barcodeCaptureSession?.addOutput(captureMetadataOutput)
 			barcodeCaptureSession?.addOutput(photoOutput)
-			photoOutput.isHighResolutionCaptureEnabled = true
+			photoOutput.isHighResolutionCaptureEnabled = false
 			captureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
 			captureMetadataOutput.metadataObjectTypes = supportedCodeTypes
 			videoPreviewLayer = AVCaptureVideoPreviewLayer(session: barcodeCaptureSession)
@@ -101,15 +101,9 @@ class BarcodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
 					AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
 					barcode = metadataObj.stringValue
 					captured = true
-			var flash: AVCaptureFlashMode
-			if light {
-				flash = .on
-			} else {
-				flash = .off
-			}
 			let photoSettings = AVCapturePhotoSettings()
-			photoSettings.flashMode = flash
-			photoSettings.isHighResolutionPhotoEnabled = true
+			photoSettings.flashMode = .off
+			photoSettings.isHighResolutionPhotoEnabled = false
 			if photoSettings.availablePreviewPhotoPixelFormatTypes.count > 0 {
 				photoSettings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String : photoSettings.availablePreviewPhotoPixelFormatTypes.first!]
 			}

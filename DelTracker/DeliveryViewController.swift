@@ -398,7 +398,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	// UITextField Navigation Bar
 	let keyboardToolbar = UIToolbar()
 	let flexBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
-	                                    target: nil, action: nil)
+										target: nil, action: nil)
 	let previousBarButton = UIBarButtonItem(title: "Previous", style: UIBarButtonItemStyle.plain, target: self, action: #selector(DeliveryViewController.goToPreviousField))
 	
 	let nextBarButton = UIBarButtonItem(title: "Next", style: UIBarButtonItemStyle.plain, target: self, action: #selector(DeliveryViewController.goToNextField))
@@ -468,6 +468,42 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	// Dismissing Keyboard
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		self.view.endEditing(true)
+	}
+}
+
+// MARK: CoreData
+
+func getContext () -> NSManagedObjectContext {
+	let appDelegate = UIApplication.shared.delegate as! AppDelegate
+	return appDelegate.persistentContainer.viewContext
+}
+func saveDelive (ticketNumber: String, ticketAmount: String, noTipSwitch: Bool, amountGiven: String, cashTipsValue: String, totalTips: String, paymentMethod: String, deliveryTimeValue: NSDate, ticketPhotoValue: UIImage?) {
+	let context = getContext()
+	
+	//retrieve the entity that we just created
+	let entity =  NSEntityDescription.entity(forEntityName: "Delivery", in: context)
+	
+	let transc = NSManagedObject(entity: entity!, insertInto: context)
+	
+	//set the entity values
+	transc.setValue(audioFileUrlString, forKey: "audioFileUrlString")
+	transc.setValue(textFileUrlString, forKey: "textFileUrlString")
+	transc.setValue(audioFileUrlString, forKey: "audioFileUrlString")
+	transc.setValue(textFileUrlString, forKey: "textFileUrlString")
+	transc.setValue(audioFileUrlString, forKey: "audioFileUrlString")
+	transc.setValue(textFileUrlString, forKey: "textFileUrlString")
+	transc.setValue(audioFileUrlString, forKey: "audioFileUrlString")
+	transc.setValue(textFileUrlString, forKey: "textFileUrlString")
+	transc.setValue(audioFileUrlString, forKey: "audioFileUrlString")
+	
+	//save the object
+	do {
+		try context.save()
+		print("saved!")
+	} catch let error as NSError  {
+		print("Could not save \(error), \(error.userInfo)")
+	} catch {
+		
 	}
 }
 
