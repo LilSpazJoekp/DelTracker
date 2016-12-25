@@ -13,6 +13,7 @@ protocol BarcodeDelegate {
 	func barcodeRead(barcode: String, light: Bool, photo: UIImage?)
 }
 class BarcodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, AVCapturePhotoCaptureDelegate {
+	
 	@IBOutlet var navbar: UINavigationBar!
 	@IBAction func toggle(_ sender: UIBarButtonItem) {
 		toggleFlash()
@@ -32,6 +33,10 @@ class BarcodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
 	var barcode: String?
 	var light: Bool = false
 	var photoJpeg: UIImage?
+	var messageFrame = UIView()
+	var activityIndicator = UIActivityIndicatorView()
+	var strLabel = UILabel()
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		let captureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
@@ -94,6 +99,7 @@ class BarcodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
 		// Get the metadata object.
 		let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
 		if !captured {
+			activityIndicator(msg: "   Capturing...", true)
 			if supportedCodeTypes.contains(metadataObj.type) {
 				let barCodeObject = videoPreviewLayer?.transformedMetadataObject(for: metadataObj)
 				qrCodeFrameView?.frame = barCodeObject!.bounds
@@ -118,13 +124,35 @@ class BarcodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
 		if let photoSampleBuffer = photoSampleBuffer {
 			let photoData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer, previewPhotoSampleBuffer: previewPhotoSampleBuffer)
 			photoJpeg = UIImage(data: photoData!)
-			self.delegate?.barcodeRead(barcode: barcode!, light: light, photo: photoJpeg)
+			var barcodeDropped = barcode!
+			barcodeDropped.remove(at: (barcodeDropped.startIndex))
+			barcodeDropped.remove(at: (barcodeDropped.startIndex))
+			barcodeDropped.remove(at: (barcodeDropped.startIndex))
+			self.delegate?.barcodeRead(barcode: barcodeDropped, light: light, photo: photoJpeg)
 			
 		} else {
 			print("Error capturing photo: \(error)")
 			return
 		}
 		barcodeCaptureSession?.stopRunning()
+		self.messageFrame.removeFromSuperview()
 		self.dismiss(animated: true, completion: nil)
+	}
+	func activityIndicator(msg:String, _ indicator:Bool ) {
+		print(msg)
+		strLabel = UILabel(frame: CGRect(x: 50, y: 0, width: 200, height: 50))
+		strLabel.text = msg
+		strLabel.textColor = UIColor.white
+		messageFrame = UIView(frame: CGRect(x: view.frame.midX - 90, y: view.frame.midY - 90, width: 180, height: 50))
+		messageFrame.layer.cornerRadius = 15
+		messageFrame.backgroundColor = UIColor(white: 0, alpha: 0.7)
+		if indicator {
+			activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.white)
+			activityIndicator.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+			activityIndicator.startAnimating()
+			messageFrame.addSubview(activityIndicator)
+		}
+		messageFrame.addSubview(strLabel)
+		view.addSubview(messageFrame)
 	}
 }

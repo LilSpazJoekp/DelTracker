@@ -28,7 +28,7 @@ class DeliveryDayViewController: UIViewController, UINavigationControllerDelegat
 	var deliveryDays = [DeliveryDay]()
 	var deliveryDateViewController = DeliveryDayViewController.self
 	static var selectedDateGlobal: String = "010116"
-	static var totalRecievedValue: String = "$0.00"
+	static var totalReceivedValue: String = "$0.00"
 	static var whoMadeBankName: String = "None"
 	static var whoClosedBankName: String = "None"
 	static var manualStatus: Bool?
@@ -66,15 +66,15 @@ class DeliveryDayViewController: UIViewController, UINavigationControllerDelegat
 					let deliveryDateValue = deliveryDay?.deliveryDateValue
 					let deliveryDayCountValue = deliveryDay?.deliveryDayCountValue
 					let totalTipsValue = deliveryDay?.totalTipsValue
-					let totalRecievedValue = deliveryDay?.totalRecievedValue
-					DeliveryDayViewController.totalRecievedValue = (deliveryDay?.totalRecievedValue)!
+					let totalReceivedValue = deliveryDay?.totalReceivedValue
+					DeliveryDayViewController.totalReceivedValue = (deliveryDay?.totalReceivedValue)!
 					DeliveryDayViewController.whoMadeBankName = (deliveryDay?.whoMadeBankName)!
 					DeliveryDayViewController.whoClosedBankName = (deliveryDay?.whoClosedBankName)!
 					DeliveryDayViewController.manualStatus = selectedDeliveryDay.manual
 					let whoMadeBankName = deliveryDay?.whoMadeBankName
 					let whoClosedBankName = deliveryDay?.whoClosedBankName
 					let manual = selectedDeliveryDay.manual
-					deliveryDay = DeliveryDay(deliveryDateValue: deliveryDateValue!, deliveryDayCountValue: deliveryDayCountValue!, totalTipsValue: totalTipsValue!, totalRecievedValue: totalRecievedValue!, whoMadeBankName: whoMadeBankName!, whoClosedBankName: whoClosedBankName!, manual: manual)
+					deliveryDay = DeliveryDay(deliveryDateValue: deliveryDateValue!, deliveryDayCountValue: deliveryDayCountValue!, totalTipsValue: totalTipsValue!, totalReceivedValue: totalReceivedValue!, whoMadeBankName: whoMadeBankName!, whoClosedBankName: whoClosedBankName!, manual: manual)
 				}
 			}
 		}

@@ -1,29 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16D12b" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Delivery" representedClassName="Delivery" syncable="YES" codeGenerationType="class">
-        <attribute name="amountGiven" optional="YES" attributeType="String" maxValueString="6" syncable="YES"/>
-        <attribute name="cashTips" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="deliveryTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="noTipSwitch" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="paymentMethod" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="ticketAmount" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="ticketNumber" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="ticketPhoto" optional="YES" attributeType="Binary" storedInTruthFile="YES" syncable="YES"/>
-        <attribute name="totalTips" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="delivery" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="DeliveryDay" inverseName="deliveries" inverseEntity="DeliveryDay" syncable="YES"/>
-    </entity>
-    <entity name="DeliveryDay" representedClassName="DeliveryDay" syncable="YES" codeGenerationType="class">
-        <attribute name="deliveryDayCount" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="delvieryDate" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="manual" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="totalRecieved" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="totalTips" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="whoClosedBankName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="whoMadeBankName" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="deliveries" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Delivery" inverseName="delivery" inverseEntity="Delivery" syncable="YES"/>
-    </entity>
-    <elements>
-        <element name="Delivery" positionX="-63" positionY="-18" width="128" height="195"/>
-        <element name="DeliveryDay" positionX="-54" positionY="63" width="128" height="165"/>
-    </elements>
+    <elements/>
 </model>

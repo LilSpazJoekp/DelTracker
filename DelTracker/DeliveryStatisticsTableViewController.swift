@@ -29,7 +29,7 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 		self.view.endEditing(true)
 			calculateManual()
 	}
-	@IBAction func RecievedTextFieldEditingEnded(_ sender: UITextField) {
+	@IBAction func ReceivedTextFieldEditingEnded(_ sender: UITextField) {
 		if manualDeliverySwitch.isOn {
 			calculateManual()
 		} else {
@@ -37,10 +37,10 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 			let paidOut = Double(self.deliveries.count) * 1.25
 			let shouldRecieve = tips + paidOut
 			let shouldRecieveRounded = round(shouldRecieve * 100) / 100
-			if actuallyRecievedField.text != nil {
-				let actuallyRecieved = Double(self.removeFirstCharactersFrom(inputString: self.actuallyRecievedField.text!))
-				let actuallyRecievedRounded = round(actuallyRecieved! * 100) / 100
-				let difference = actuallyRecievedRounded - shouldRecieveRounded
+			if actuallyReceivedField.text != nil {
+				let actuallyReceived = Double(self.removeFirstCharactersFrom(inputString: self.actuallyReceivedField.text!))
+				let actuallyReceivedRounded = round(actuallyReceived! * 100) / 100
+				let difference = actuallyReceivedRounded - shouldRecieveRounded
 				let differenceRounded = round(difference * 100) / 100
 				differenceLabel.text = "$" + "\(String(format: "%.2f", differenceRounded))"
 				if differenceRounded < 0 {
@@ -49,8 +49,8 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 					differenceLabel.textColor = UIColor.white
 				}
 			} else {
-				let actuallyRecieved = 0.00
-				let difference = shouldRecieveRounded - actuallyRecieved
+				let actuallyReceived = 0.00
+				let difference = shouldRecieveRounded - actuallyReceived
 				let differenceRounded = round(difference * 100) / 100
 				differenceLabel.text = "$" + "\(String(format: "%.2f", differenceRounded))"
 				if differenceRounded < 0 {
@@ -90,7 +90,7 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 	@IBOutlet var whoMadeBankLabel: UILabel!
 	@IBOutlet var whoClosedBankLabel: UILabel!
 	@IBOutlet var amountShouldRecieveBankDetailsLabel: UILabel!
-	@IBOutlet var actuallyRecievedField: CurrencyField!
+	@IBOutlet var actuallyReceivedField: CurrencyField!
 	@IBOutlet var differenceLabel: UILabel!
 	var deliveryDays = [DeliveryDay]()
 	var deliveryDay: DeliveryDay?
@@ -130,7 +130,7 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 		super.viewDidLoad()
 		self.tabBarController?.tabBar.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
 		keyboardToolbar.backgroundColor = UIColor(red:0.09, green:0.11, blue:0.11, alpha:1.0)
-		actuallyRecievedField.delegate = self
+		actuallyReceivedField.delegate = self
 		deliveriesCount.delegate = self
 		if let savedDeliveryDays = loadDeliveryDays() {
 			deliveryDays += savedDeliveryDays
@@ -142,7 +142,7 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 				manualDeliveryDayLabel.isHidden = true
 				whoMadeBank = selectedDeliveryDay.whoMadeBankName
 				whoClosedBank = selectedDeliveryDay.whoClosedBankName
-				actuallyRecievedField.text = selectedDeliveryDay.totalRecievedValue
+				actuallyReceivedField.text = selectedDeliveryDay.totalReceivedValue
 				deliveriesCount.text = selectedDeliveryDay.deliveryDayCountValue
 				calculateManual()
 				manualDeliverySwitch.isOn = selectedDeliveryDay.manual
@@ -153,7 +153,7 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 			} else {
 				whoMadeBank = selectedDeliveryDay.whoMadeBankName
 				whoClosedBank = selectedDeliveryDay.whoClosedBankName
-				actuallyRecievedField.text = selectedDeliveryDay.totalRecievedValue
+				actuallyReceivedField.text = selectedDeliveryDay.totalReceivedValue
 				manualDeliverySwitch.isHidden = true
 				manualDeliveryDayLabel.isHidden = true				
 			}
@@ -237,17 +237,17 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 		if manualDeliverySwitch.isOn {
 			let numberOfDeliveries: Double = Double(deliveriesCount.text!)!
 			let totalPaidout = numberOfDeliveries * 1.25
-			let totalRecieved = removeFirstCharactersFrom(inputString: actuallyRecievedField.text!)
-			let totalTips = "\(Double(totalRecieved)! - totalPaidout)"
+			let totalReceived = removeFirstCharactersFrom(inputString: actuallyReceivedField.text!)
+			let totalTips = "\(Double(totalReceived)! - totalPaidout)"
 			totalTipsLabel.text = "$" + totalTips
 			let deliveryCountValue = deliveriesCount.text ?? "0"
 			let deliveryDateValue = String(DeliveryDayViewController.selectedDateGlobal) ?? "010116"
-			let totalTipsValue = "$" + "\(String(format: "%.2f", Double(totalRecieved)! - totalPaidout))"
+			let totalTipsValue = "$" + "\(String(format: "%.2f", Double(totalReceived)! - totalPaidout))"
 			let whoMadeBankName = self.whoMadeBank
 			let whoClosedBankName = self.whoClosedBank
-			let totalRecievedValue = actuallyRecievedField.text ?? "$0.00"
+			let totalReceivedValue = actuallyReceivedField.text ?? "$0.00"
 			let manual = true
-			deliveryDay = DeliveryDay(deliveryDateValue: deliveryDateValue, deliveryDayCountValue: deliveryCountValue, totalTipsValue: totalTipsValue, totalRecievedValue: totalRecievedValue, whoMadeBankName: whoMadeBankName, whoClosedBankName: whoClosedBankName, manual: manual)
+			deliveryDay = DeliveryDay(deliveryDateValue: deliveryDateValue, deliveryDayCountValue: deliveryCountValue, totalTipsValue: totalTipsValue, totalReceivedValue: totalReceivedValue, whoMadeBankName: whoMadeBankName, whoClosedBankName: whoClosedBankName, manual: manual)
 		} else if let savedDeliveries = loadDeliveries() {
 			deliveries = savedDeliveries
 			for (index, _) in deliveries.enumerated() {
@@ -275,12 +275,13 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 			}
 			let deliveryCountValue = String(deliveries.count)
 			let deliveryDateValue = String(DeliveryDayViewController.selectedDateGlobal) ?? "010116"
-			let totalTipsValue = "$" + "\(String(format: "%.2f", totalTipsFinal))"
+			//let tipsWithoutPayout = "S" + "\(String(format: "%.2f", Double(actuallyReceivedField.text)! - Double(deliveries.count) * 1.25))"
+			let totalTipsValue = "S" + "\(String(format: "%.2f", totalTipsFinal))"
 			let whoMadeBankName = self.whoMadeBank
 			let whoClosedBankName = self.whoClosedBank
-			let totalRecievedValue = actuallyRecievedField.text
+			let totalReceivedValue = actuallyReceivedField.text
 			let manual = false
-			deliveryDay = DeliveryDay(deliveryDateValue: deliveryDateValue, deliveryDayCountValue: deliveryCountValue, totalTipsValue: totalTipsValue, totalRecievedValue: totalRecievedValue!, whoMadeBankName: whoMadeBankName, whoClosedBankName: whoClosedBankName, manual: manual)
+			deliveryDay = DeliveryDay(deliveryDateValue: deliveryDateValue, deliveryDayCountValue: deliveryCountValue, totalTipsValue: totalTipsValue, totalReceivedValue: totalReceivedValue!, whoMadeBankName: whoMadeBankName, whoClosedBankName: whoClosedBankName, manual: manual)
 		}
 	}
 	@IBAction func unwindToDeliveryStatisticsTableList(_ sender: UIStoryboardSegue) {
@@ -465,9 +466,9 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 				let paidOut = Double(self.deliveries.count) * 1.25
 				let shouldRecieve = tips + paidOut
 				let shouldRecieveRounded = round(shouldRecieve * 100) / 100
-				let actuallyRecieved = Double(self.removeFirstCharactersFrom(inputString: self.actuallyRecievedField.text!))
-				let actuallyRecievedRounded = round(actuallyRecieved! * 100) / 100
-				let difference = actuallyRecievedRounded - shouldRecieveRounded
+				let actuallyReceived = Double(self.removeFirstCharactersFrom(inputString: self.actuallyReceivedField.text!))
+				let actuallyReceivedRounded = round(actuallyReceived! * 100) / 100
+				let difference = actuallyReceivedRounded - shouldRecieveRounded
 				let differenceRounded = round(difference * 100) / 100
 				differenceLabel.text = "$" + "\(String(format: "%.2f", differenceRounded))"
 				if differenceRounded < 0 {
@@ -489,8 +490,8 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 		if manualDeliverySwitch.isOn {
 		let numberOfDeliveries: Double = Double(deliveriesCount.text!)!
 		let totalPaidout = numberOfDeliveries * 1.25
-		let totalRecieved = removeFirstCharactersFrom(inputString: actuallyRecievedField.text!)
-		let totalTips = Double(totalRecieved)! - totalPaidout
+		let totalReceived = removeFirstCharactersFrom(inputString: actuallyReceivedField.text!)
+		let totalTips = Double(totalReceived)! - totalPaidout
 		totalTipsLabel.text = "$" + "\(String(format: "%.2f", totalTips))"
 		paidoutLabel.text = "$" + "\(String(format: "%.2f", totalPaidout))"
 		}
@@ -507,12 +508,12 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 		keyboardToolbar.items = [flexBarButton, previousBarButton, nextBarButton]
 		if manualDeliverySwitch.isOn {
 		deliveriesCount.inputAccessoryView = keyboardToolbar
-		actuallyRecievedField.inputAccessoryView = keyboardToolbar
+		actuallyReceivedField.inputAccessoryView = keyboardToolbar
 		}
 	}
 	func goToPreviousField(_:Any?) {
-		if actuallyRecievedField.isFirstResponder {
-			actuallyRecievedField.resignFirstResponder()
+		if actuallyReceivedField.isFirstResponder {
+			actuallyReceivedField.resignFirstResponder()
 			deliveriesCount.becomeFirstResponder()
 			deliveriesCount.selectedTextRange = deliveriesCount.textRange(from: deliveriesCount.beginningOfDocument, to: deliveriesCount.endOfDocument)
 			previousBarButton.isEnabled = false
@@ -522,8 +523,8 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 	func goToNextField() {
 		if deliveriesCount.isFirstResponder {
 			deliveriesCount.resignFirstResponder()
-			actuallyRecievedField.becomeFirstResponder()
-			actuallyRecievedField.selectedTextRange = actuallyRecievedField.textRange(from: actuallyRecievedField.beginningOfDocument, to: actuallyRecievedField.endOfDocument)
+			actuallyReceivedField.becomeFirstResponder()
+			actuallyReceivedField.selectedTextRange = actuallyReceivedField.textRange(from: actuallyReceivedField.beginningOfDocument, to: actuallyReceivedField.endOfDocument)
 			previousBarButton.isEnabled = true
 			nextBarButton.isEnabled = false
 		}

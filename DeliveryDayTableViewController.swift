@@ -68,6 +68,7 @@ class DeliveryDayTableViewController: UITableViewController {
 		if let savedDeliveryDays = loadDeliveryDays() {
 			deliveryDays += savedDeliveryDays
 		}
+		print(DeliveryDay.ArchiveURL.path)
 	}
 	
 	// MARK: - Table view data source
@@ -90,7 +91,7 @@ class DeliveryDayTableViewController: UITableViewController {
 		cell.dateLabel?.text = dateFormattedFinal
 		cell.deliveryCount?.text = deliveryDay.deliveryDayCountValue
 		cell.totalTips?.text = deliveryDay.totalTipsValue
-		cell.totalPay?.text = deliveryDay.totalRecievedValue
+		cell.totalPay?.text = deliveryDay.totalReceivedValue
 		let backgroundView = UIView()
 		backgroundView.backgroundColor = UIColor.darkGray
 		cell.selectedBackgroundView = backgroundView

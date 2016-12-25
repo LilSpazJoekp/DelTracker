@@ -49,7 +49,10 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 	var selectedIndicies: [Int] = []
 	var deselectedIndexPath: Int?
 	var indexPathsToDelete: [IndexPath] = []
-	var deliveries = [Delivery]()
+	var deliveries = [Delivery]()	
+	var messageFrame = UIView()
+	var activityIndicator = UIActivityIndicatorView()
+	var strLabel = UILabel()
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.clearsSelectionOnViewWillAppear = true
@@ -160,6 +163,7 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 	
 	@IBAction func unwindToDeliveryList(_ sender: UIStoryboardSegue) {
 		if let sourceViewController = sender.source as? DeliveryViewController, let delivery = sourceViewController.delivery {
+			activityIndicator(msg: "    Saving...", true)
 			if let selectedIndexPath = tableView.indexPathForSelectedRow {
 				deliveries[selectedIndexPath.row] = delivery
 				tableView.reloadRows(at: [selectedIndexPath], with: .right)
@@ -197,27 +201,26 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 		let appDelegate = UIApplication.shared.delegate as! AppDelegate
 		return appDelegate.persistentContainer.viewContext
 	}
-	func saveDelive (audioFileUrlString: String, textFileUrlString: String) {
-		let context = getContext()
-		
-		//retrieve the entity that we just created
-		let entity =  NSEntityDescription.entity(forEntityName: "Delivery", in: context)
-		
-		let transc = NSManagedObject(entity: entity!, insertInto: context)
-		
-		//set the entity values
-		transc.setValue(audioFileUrlString, forKey: "audioFileUrlString")
-		transc.setValue(textFileUrlString, forKey: "textFileUrlString")
-		
-		//save the object
-		do {
-			try context.save()
-			print("saved!")
-		} catch let error as NSError  {
-			print("Could not save \(error), \(error.userInfo)")
-		} catch {
-			
-		}
+
+
+func activityIndicator(msg:String, _ indicator:Bool ) {
+	print(msg)
+	strLabel = UILabel(frame: CGRect(x: 50, y: 0, width: 200, height: 50))
+	strLabel.text = msg
+	strLabel.textColor = UIColor.white
+	messageFrame = UIView(frame: CGRect(x: view.frame.midX - 90, y: view.frame.midY - 90, width: 180, height: 50))
+	messageFrame.layer.cornerRadius = 15
+	messageFrame.backgroundColor = UIColor(white: 0, alpha: 0.7)
+	if indicator {
+		activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.white)
+		activityIndicator.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+		activityIndicator.startAnimating()
+		messageFrame.addSubview(activityIndicator)
+	}
+	messageFrame.addSubview(strLabel)
+	view.bringSubview(toFront: strLabel)
+	view.addSubview(messageFrame)
+	view.bringSubview(toFront: messageFrame)
 	}
 	func saveDeliveries() {
 		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(deliveries, toFile: Delivery.ArchiveURL.path)
