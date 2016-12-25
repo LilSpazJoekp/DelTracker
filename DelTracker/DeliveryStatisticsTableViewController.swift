@@ -10,6 +10,7 @@
 import UIKit
 
 class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldDelegate {
+	
 	var tabBar: DeliveryTabBarViewController?
 	@IBAction func manualDeliverySwitchChanged(_ sender: Any) {
 		deliveriesCount.isEnabled = manualDeliverySwitch.isOn
@@ -476,7 +477,6 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 				} else {
 					differenceLabel.textColor = UIColor.white
 				}
-				
 			}
 			bankBalanceLabel.text = "$" + "\(String(format: "%.2f", bankBalance))"
 			totalDropsLabel.text = "$" + "\(String(format: "%.2f", totalDropsFinal))"

@@ -10,8 +10,7 @@ import UIKit
 
 class TicketPhotoViewController: UIViewController {
 	
-	@IBAction func rotate(_ sender: Any) {
-		
+	@IBAction func rotate(_ sender: Any) {		
 	}
 	@IBOutlet var ticketPhotoImageView: UIImageView!
 	@IBAction func doneButton(_ sender: UIBarButtonItem) {

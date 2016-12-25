@@ -129,7 +129,6 @@ class BarcodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
 			barcodeDropped.remove(at: (barcodeDropped.startIndex))
 			barcodeDropped.remove(at: (barcodeDropped.startIndex))
 			self.delegate?.barcodeRead(barcode: barcodeDropped, light: light, photo: photoJpeg)
-			
 		} else {
 			print("Error capturing photo: \(error)")
 			return

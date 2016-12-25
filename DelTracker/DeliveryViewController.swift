@@ -110,9 +110,10 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	var activityIndicator = UIActivityIndicatorView()
 	var strLabel = UILabel()
 	var activityIndicatorRunning: Bool = false
+	
 	// MARK: - View Life Cycle
+	
 	func showIndicator(_ sender: UIBarButtonItem) {
-		
 		self.activityIndicator(msg: "    Saving...", true)
 	}
 	override func viewDidLoad() {
@@ -270,6 +271,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	func configureSaveButton() {
 		saveDelivery?.addTarget(self, action: #selector(DeliveryViewController.showIndicator(_:)), for: UIControlEvents.touchUpInside)
 	}
+	
 	// Quick Tip Segment Control
 	func selectedSegmentDidChange(_ segmentedControl: UISegmentedControl) {
 		if segmentedControl.selectedSegmentIndex == 0 {
@@ -433,7 +435,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	let flexBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
 	                                    target: nil, action: nil)
 	let previousBarButton = UIBarButtonItem(title: "Previous", style: UIBarButtonItemStyle.plain, target: self, action: #selector(DeliveryViewController.goToPreviousField))
-	
 	let nextBarButton = UIBarButtonItem(title: "Next", style: UIBarButtonItemStyle.plain, target: self, action: #selector(DeliveryViewController.goToNextField))
 	func addBarButtons() {
 		nextBarButton.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
@@ -499,14 +500,12 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		}
 	}
 	@IBAction func activityIndictorStart(_ sender: UIBarButtonItem) {
-		
 		activityIndicator(msg: "    Saving...", true)
 	}
 	// Dismissing Keyboard
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		self.view.endEditing(true)
 	}
-	
 	func activityIndicator(msg:String, _ indicator:Bool ) {
 		print(msg)
 		strLabel = UILabel(frame: CGRect(x: 50, y: 0, width: 200, height: 50))
@@ -527,6 +526,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		view.bringSubview(toFront: messageFrame)
 	}
 }
+
 // MARK: Extensions
 
 extension UIButton {
@@ -539,4 +539,3 @@ extension UIButton {
 		self.setBackgroundImage(colorImage, for: forState)
 	}
 }
-

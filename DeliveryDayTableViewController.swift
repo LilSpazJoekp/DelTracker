@@ -207,10 +207,6 @@ class DeliveryDayTableViewController: UITableViewController {
 	func loadDeliveryDays() -> [DeliveryDay]? {
 		return NSKeyedUnarchiver.unarchiveObject(withFile: DeliveryDay.ArchiveURL.path) as? [DeliveryDay]
 	}
-	func removeDeliveries() {
-		
-		
-	}
 	func removeDelivery(deliveryDate: String) {
 		let fileManager = FileManager.default
 		let nsDocumentDirectory = FileManager.SearchPathDirectory.documentDirectory

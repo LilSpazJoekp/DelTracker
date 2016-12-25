@@ -13,15 +13,12 @@ class ProgressView: UIView {
 	enum Theme {
 		case Light
 		case Dark
-	}
-	
+	}	
 	var theme:Theme;
 	var container:UIStackView;
 	var activityIndicator: UIActivityIndicatorView;
 	var label: UILabel;
 	var glass:UIView;
-	
-	
 	private var Message:String;
 	private var isModal:Bool;
 	
@@ -30,7 +27,6 @@ class ProgressView: UIView {
 		self.Message = Message;
 		self.theme=Theme;
 		self.isModal=IsModal;
-		
 		self.container=UIStackView();
 		self.activityIndicator=UIActivityIndicatorView();
 		self.label = UILabel();
@@ -46,10 +42,8 @@ class ProgressView: UIView {
 		}else{
 			super.init(frame: CGRect(x: 0, y: 0, width: 200, height: 50));
 		}
-		
 		//detect rotation
 		NotificationCenter.default.addObserver(self, selector: #selector(onRotate), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil);
-		
 		//style
 		self.layer.cornerRadius = 3;
 		if (self.theme == .Dark){
@@ -57,7 +51,6 @@ class ProgressView: UIView {
 		}else{
 			self.backgroundColor=UIColor.lightGray;
 		}
-		
 		//label
 		if self.theme == .Dark{
 			self.label.textColor=UIColor.white;
@@ -80,7 +73,6 @@ class ProgressView: UIView {
 		}
 		self.activityIndicator.startAnimating();
 		//Add them to container
-		
 		//First glass
 		if let superview = UIApplication.shared.keyWindow {
 			if (self.isModal){
@@ -106,7 +98,6 @@ class ProgressView: UIView {
 		//Do not show until show() is called;
 		self.hide();
 	}
-	
 	required init(coder: NSCoder) {
 		self.theme = .Dark;
 		self.Message = "Not set!";
@@ -117,23 +108,18 @@ class ProgressView: UIView {
 		self.glass = UIView();
 		super.init(coder: coder)!
 	}
-	
 	func onRotate(){
 		if let superview = self.superview {
 			self.glass.frame=superview.frame;
 			self.center=superview.center;
-			//            superview.addSubview(self);
 		}
 	}
-	
 	public func show() {
 		self.glass.isHidden=false;
 		self.isHidden = false
 	}
-	
 	public func hide() {
 		self.glass.isHidden=true;
 		self.isHidden=true;
 	}
 }
-
