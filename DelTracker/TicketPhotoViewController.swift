@@ -7,9 +7,11 @@
 //
 
 import UIKit
+import CoreData
 
 class TicketPhotoViewController: UIViewController {
 	
+	@IBOutlet var navbar: UINavigationBar!
 	@IBAction func rotate(_ sender: Any) {		
 	}
 	@IBOutlet var ticketPhotoImageView: UIImageView!
@@ -20,5 +22,6 @@ class TicketPhotoViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		ticketPhotoImageView.image = ticketPhoto
+		view.bringSubview(toFront: navbar)
 	}
 }

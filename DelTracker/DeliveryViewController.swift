@@ -8,28 +8,32 @@
 
 import UIKit
 import CoreData
+
 import AVFoundation
 
 class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, UIToolbarDelegate, UINavigationControllerDelegate, BarcodeDelegate {
 	
 	// MARK: - Storyboard Actions
 	
+	@IBAction func activityIndictorStart(_ sender: UIBarButtonItem) {
+		self.activityIndicatorOverlay?.show()
+	}
 	@IBAction func ticketNumberEditingBegan(_ sender: UITextField) {
 		previousBarButton.isEnabled = false
 		nextBarButton.isEnabled = true
-		ticketNumberField.selectedTextRange = ticketNumberField.textRange(from: ticketNumberField.beginningOfDocument, to: ticketNumberField.endOfDocument)
+		ticketNumberField.selectAllText()
 	}
 	@IBAction func ticketNumberChanged(_ sender: UITextField) {
 		if ticketNumberField.text?.characters.count == 3 {
 			ticketNumberField.resignFirstResponder()
 			ticketAmountField.becomeFirstResponder()
-			ticketAmountField.selectedTextRange = ticketAmountField.textRange(from: ticketAmountField.beginningOfDocument, to: ticketAmountField.endOfDocument)
+			ticketAmountField.selectAllText()
 		}
 	}
 	@IBAction func ticketAmountEditingBegan(_ sender: UITextField) {
 		previousBarButton.isEnabled = true
 		nextBarButton.isEnabled = true
-		ticketAmountField.selectedTextRange = ticketAmountField.textRange(from: ticketAmountField.beginningOfDocument, to: ticketAmountField.endOfDocument)
+		ticketAmountField.selectAllText()
 	}
 	@IBAction func ticketAmountEditingEnded(_ sender: UITextField) {
 		amountGivenField.isEnabled = true
@@ -38,7 +42,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	@IBAction func amountGivenEditingBegan(_ sender: UITextField) {
 		previousBarButton.isEnabled = true
 		nextBarButton.isEnabled = true
-		amountGivenField.selectedTextRange = amountGivenField.textRange(from: amountGivenField.beginningOfDocument, to: amountGivenField.endOfDocument)
+		amountGivenField.selectAllText()
 	}
 	@IBAction func amountGivenEditingEnded(_ sender: UITextField) {
 		removeFirstCharacterAndCalculate()
@@ -48,16 +52,17 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	@IBAction func cashTipsEditingBegan(_ sender: UITextField) {
 		previousBarButton.isEnabled = true
 		nextBarButton.isEnabled = false
-		cashTipsField?.selectedTextRange = cashTipsField?.textRange(from: (cashTipsField?.beginningOfDocument)!, to: (cashTipsField?.endOfDocument)!)
+		cashTipsField?.selectAllText()
 	}
 	@IBAction func cashTipsEditingEnded(_ sender: UITextField) {
 		removeFirstCharacterAndCalculate()
 	}
 	@IBAction func saveDelivery(_ sender: UIBarButtonItem) {
-		DispatchQueue.main.async {
-			self.activityIndicator(msg: "    Saving...", true)
-			self.removeFirstCharacterAndCalculate()
+		removeFirstCharacterAndCalculate()
+		OperationQueue.main.addOperation() {
+			self.activityIndicator(msg: "   Saving...", true)
 		}
+		perfomUnwindSegue()
 	}
 	@IBAction func cancelEdit(_ sender: UIBarButtonItem) {
 		dismiss(animated: true, completion: nil)
@@ -97,10 +102,11 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	@IBOutlet var cashTipsField: CurrencyField?
 	@IBOutlet var totalTips: UILabel!
 	@IBOutlet var paymentMethodPicker: UIPickerView!
-	@IBOutlet var saveDelivery: AnyObject?
-	@IBOutlet var setTimeToNowButton: UIBarButtonItem?
+	@IBOutlet var setTimeToNowButton: UIBarButtonItem!
 	@IBOutlet var timeOverrideSwitch: UISwitch!
 	@IBOutlet var deliveryTime: UIDatePicker!
+	
+	// MARK: Vairables and Constants
 	
 	var delivery: Delivery?
 	var selectedTime: String = ""
@@ -110,25 +116,33 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	var activityIndicator = UIActivityIndicatorView()
 	var strLabel = UILabel()
 	var activityIndicatorRunning: Bool = false
+	var selectedPaymentMethod: String = ""
+	var paymentMethodDataSource = ["None", "Cash", "Check", "Credit", "Charge", "Other"]
+	let keyboardToolbar = UIToolbar()
+	let flexBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+	let previousBarButton = UIBarButtonItem(title: "Previous", style: UIBarButtonItemStyle.plain, target: self, action: #selector(DeliveryViewController.goToPreviousField))
+	let nextBarButton = UIBarButtonItem(title: "Next", style: UIBarButtonItemStyle.plain, target: self, action: #selector(DeliveryViewController.goToNextField))
+	var activityIndicatorOverlay: ActivityIndicatorOverlay?
+	let doubleZero = UIButton(type: UIButtonType.custom)
 	
 	// MARK: - View Life Cycle
 	
 	func showIndicator(_ sender: UIBarButtonItem) {
-		self.activityIndicator(msg: "    Saving...", true)
+		activityIndicator(msg: "   Saving...", true)
 	}
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		keyboardToolbar.backgroundColor = UIColor(red:0.09, green:0.11, blue:0.11, alpha:1.0)
+		if delivery != nil {
+			navigationItem.title = "Edit Delivery"
+		} else {
+			navigationItem.title = "Add Delivery"
+		}
+		self.tabBarController?.tabBar.isHidden = true
+		self.activityIndicatorOverlay = ActivityIndicatorOverlay(activityIndicatorLabel: "Saving...", modal: false)
 		ticketNumberField.delegate = self
 		ticketAmountField.delegate = self
 		amountGivenField.delegate = self
 		cashTipsField?.delegate = self
-		var ticketAmountDropped = ticketAmountField.text
-		ticketAmountDropped?.remove(at: (ticketAmountDropped?.startIndex)!)
-		var amountGivenDropped = amountGivenField.text
-		amountGivenDropped?.remove(at: (amountGivenDropped?.startIndex)!)
-		var cashTipsDropped = cashTipsField?.text
-		cashTipsDropped?.remove(at: (cashTipsDropped?.startIndex)!)
 		configureTicketNumberField()
 		configureTicketAmountField()
 		configureNoTipSwitch()
@@ -139,7 +153,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	}
 	override func viewDidAppear(_ animated: Bool) {
 		if let delivery = delivery {
-			navigationItem.title = "Edit Delivery"
 			ticketNumberField.text = delivery.ticketNumberValue
 			ticketAmountField.text = delivery.ticketAmountValue
 			noTipSwitch.isOn = Bool(delivery.noTipSwitchValue)!
@@ -161,17 +174,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		if light {
 			toggleFlash()
 		}
-		if (ticketNumberField.text?.characters.count)! > 3 {
-			var ticketNumberRemove = ticketNumberField.text
-			let ticketNumberCount = ticketNumberRemove?.characters.count
-			print("ticketNumberCount: \(ticketNumberCount!)")
-			for _ in 1...3 {
-				ticketNumberRemove?.remove(at: (ticketNumberRemove?.startIndex)!)
-				print("ticketNumberRemove: \(ticketNumberRemove!)")
-			}
-			ticketNumberField.text = ticketNumberRemove
-			print("ticketNumberField.text: \(ticketNumberField.text)")
-		}
 	}
 	override func viewWillDisappear(_ animated: Bool) {
 		ticketNumberField.resignFirstResponder()
@@ -179,43 +181,32 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		amountGivenField.resignFirstResponder()
 		cashTipsField?.resignFirstResponder()
 	}
-	override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-		if !activityIndicatorRunning {
-			activityIndicator(msg: "    Saving...", true)
-			return true
-		} else {
-			return true
-		}
-	}
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		DispatchQueue.main.async {
-			if self.saveDelivery === sender as AnyObject? {
-				self.activityIndicator(msg: "    Saving...", true)
-				if self.timeOverrideSwitch.isOn {
-					self.setDeliveryTime()
-				} else if self.navigationItem.title == "Add Delivery" {
-					self.deliveryTime.setDate(NSDate() as Date, animated: true)
-					self.setDeliveryTime()
-				}
+		if segue.identifier == "unwindToDeliveryListSegue" {
+			if self.timeOverrideSwitch.isOn {
 				self.setDeliveryTime()
-				let ticketNumberValue = self.ticketNumberField.text ?? ""
-				let ticketAmountValue = self.ticketAmountField.text ?? ""
-				let noTipSwitchValue = String(self.noTipSwitch.isOn)
-				let amountGivenValue = self.amountGivenField.text ?? ""
-				let cashTipsValue = self.cashTipsField?.text ?? ""
-				let totalTipsValue = self.totalTips.text ?? ""
-				let deliveryTimeValue = self.selectedTime
-				let paymentMethodValue = String(self.paymentMethodPicker.selectedRow(inComponent: 0))
-				self.delivery = Delivery(ticketNumberValue: ticketNumberValue, ticketAmountValue: ticketAmountValue, noTipSwitchValue: noTipSwitchValue, amountGivenValue: amountGivenValue, cashTipsValue: cashTipsValue, totalTipsValue: totalTipsValue, paymentMethodValue: paymentMethodValue, deliveryTimeValue: deliveryTimeValue, ticketPhotoValue: DeliveryViewController.ticketPhoto)
+			} else if self.navigationItem.title == "Add Delivery" {
+				self.deliveryTime.setDate(NSDate() as Date, animated: true)
+				self.setDeliveryTime()
 			}
-			if segue.identifier == "viewPhoto" {
-				let ticketPhotoViewController = segue.destination as! TicketPhotoViewController
-				if let ticketPhoto = DeliveryViewController.ticketPhoto {
-					ticketPhotoViewController.ticketPhoto = ticketPhoto
-				}
-			} else if segue.identifier == "scan" {
-				let barcodeViewController: BarcodeViewController = segue.destination as! BarcodeViewController
-				barcodeViewController.delegate = self
+			self.setDeliveryTime()
+			let ticketNumberValue = self.ticketNumberField.text ?? ""
+			let ticketAmountValue = self.ticketAmountField.text ?? ""
+			let noTipSwitchValue = String(self.noTipSwitch.isOn)
+			let amountGivenValue = self.amountGivenField.text ?? ""
+			let cashTipsValue = self.cashTipsField?.text ?? ""
+			let totalTipsValue = self.totalTips.text ?? ""
+			let deliveryTimeValue = self.selectedTime
+			let paymentMethodValue = String(self.paymentMethodPicker.selectedRow(inComponent: 0))
+			self.delivery = Delivery(ticketNumberValue: ticketNumberValue, ticketAmountValue: ticketAmountValue, noTipSwitchValue: noTipSwitchValue, amountGivenValue: amountGivenValue, cashTipsValue: cashTipsValue, totalTipsValue: totalTipsValue, paymentMethodValue: paymentMethodValue, deliveryTimeValue: deliveryTimeValue, ticketPhotoValue: DeliveryViewController.ticketPhoto)
+			self.messageFrame.removeFromSuperview()
+		} else if segue.identifier == "scan" {
+			let barcodeViewController: BarcodeViewController = segue.destination as! BarcodeViewController
+			barcodeViewController.delegate = self
+		} else if segue.identifier == "viewPhoto" {
+			let ticketPhotoViewController = segue.destination as! TicketPhotoViewController
+			if let ticketPhoto = DeliveryViewController.ticketPhoto {
+				ticketPhotoViewController.ticketPhoto = ticketPhoto
 			}
 		}
 	}
@@ -228,7 +219,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		ticketNumberField.text = barcode
 		viewTicketPhoto.isEnabled = true
 		ticketAmountField.becomeFirstResponder()
-		print(barcode)
 	}
 	func toggleFlash() {
 		if let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo), device.hasTorch {
@@ -241,6 +231,11 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			} catch {
 				print("error")
 			}
+		}
+	}
+	func perfomUnwindSegue() {
+		OperationQueue.main.addOperation {
+			self.performSegue(withIdentifier: "unwindToDeliveryListSegue", sender: self)
 		}
 	}
 	
@@ -268,9 +263,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		doubleZero.addTarget(self, action: #selector(DeliveryViewController.doubleZero(_:)), for: UIControlEvents.touchUpInside)
 		doubleZero.setBackgroundColor(UIColor(red:0.47, green:0.47, blue:0.47, alpha:1.0), forState: UIControlState.highlighted)
 	}
-	func configureSaveButton() {
-		saveDelivery?.addTarget(self, action: #selector(DeliveryViewController.showIndicator(_:)), for: UIControlEvents.touchUpInside)
-	}
+	
 	
 	// Quick Tip Segment Control
 	func selectedSegmentDidChange(_ segmentedControl: UISegmentedControl) {
@@ -309,8 +302,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	}
 	
 	// Payment Method PickerView
-	var selectedPaymentMethod: String = ""
-	var paymentMethodDataSource = ["None", "Cash", "Check", "Credit", "Charge", "Other"]
 	func numberOfComponents(in pickerView: UIPickerView) -> Int {
 		return 1
 	}
@@ -376,23 +367,20 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		deliveryTime.setValue(UIColor.white, forKey: "textColor")
 	}
 	
-	// Keyboard Double Zero Key
-	let doubleZero = UIButton(type: UIButtonType.custom)
-	
 	// Toolbar Previous and Next Buttons
-	func goToPreviousField(_:Any?) {
+	func goToPreviousField(_: Any?) {
 		if ticketAmountField.isFirstResponder {
 			ticketAmountField.resignFirstResponder()
 			ticketNumberField.becomeFirstResponder()
-			ticketNumberField.selectedTextRange = ticketNumberField.textRange(from: ticketNumberField.beginningOfDocument, to: ticketNumberField.endOfDocument)
+			ticketNumberField.selectAllText()
 		} else if amountGivenField.isFirstResponder {
 			amountGivenField.resignFirstResponder()
 			ticketAmountField.becomeFirstResponder()
-			ticketAmountField.selectedTextRange = ticketAmountField.textRange(from: ticketAmountField.beginningOfDocument, to: ticketAmountField.endOfDocument)
+			ticketAmountField.selectAllText()
 		} else if (cashTipsField?.isFirstResponder)! {
 			cashTipsField?.resignFirstResponder()
 			amountGivenField.becomeFirstResponder()
-			amountGivenField.selectedTextRange = amountGivenField.textRange(from: amountGivenField.beginningOfDocument, to: amountGivenField.endOfDocument)
+			amountGivenField.selectAllText()
 		}
 	}
 	func goToNextField() {
@@ -400,19 +388,19 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			previousBarButton.isEnabled = true
 			ticketNumberField.resignFirstResponder()
 			ticketAmountField.becomeFirstResponder()
-			ticketAmountField.selectedTextRange = ticketAmountField.textRange(from: ticketAmountField.beginningOfDocument, to: ticketAmountField.endOfDocument)
+			ticketAmountField.selectAllText()
 		} else if ticketAmountField.isFirstResponder {
 			ticketAmountField.resignFirstResponder()
 			if quickTipSelector.selectedSegmentIndex == 5 {
 				amountGivenField.isEnabled = true
 				amountGivenField.becomeFirstResponder()
-				amountGivenField.selectedTextRange = amountGivenField.textRange(from: amountGivenField.beginningOfDocument, to: amountGivenField.endOfDocument)
+				amountGivenField.selectAllText()
 			}
 		} else if amountGivenField.isFirstResponder {
 			amountGivenField.resignFirstResponder()
 			cashTipsField?.isEnabled = true
 			cashTipsField?.becomeFirstResponder()
-			cashTipsField?.selectedTextRange = cashTipsField?.textRange(from: (cashTipsField?.beginningOfDocument)!, to: (cashTipsField?.endOfDocument)!)
+			cashTipsField?.selectAllText()
 		}
 	}
 	func doubleZero(_ sender : UIButton) {
@@ -420,7 +408,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			ticketAmountField.insertText("00")
 			ticketAmountField.resignFirstResponder()
 			amountGivenField.becomeFirstResponder()
-			amountGivenField.selectedTextRange = amountGivenField.textRange(from: amountGivenField.beginningOfDocument, to: amountGivenField.endOfDocument)
+			amountGivenField.selectAllText()
 		} else if amountGivenField.isFirstResponder {
 			amountGivenField.insertText("00")
 			amountGivenField.resignFirstResponder()
@@ -429,13 +417,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			cashTipsField?.resignFirstResponder()
 		}
 	}
-	
 	// UITextField Navigation Bar
-	let keyboardToolbar = UIToolbar()
-	let flexBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace,
-	                                    target: nil, action: nil)
-	let previousBarButton = UIBarButtonItem(title: "Previous", style: UIBarButtonItemStyle.plain, target: self, action: #selector(DeliveryViewController.goToPreviousField))
-	let nextBarButton = UIBarButtonItem(title: "Next", style: UIBarButtonItemStyle.plain, target: self, action: #selector(DeliveryViewController.goToNextField))
 	func addBarButtons() {
 		nextBarButton.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
 		previousBarButton.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
@@ -479,15 +461,8 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		}
 	}
 	func switchValueDidChange(_ aSwitch: UISwitch) {
-		var ticketAmountDropped = ticketAmountField.text
-		ticketAmountDropped?.remove(at: (ticketAmountDropped?.startIndex)!)
-		var amountGivenDropped = amountGivenField.text
-		amountGivenDropped?.remove(at: (amountGivenDropped?.startIndex)!)
-		var cashTipsDropped = cashTipsField?.text
-		cashTipsDropped?.remove(at: (cashTipsDropped?.startIndex)!)
 		if (noTipSwitch?.isOn)! {
 			delivery?.noTipSwitchValue = "true"
-			amountGivenDropped = ticketAmountDropped
 			amountGivenField.text = ticketAmountField.text
 			cashTipsField?.text = "$0.00"
 			amountGivenField.isEnabled = false
@@ -497,16 +472,15 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			delivery?.noTipSwitchValue = "false"
 			amountGivenField.isEnabled = true
 			cashTipsField?.isEnabled = true
+			removeFirstCharacterAndCalculate()
 		}
 	}
-	@IBAction func activityIndictorStart(_ sender: UIBarButtonItem) {
-		activityIndicator(msg: "    Saving...", true)
-	}
+	
 	// Dismissing Keyboard
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		self.view.endEditing(true)
 	}
-	func activityIndicator(msg:String, _ indicator:Bool ) {
+	func activityIndicator(msg: String, _ indicator: Bool ) {
 		print(msg)
 		strLabel = UILabel(frame: CGRect(x: 50, y: 0, width: 200, height: 50))
 		strLabel.text = msg
@@ -527,15 +501,3 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	}
 }
 
-// MARK: Extensions
-
-extension UIButton {
-	func setBackgroundColor(_ color: UIColor, forState: UIControlState) {
-		UIGraphicsBeginImageContext(CGSize(width: 1, height: 1))
-		UIGraphicsGetCurrentContext()!.setFillColor(color.cgColor)
-		UIGraphicsGetCurrentContext()!.fill(CGRect(x: 0, y: 0, width: 1, height: 1))
-		let colorImage = UIGraphicsGetImageFromCurrentImageContext()
-		UIGraphicsEndImageContext()
-		self.setBackgroundImage(colorImage, for: forState)
-	}
-}

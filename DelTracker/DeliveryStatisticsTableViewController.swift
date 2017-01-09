@@ -8,10 +8,9 @@
 
 
 import UIKit
+import CoreData
 
 class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldDelegate {
-	
-	var tabBar: DeliveryTabBarViewController?
 	@IBAction func manualDeliverySwitchChanged(_ sender: Any) {
 		deliveriesCount.isEnabled = manualDeliverySwitch.isOn
 		self.tabBarController?.tabBar.items![1].isEnabled = !manualDeliverySwitch.isOn
@@ -28,7 +27,7 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 	}
 	@IBAction func endEditing(_ sender: UITapGestureRecognizer) {
 		self.view.endEditing(true)
-			calculateManual()
+		calculateManual()
 	}
 	@IBAction func ReceivedTextFieldEditingEnded(_ sender: UITextField) {
 		if manualDeliverySwitch.isOn {
@@ -99,6 +98,7 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 	var deliveryDayViewController: DeliveryDayViewController?
 	var deliveries = [Delivery]()
 	var drops = [Drop]()
+	var tabBar: DeliveryTabBarViewController?
 	var ticketAmountArray: [Double] = []
 	var ticketAmountFinal: Double = 0.0
 	var amountGivenArray: [Double] = []
@@ -107,6 +107,7 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 	var cashTipsFinal: Double = 0.0
 	var totalTipsArray: [Double] = []
 	var totalTipsFinal: Double = 0.0
+	var totalTipsMinArray: [Double] = []
 	var totalDropsArray: [Double] = []
 	var totalDropsFinal: Double = 0.0
 	var noTipArray: [String] = []
@@ -127,6 +128,7 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 	var noTipSalesFinal: Double = 0.0
 	var whoMadeBank: String = ""
 	var whoClosedBank: String = ""
+	static var shortcutAction: String = ""
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.tabBarController?.tabBar.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
@@ -136,7 +138,9 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 		if let savedDeliveryDays = loadDeliveryDays() {
 			deliveryDays += savedDeliveryDays
 		}
-		if DeliveryDayTableViewController.status != "adding" {
+		if DeliveryStatisticsTableViewController.shortcutAction == "viewDeliveriesShortcut" || DeliveryStatisticsTableViewController.shortcutAction == "addDeliveryShortcut" {
+			self.tabBarController?.selectedIndex = 1
+		} else if DeliveryDayTableViewController.status != "adding" {
 			let selectedDeliveryDay = deliveryDays[Int(DeliveryDayTableViewController.status)!]
 			if selectedDeliveryDay.manual {
 				manualDeliverySwitch.isHidden = true
@@ -147,7 +151,7 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 				deliveriesCount.text = selectedDeliveryDay.deliveryDayCountValue
 				calculateManual()
 				manualDeliverySwitch.isOn = selectedDeliveryDay.manual
-				deliveriesCount.isEnabled = manualDeliverySwitch.isOn				
+				deliveriesCount.isEnabled = manualDeliverySwitch.isOn
 				self.tabBarController?.tabBar.items![1].isEnabled = !manualDeliverySwitch.isOn
 				self.tabBarController?.tabBar.items![2].isEnabled = !manualDeliverySwitch.isOn
 				addBarButtons()
@@ -156,12 +160,11 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 				whoClosedBank = selectedDeliveryDay.whoClosedBankName
 				actuallyReceivedField.text = selectedDeliveryDay.totalReceivedValue
 				manualDeliverySwitch.isHidden = true
-				manualDeliveryDayLabel.isHidden = true				
+				manualDeliveryDayLabel.isHidden = true
 			}
 		}
 	}
-	override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int)
-	{
+	override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int){
 		let title = UILabel()
 		title.textColor = UIColor.white
 		let header = view as! UITableViewHeaderFooterView
@@ -276,7 +279,6 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 			}
 			let deliveryCountValue = String(deliveries.count)
 			let deliveryDateValue = String(DeliveryDayViewController.selectedDateGlobal) ?? "010116"
-			//let tipsWithoutPayout = "S" + "\(String(format: "%.2f", Double(actuallyReceivedField.text)! - Double(deliveries.count) * 1.25))"
 			let totalTipsValue = "S" + "\(String(format: "%.2f", totalTipsFinal))"
 			let whoMadeBankName = self.whoMadeBank
 			let whoClosedBankName = self.whoClosedBank
@@ -304,6 +306,7 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 		chargeGivenArray.removeAll()
 		cashTipsArray.removeAll()
 		totalTipsArray.removeAll()
+		totalTipsMinArray.removeAll()
 		noTipArray.removeAll()
 		totalDropsArray.removeAll()
 		cashSalesArray.removeAll()
@@ -343,6 +346,9 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 				var totalTipsDropped = delivery.totalTipsValue
 				totalTipsDropped.remove(at: (delivery.totalTipsValue.startIndex))
 				let totalTipsRounded = round(Double(totalTipsDropped)! * 100) / 100
+				if totalTipsRounded > 0.0 {
+					totalTipsMinArray.append(totalTipsRounded)
+				}
 				totalTipsArray.append(totalTipsRounded)
 				let totalTipsTotaled = totalTipsArray.reduce(0, +)
 				self.totalTipsFinal = totalTipsTotaled
@@ -403,18 +409,15 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 				}
 			}
 		}
-		if let savedDrops = loadDrops() {
-			drops = savedDrops
-			for (index, _) in drops.enumerated() {
-				let drop = drops[index]
-				var totalDropsDropped = drop.deliveryDropAmount
-				totalDropsDropped.remove(at: (drop.deliveryDropAmount.startIndex))
-				let totalDropsRounded = round(Double(totalDropsDropped)! * 100) / 100
-				totalDropsArray.append(totalDropsRounded)
-				let totalDropsTotaled = totalDropsArray.reduce(0, +)
-				self.totalDropsFinal = totalDropsTotaled
-			}
-		}
+//		if let savedDrops = loadDrops() {
+//			drops = savedDrops
+//			for (index, _) in drops.enumerated() {
+//				let drop = drops[index]
+//				totalDropsArray.append(drop.dropAmount)
+//				let totalDropsTotaled = totalDropsArray.reduce(0, +)
+//				self.totalDropsFinal = totalDropsTotaled
+//			}
+//		}
 		let dateFormatter = DateFormatter()
 		dateFormatter.dateFormat = "MMddyy"
 		let dateFormatted = dateFormatter.date(from: DeliveryDayViewController.selectedDateGlobal)
@@ -460,7 +463,7 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 				otherSalesLabel.text = "$" + "\(String(format: "%.2f", otherSalesFinal))"
 				tipsAverageLabel.text = "$" + "\(String(format: "%.2f", totalTipsAverage))"
 				tipsMaxLabel.text = "$" + "\(String(format: "%.2f", totalTipsArray.max()!))"
-				tipsMinLabel.text = "$" + "\(String(format: "%.2f", totalTipsArray.min()!))"
+				tipsMinLabel.text = "$" + "\(String(format: "%.2f", totalTipsMinArray.min()!))"
 				noTipCountLabel.text = String(self.noTipArrayCount)
 				noTipSalesLabel.text = "$" + "\(String(format: "%.2f", noTipSalesFinal))"
 				let tips = self.amountGivenFinal - self.ticketAmountFinal + self.cashTipsFinal
@@ -485,15 +488,17 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 		currentDeliverDayDateLabel.text = dateFormattedFinal
 		whoMadeBankLabel.text = whoMadeBank
 		whoClosedBankLabel.text = whoClosedBank
+		self.tabBarController?.tabBar.items![1].badgeValue = String(deliveries.count)
+		self.tabBarController?.tabBar.items![2].badgeValue = String(drops.count)
 	}
 	func calculateManual() {
 		if manualDeliverySwitch.isOn {
-		let numberOfDeliveries: Double = Double(deliveriesCount.text!)!
-		let totalPaidout = numberOfDeliveries * 1.25
-		let totalReceived = removeFirstCharactersFrom(inputString: actuallyReceivedField.text!)
-		let totalTips = Double(totalReceived)! - totalPaidout
-		totalTipsLabel.text = "$" + "\(String(format: "%.2f", totalTips))"
-		paidoutLabel.text = "$" + "\(String(format: "%.2f", totalPaidout))"
+			let numberOfDeliveries: Double = Double(deliveriesCount.text!)!
+			let totalPaidout = numberOfDeliveries * 1.25
+			let totalReceived = removeFirstCharactersFrom(inputString: actuallyReceivedField.text!)
+			let totalTips = Double(totalReceived)! - totalPaidout
+			totalTipsLabel.text = "$" + "\(String(format: "%.2f", totalTips))"
+			paidoutLabel.text = "$" + "\(String(format: "%.2f", totalPaidout))"
 		}
 	}
 	let keyboardToolbar = UIToolbar()
@@ -507,8 +512,8 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 		keyboardToolbar.sizeToFit()
 		keyboardToolbar.items = [flexBarButton, previousBarButton, nextBarButton]
 		if manualDeliverySwitch.isOn {
-		deliveriesCount.inputAccessoryView = keyboardToolbar
-		actuallyReceivedField.inputAccessoryView = keyboardToolbar
+			deliveriesCount.inputAccessoryView = keyboardToolbar
+			actuallyReceivedField.inputAccessoryView = keyboardToolbar
 		}
 	}
 	func goToPreviousField(_:Any?) {
@@ -559,12 +564,21 @@ class DeliveryStatisticsTableViewController: UITableViewController, UITextFieldD
 		}
 	}
 	func loadDrops() -> [Drop]? {
-		return NSKeyedUnarchiver.unarchiveObject(withFile: Drop.ArchiveURL.path) as? [Drop]
-	}
-	func saveDrops() {
-		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(drops, toFile: Drop.ArchiveURL.path)
-		if !isSuccessfulSave {
-			print("save Failed")
+		let coreDataStack = UIApplication.shared.delegate as! AppDelegate
+		let context = coreDataStack.persistentContainer.viewContext
+		let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Drop")
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "MMM d, yyyy"
+		let dateFormatted = DeliveryDayViewController.selectedDateGlobal
+		let dateFormattedFinal = dateFormatter.date(from: dateFormatted)
+		request.predicate = NSPredicate(format: "dropTime = %@", "\(dateFormattedFinal)")
+		request.returnsObjectsAsFaults = false
+		do {
+			let results = try context.fetch(request)
+		return results as? [Drop]
+		} catch {
+			print("Request failed")
+			return []
 		}
 	}
 }

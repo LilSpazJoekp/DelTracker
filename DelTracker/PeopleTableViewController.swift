@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class PeopleTableViewController: UITableViewController {
 	
@@ -27,6 +28,21 @@ class PeopleTableViewController: UITableViewController {
 		if let savedPeople = loadPeople() {
 			people += savedPeople
 		}
+		let coreDataStack = UIApplication.shared.delegate as! AppDelegate
+		let context = coreDataStack.persistentContainer.viewContext/*
+		for person in people {
+			let newPerson = PersonCore(context: context)
+			newPerson.setValue(person.name, forKey: "name")
+			do {
+				try context.save()
+				print("Save Successful \(newPerson)")
+			} catch {
+				print("Failed to save")
+				let nserror = error as NSError
+				fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+			}
+		
+		}*/
 	}
 	
 	// MARK: - Table view data source

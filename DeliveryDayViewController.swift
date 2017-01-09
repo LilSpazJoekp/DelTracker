@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class DeliveryDayViewController: UIViewController, UINavigationControllerDelegate {
 	@IBAction func datePickerValueChanged(_ sender: UIDatePicker) {
@@ -39,10 +40,18 @@ class DeliveryDayViewController: UIViewController, UINavigationControllerDelegat
 	}
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		if deliveryDay != nil {
+			deliveryDatePicker.isEnabled = false
+		}
+		setArchiveURLPath()
 		deliveryDatePicker.setValue(UIColor.white, forKey: "textColor")
 	}
 	override func viewDidAppear(_ animated: Bool) {
-		if let deliveryDay = deliveryDay {
+		if DeliveryStatisticsTableViewController.shortcutAction == "addDeliveryShortcut" {
+			performSegue(withIdentifier: "edit", sender: self)
+		} else if DeliveryStatisticsTableViewController.shortcutAction == "viewDeliveriesShortcut" {
+			performSegue(withIdentifier: "edit", sender: self)
+		} else if let deliveryDay = deliveryDay {
 			let dateFormatter = DateFormatter()
 			dateFormatter.dateFormat = "MMddyy"
 			let date = dateFormatter.date(from: deliveryDay.deliveryDateValue)
@@ -50,6 +59,7 @@ class DeliveryDayViewController: UIViewController, UINavigationControllerDelegat
 			if let savedDeliveryDays = loadDeliveryDays() {
 				deliveryDays += savedDeliveryDays
 			}
+			setArchiveURLPath()
 		}
 		setArchiveURLPath()
 	}
@@ -84,7 +94,7 @@ class DeliveryDayViewController: UIViewController, UINavigationControllerDelegat
 		dateFormatter.dateFormat = "MMddyy"
 		DeliveryDayViewController.selectedDateGlobal = dateFormatter.string(from: deliveryDatePicker.date)
 		Delivery.ArchiveURL = Delivery.DocumentsDirectory.appendingPathComponent("\(DeliveryDayViewController.selectedDateGlobal)")
-		Drop.ArchiveURL = Drop.DocumentsDirectory.appendingPathComponent("\(DeliveryDayViewController.selectedDateGlobal)")
+		//Drop.ArchiveURL = Drop.DocumentsDirectory.appendingPathComponent("\(DeliveryDayViewController.selectedDateGlobal)")
 	}
 	func loadDeliveryDays() -> [DeliveryDay]? {
 		return NSKeyedUnarchiver.unarchiveObject(withFile: DeliveryDay.ArchiveURL.path) as? [DeliveryDay]

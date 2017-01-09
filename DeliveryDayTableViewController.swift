@@ -8,6 +8,7 @@
 //
 
 import UIKit
+import CoreData
 
 class DeliveryDayTableViewController: UITableViewController {
 	@IBOutlet var table: UITableView!
@@ -21,7 +22,6 @@ class DeliveryDayTableViewController: UITableViewController {
 				print(path)
 				let indexPath: IndexPath = [0, path]
 				indexPathsToDelete.append(indexPath)
-				print(indexPathsToDelete)
 				removeDelivery(deliveryDate: deliveryDay.deliveryDateValue)
 				deliveryDays.remove(at: path)
 			} else {
@@ -59,8 +59,12 @@ class DeliveryDayTableViewController: UITableViewController {
 	var indexPathsToDelete: [IndexPath] = []
 	static var status: String = ""
 	static var manual: Bool?
+	var insertRows: IndexPath? = nil
+	var newRows: IndexPath? = nil
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		insertRows?.removeFirst()
+		newRows?.removeFirst()
 		self.clearsSelectionOnViewWillAppear = true
 		deleteButton.isEnabled = false
 		deleteButton.tintColor = UIColor.clear
@@ -68,7 +72,6 @@ class DeliveryDayTableViewController: UITableViewController {
 		if let savedDeliveryDays = loadDeliveryDays() {
 			deliveryDays += savedDeliveryDays
 		}
-		print(DeliveryDay.ArchiveURL.path)
 	}
 	
 	// MARK: - Table view data source
@@ -107,7 +110,6 @@ class DeliveryDayTableViewController: UITableViewController {
 		setDeleteButtonCount()
 		selectedIndicies.append(indexPath.row)
 		if selectedIndicies.count != 0 {
-			print(selectedIndicies)
 		}
 	}
 	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
@@ -120,9 +122,7 @@ class DeliveryDayTableViewController: UITableViewController {
 				for (index, _) in selectedIndicesFiltered.enumerated() {
 					deselectedIndexPath = selectedIndicesFiltered[index]
 				}
-				print(deselectedIndexPath!)
 				selectedIndicies.remove(at: selectedIndicies.index(of: Int(deselectedIndexPath!))!)
-				print(selectedIndicies)
 			}
 		}
 	}
@@ -145,8 +145,8 @@ class DeliveryDayTableViewController: UITableViewController {
 			let deliveryDay = deliveryDays[indexPath.row]
 			removeDelivery(deliveryDate: deliveryDay.deliveryDateValue)
 			deliveryDays.remove(at: indexPath.row)
-			saveDeliveryDays()
 			tableView.deleteRows(at: [indexPath], with: .fade)
+			saveDeliveryDays()
 		}
 	}
 	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
@@ -189,8 +189,7 @@ class DeliveryDayTableViewController: UITableViewController {
 					DeliveryDayViewController.manualStatus = selectedDeliveryDay.manual
 					DeliveryDayTableViewController.status = String(indexPath.row)
 				}
-			} else if segue.identifier == "addItem" {
-				
+			} else if segue.identifier == "addItem" {				
 				DeliveryDayTableViewController.status = "adding"
 			}
 		}
@@ -248,11 +247,4 @@ class DeliveryDayTableViewController: UITableViewController {
 		}
 	}
 }
-extension UIBarButtonItem {
-	func setTitleWithOutAnimation(title: String?) {
-		UIView.setAnimationsEnabled(false)
-		self.title = title
-		
-		UIView.setAnimationsEnabled(true)
-	}
-}
+

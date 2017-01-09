@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class DeliveryDayTableViewCell: UITableViewCell {
 	@IBOutlet var dateLabel: UILabel?

@@ -50,9 +50,11 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 	var deselectedIndexPath: Int?
 	var indexPathsToDelete: [IndexPath] = []
 	var deliveries = [Delivery]()
+	var drops = [Drop]()
 	var messageFrame = UIView()
 	var activityIndicator = UIActivityIndicatorView()
 	var strLabel = UILabel()
+	var tabBar: DeliveryTabBarViewController?
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.clearsSelectionOnViewWillAppear = true
@@ -100,8 +102,19 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 		cell.selectedBackgroundView = backgroundView
 		return cell
 	}
+	override func viewWillAppear(_ animated: Bool) {
+		self.tabBarController?.tabBar.isHidden = false
+		if DeliveryStatisticsTableViewController.shortcutAction == "addDeliveryShortcut" {
+			performSegue(withIdentifier: "addItem", sender: self)
+			DeliveryStatisticsTableViewController.shortcutAction = ""
+		} else if DeliveryStatisticsTableViewController.shortcutAction == "viewDeliveriesShortcut" {
+			DeliveryStatisticsTableViewController.shortcutAction = ""
+		}
+	}
 	override func viewDidAppear(_ animated: Bool) {
 		table.reloadSections(IndexSet.init(integer: 0), with: .fade)
+		self.tabBarController?.tabBar.items![1].badgeValue = String(deliveries.count)
+		self.tabBarController?.tabBar.items![2].badgeValue = String(drops.count)
 	}
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
 		return true
@@ -124,23 +137,19 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 		setDeleteButtonCount()
 		selectedIndicies.append(indexPath.row)
 		if selectedIndicies.count != 0 {
-			print(selectedIndicies)
 		}
 	}
 	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
 		setDeleteButtonCount()
 		if selectedIndicies.count != 0 {
-			if selectedIndicies.contains(indexPath.row) {
-				
+			if selectedIndicies.contains(indexPath.row) {				
 				let selectedIndicesFiltered = selectedIndicies.filter {
 					el in el == indexPath.row
 				}
 				for (index, _) in selectedIndicesFiltered.enumerated() {
 					deselectedIndexPath = selectedIndicesFiltered[index]
 				}
-				print(deselectedIndexPath!)
 				selectedIndicies.remove(at: selectedIndicies.index(of: Int(deselectedIndexPath!))!)
-				print(selectedIndicies)
 			}
 		}
 	}
@@ -163,10 +172,10 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 	
 	@IBAction func unwindToDeliveryList(_ sender: UIStoryboardSegue) {
 		if let sourceViewController = sender.source as? DeliveryViewController, let delivery = sourceViewController.delivery {
-			activityIndicator(msg: "    Saving...", true)
 			if let selectedIndexPath = tableView.indexPathForSelectedRow {
 				deliveries[selectedIndexPath.row] = delivery
 				tableView.reloadRows(at: [selectedIndexPath], with: .right)
+				tableView.deselectRow(at: selectedIndexPath, animated: true)
 			} else {
 				let newIndexPath = IndexPath(row: deliveries.count, section: 0)
 				deliveries.append(delivery)
@@ -183,8 +192,6 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 				let selectedDelivery = deliveries[indexPath.row]
 				deliveryDetailViewController.delivery = selectedDelivery
 			}
-		} else if segue.identifier == "addItem" {
-			
 		}
 	}
 	override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
@@ -195,13 +202,7 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 		}
 	}
 	
-	//MARK: CoreData
-	
-	func getContext () -> NSManagedObjectContext {
-		let appDelegate = UIApplication.shared.delegate as! AppDelegate
-		return appDelegate.persistentContainer.viewContext
-	}
-	func activityIndicator(msg:String, _ indicator:Bool ) {
+	func activityIndicator(msg: String, _ indicator: Bool) {
 		print(msg)
 		strLabel = UILabel(frame: CGRect(x: 50, y: 0, width: 200, height: 50))
 		strLabel.text = msg

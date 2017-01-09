@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import CoreData
 
-class DropTableViewController: UITableViewController {
+class DropTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 	@IBOutlet var table: UITableView!
 	@IBOutlet var editButton: UIBarButtonItem!
 	@IBOutlet var deleteButton: UIBarButtonItem!
@@ -18,12 +19,13 @@ class DropTableViewController: UITableViewController {
 			print(path)
 			let indexPath: IndexPath = [0, path]
 			indexPathsToDelete.append(indexPath)
-			print(indexPathsToDelete)
-			removeDrop(dropDate: "drops" + DeliveryDayViewController.selectedDateGlobal)
+			//print(indexPathsToDelete)
+			//removeDrop(dropDate: "drops" + DeliveryDayViewController.selectedDateGlobal)
 			drops.remove(at: path)
 		}
 		table.deleteRows(at: indexPathsToDelete, with: .fade)
-		saveDrops()
+		//save
+		
 		table.setEditing(false, animated: true)
 		editButton.title = "Edit"
 		editButton.style = UIBarButtonItemStyle.plain
@@ -50,13 +52,36 @@ class DropTableViewController: UITableViewController {
 	var selectedIndicies: [Int] = []
 	var deselectedIndexPath: Int?
 	var indexPathsToDelete: [IndexPath] = []
+	var deliveryDayViewController: DeliveryDayViewController?
+	var managedObjectContext: NSManagedObjectContext? = nil
+	
+	// MARK: View Life Cycle
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.clearsSelectionOnViewWillAppear = true
 		//self.navigationItem.leftBarButtonItem = self.editButtonItem
 		self.navigationItem.leftBarButtonItem?.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
-		if let savedDrops = loadDrops() {
-			drops += savedDrops
+	}
+	override func viewDidAppear(_ animated: Bool) {
+		let context = self.fetchedResultsController.managedObjectContext
+		let request = NSFetchRequest<Drop>(entityName: "Drop")
+		do {
+			let results = try context.fetch(request)
+			if results.count > 0 {
+				for result in results {
+					context.delete(result)
+					do {
+						try context.save()
+					} catch {
+						let nserror = error as NSError
+						fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+					}
+				}
+			}
+		} catch {
+			let nserror = error as NSError
+			fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
 		}
 	}
 	func setDeleteButtonCount() {
@@ -73,62 +98,90 @@ class DropTableViewController: UITableViewController {
 			}
 		}
 	}
-	// MARK: - Table view data source
+	// MARK: - Table View
 	
 	override func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return drops.count
+		let sectionInfo = self.fetchedResultsController.sections![section]
+		return sectionInfo.numberOfObjects
 	}
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cellIdentifier = "dropCell"
 		let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! DropTableViewCell
-		let drop = drops[indexPath.row]
-		cell.dropNumber.text = String(indexPath.row + 1)
-		cell.dropAmount.text = drop.deliveryDropAmount
-		let backgroundView = UIView()
-		backgroundView.backgroundColor = UIColor.darkGray
-		cell.selectedBackgroundView = backgroundView
+		let drop = self.fetchedResultsController.object(at: indexPath)
+		self.configureCell(cell, withDrop: drop, indexPath: indexPath)
 		return cell
 	}
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		setDeleteButtonCount()
-		selectedIndicies.append(indexPath.row)
-		if selectedIndicies.count != 0 {
-			print(selectedIndicies)
-		}
-	}
-	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-		setDeleteButtonCount()
-		if selectedIndicies.count != 0 {
-			if selectedIndicies.contains(indexPath.row) {				
-				let selectedIndicesFiltered = selectedIndicies.filter {
-					el in el == indexPath.row
-				}
-				for (index, _) in selectedIndicesFiltered.enumerated() {
-					deselectedIndexPath = selectedIndicesFiltered[index]
-				}
-				print(deselectedIndexPath!)
-				selectedIndicies.remove(at: selectedIndicies.index(of: Int(deselectedIndexPath!))!)
-				print(selectedIndicies)
-			}
-		}
-	}
-	override func viewDidAppear(_ animated: Bool) {
-	}
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		// Return false if you do not want the specified item to be editable.
 		return true
 	}
-	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-		if editingStyle == .delete {
-			drops.remove(at: indexPath.row)
-			saveDrops()
-			tableView.deleteRows(at: [indexPath], with: .fade)
-		} else if editingStyle == .insert {
+	func configureCell(_ cell: DropTableViewCell, withDrop drop: Drop, indexPath: IndexPath) {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "hh:mm:ss a"
+		//let formattedTime = dateFormatter.string(from: drop.dropTime as! Date)
+		cell.dropAmount.text = convertToCurrency(drop.dropAmount)
+		cell.dropNumber.text = "\(indexPath.row)"
+		//cell.dropTime.text = formattedTime
+	}
+	
+	// MARK: - Fetched results controller
+	
+	var fetchedResultsController: NSFetchedResultsController<Drop> {
+		if _fetchedResultsController != nil {
+			return _fetchedResultsController!
+		}
+		let fetchRequest: NSFetchRequest<Drop> = Drop.fetchRequest()
+		// Set the batch size to a suitable number.
+		fetchRequest.fetchBatchSize = 20
+		// Edit the sort key as appropriate.
+		let sortDescriptor = NSSortDescriptor(key: "dropTime", ascending: false)
+		fetchRequest.sortDescriptors = [sortDescriptor]
+		// Edit the section name key path and cache name if appropriate.
+		// nil for section name key path means "no sections".
+		let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.managedObjectContext!, sectionNameKeyPath: "Drop", cacheName: "Master")
+		aFetchedResultsController.delegate = self
+		_fetchedResultsController = aFetchedResultsController
+		do {
+			try _fetchedResultsController!.performFetch()
+		} catch {
+			// Replace this implementation with code to handle the error appropriately.
+			// fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+			let nserror = error as NSError
+			fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+		}		
+		return _fetchedResultsController!
+	}
+	var _fetchedResultsController: NSFetchedResultsController<Drop>? = nil
+	func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		self.tableView.beginUpdates()
+	}
+	func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+		switch type {
+		case .insert:
+			self.tableView.insertSections(IndexSet(integer: sectionIndex), with: .fade)
+		case .delete:
+			self.tableView.deleteSections(IndexSet(integer: sectionIndex), with: .fade)
+		default:
+			return
 		}
 	}
-	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+	func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+		switch type {
+		case .insert:
+			tableView.insertRows(at: [newIndexPath!], with: .fade)
+		case .delete:
+			tableView.deleteRows(at: [indexPath!], with: .fade)
+		case .update:
+			self.configureCell(tableView.cellForRow(at: indexPath!)! as! DropTableViewCell, withDrop: anObject as! Drop, indexPath: indexPath!)
+		case .move:
+			tableView.moveRow(at: indexPath!, to: newIndexPath!)
+		}
+	}
+	func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		self.tableView.endUpdates()
 	}
 	
 	// MARK: - Navigation
@@ -143,7 +196,6 @@ class DropTableViewController: UITableViewController {
 				drops.append(drop)
 				tableView.insertRows(at: [newIndexPath], with: .bottom)
 			}
-			saveDrops()
 		}
 	}
 	override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
@@ -163,31 +215,55 @@ class DropTableViewController: UITableViewController {
 			}
 		}
 	}
+	func convertToCurrency(_ inputDouble: Double) -> String {
+		let outputString = "$" + "\(String(format: "%.2f", inputDouble))"
+		return outputString
+	}
+	func convertToTime(_ date: Date) -> String {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "hh:mm:ss a"
+		let time = dateFormatter.string(from: date)
+		return time
+	}
 	
 	// MARK: NSCoding
 	
-	func saveDrops() {
-		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(drops, toFile: Drop.ArchiveURL.path)
-		if !isSuccessfulSave {
-			print("save Failed")
-		}
-	}
+	
 	func loadDrops() -> [Drop]? {
-		return NSKeyedUnarchiver.unarchiveObject(withFile: Drop.ArchiveURL.path) as? [Drop]
-	}
-	func removeDrop(dropDate: String) {
-		let fileManager = FileManager.default
-		let nsDocumentDirectory = FileManager.SearchPathDirectory.documentDirectory
-		let nsUserDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-		let paths = NSSearchPathForDirectoriesInDomains(nsDocumentDirectory, nsUserDomainMask, true)
-		guard let dirPath = paths.first else {
-			return
-		}
-		let filePath = "\(dirPath)/\(dropDate)"
+		let coreDataStack = UIApplication.shared.delegate as! AppDelegate
+		// UIApplication.shared().delegate as! AppDelegate is now UIApplication.shared.delegate as! AppDelegate
+		let context = coreDataStack.persistentContainer.viewContext
+		let request = NSFetchRequest<Drop>(entityName: "Drop")
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "MMddyy"
+		let dateFormatted = dateFormatter.date(from: DeliveryDayViewController.selectedDateGlobal)
+		dateFormatter.dateFormat = "MMM d, yyyy"
+		let dateFormattedFinal = dateFormatter.string(from: dateFormatted!)
+		//request.predicate = NSPredicate(format: "dropTime = %@", dateFormattedFinal)
+		request.returnsObjectsAsFaults = false
 		do {
-			try fileManager.removeItem(atPath: filePath)
-		} catch let error as NSError {
-			print(error.debugDescription)
+			let results = try context.fetch(request)
+		return results as [Drop]
+		} catch {
+			print("Request failed")
+			return []
 		}
 	}
+	/*
+	func removeDrop(dropDate: String) {
+	let fileManager = FileManager.default
+	let nsDocumentDirectory = FileManager.SearchPathDirectory.documentDirectory
+	let nsUserDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+	let paths = NSSearchPathForDirectoriesInDomains(nsDocumentDirectory, nsUserDomainMask, true)
+	guard let dirPath = paths.first else {
+	return
+	}
+	let filePath = "\(dirPath)/\(dropDate)"
+	do {
+	try fileManager.removeItem(atPath: filePath)
+	} catch let error as NSError {
+	print(error.debugDescription)
+	}
+	}
+	*/
 }

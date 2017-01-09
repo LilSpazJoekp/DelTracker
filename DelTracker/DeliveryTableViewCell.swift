@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class DeliveryTableViewCell: UITableViewCell {
 	@IBOutlet var deliveryNumber: UILabel!

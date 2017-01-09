@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class DeliveryTabBarViewController: UITabBarController {
 	
@@ -15,8 +16,5 @@ class DeliveryTabBarViewController: UITabBarController {
 	}
 	func loadDeliveries() -> [Delivery]? {
 		return NSKeyedUnarchiver.unarchiveObject(withFile: Delivery.ArchiveURL.path) as? [Delivery]
-	}
-	func loadDrops() -> [Drop]? {
-		return NSKeyedUnarchiver.unarchiveObject(withFile: Drop.ArchiveURL.path) as? [Drop]
 	}
 }

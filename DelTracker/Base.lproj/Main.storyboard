@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D12b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="MCf-yt-ql0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D17a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="MCf-yt-ql0">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -15,7 +15,7 @@
         <!--Add Delivery-->
         <scene sceneID="exS-pd-sGC">
             <objects>
-                <viewController id="Ck1-Ca-689" userLabel="Add Delivery" customClass="DeliveryViewController" customModule="DelTracker" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController useStoryboardIdentifierAsRestorationIdentifier="YES" id="Ck1-Ca-689" userLabel="Add Delivery" customClass="DeliveryViewController" customModule="DelTracker" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="C6i-t8-6HH"/>
                         <viewControllerLayoutGuide type="bottom" id="nRv-mT-Zpr"/>
@@ -118,7 +118,6 @@
                                     <barButtonItem systemItem="save" id="b2p-cK-hI5">
                                         <connections>
                                             <action selector="saveDelivery:" destination="Ck1-Ca-689" id="AZm-51-GnQ"/>
-                                            <segue destination="hIt-Xb-CEL" kind="unwind" unwindAction="unwindToDeliveryList:" id="x6m-7a-ELp"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>
@@ -127,11 +126,21 @@
                                 <rect key="frame" x="0.0" y="20" width="414" height="44"/>
                                 <items>
                                     <navigationItem title="Edit Delivery" id="Z8k-Nz-Q0F">
-                                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="Upb-X6-l2m">
-                                            <connections>
-                                                <action selector="cancelEdit:" destination="Ck1-Ca-689" id="auM-WR-MwG"/>
-                                            </connections>
-                                        </barButtonItem>
+                                        <barButtonItem key="backBarButtonItem" title="Deliveries" id="uPO-fp-Gic"/>
+                                        <rightBarButtonItems>
+                                            <barButtonItem systemItem="camera" id="eb3-Ez-0kz">
+                                                <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                <connections>
+                                                    <segue destination="ybr-cx-O2w" kind="presentation" identifier="scan" id="FYb-JT-7jV"/>
+                                                </connections>
+                                            </barButtonItem>
+                                            <barButtonItem title="Light" id="6GO-td-U9s">
+                                                <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                <connections>
+                                                    <action selector="toggle:" destination="Ck1-Ca-689" id="kMe-Tv-Qxv"/>
+                                                </connections>
+                                            </barButtonItem>
+                                        </rightBarButtonItems>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -156,16 +165,12 @@
                                 <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cmr-Zo-bFa">
-                                <rect key="frame" x="20" y="338" width="374" height="161"/>
+                            <pickerView contentMode="scaleToFill" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="Cmr-Zo-bFa">
+                                <rect key="frame" x="20" y="337.33333333333331" width="374" height="167"/>
                                 <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <accessibilityTraits key="traits" playsSound="YES" adjustable="YES"/>
                                 </accessibility>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="161" id="2xa-cr-uBt"/>
-                                    <constraint firstAttribute="width" constant="374" id="5t3-cZ-zzE"/>
-                                </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="textColor">
                                         <color key="value" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -192,7 +197,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$0.00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8o6-JV-A43">
-                                <rect key="frame" x="349" y="309" width="45" height="21"/>
+                                <rect key="frame" x="349" y="309" width="45" height="20.333333333333314"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -238,10 +243,7 @@
                                 </connections>
                             </textField>
                             <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="eBJ-AP-4Wo">
-                                <rect key="frame" x="20" y="507" width="374" height="172"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="172" id="b6n-Do-tAq"/>
-                                </constraints>
+                                <rect key="frame" x="20" y="512.33333333333348" width="374" height="166.66666666666663"/>
                                 <date key="date" timeIntervalSinceReferenceDate="503095998.58481801">
                                     <!--2016-12-10 20:53:18 +0000-->
                                 </date>
@@ -268,10 +270,11 @@
                             <constraint firstItem="pZE-mc-txH" firstAttribute="leading" secondItem="c1g-4j-5ub" secondAttribute="trailing" constant="8" symbolic="YES" id="6CP-ow-b63"/>
                             <constraint firstItem="8o6-JV-A43" firstAttribute="top" secondItem="wNG-ch-15z" secondAttribute="bottom" constant="10" id="6U9-sX-gYs"/>
                             <constraint firstItem="8o6-JV-A43" firstAttribute="top" secondItem="qfK-4N-wdw" secondAttribute="top" constant="309" id="8Bj-EW-gZv"/>
+                            <constraint firstItem="eBJ-AP-4Wo" firstAttribute="height" secondItem="Cmr-Zo-bFa" secondAttribute="height" id="8aY-9Z-s70"/>
                             <constraint firstAttribute="leadingMargin" secondItem="eBJ-AP-4Wo" secondAttribute="leading" id="CzH-bo-5Ku"/>
                             <constraint firstItem="Cmr-Zo-bFa" firstAttribute="centerX" secondItem="qfK-4N-wdw" secondAttribute="centerX" id="Eff-Si-MU3"/>
                             <constraint firstItem="pZE-mc-txH" firstAttribute="top" secondItem="Dek-Ms-0LF" secondAttribute="bottom" constant="8" symbolic="YES" id="FEI-Qi-LBb"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Cmr-Zo-bFa" secondAttribute="trailing" id="Gmm-iy-iup"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="Cmr-Zo-bFa" secondAttribute="leading" id="Gmm-iy-iup"/>
                             <constraint firstItem="8o6-JV-A43" firstAttribute="trailing" secondItem="wNG-ch-15z" secondAttribute="trailing" id="HXF-7V-x9E"/>
                             <constraint firstItem="f08-5T-t4a" firstAttribute="leading" secondItem="h7l-16-1pY" secondAttribute="trailing" constant="-133" id="Iw0-WY-zTC"/>
                             <constraint firstAttribute="trailing" secondItem="oTY-Ww-fXu" secondAttribute="trailing" id="JCq-5D-Jch"/>
@@ -314,12 +317,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Add Delivery" id="DMb-rH-FkB">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="M2p-2v-AW8">
-                            <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="cancelAdd:" destination="Ck1-Ca-689" id="s3O-pL-dCj"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="backBarButtonItem" title="Deliveries" id="gGA-R7-r45"/>
                         <rightBarButtonItems>
                             <barButtonItem systemItem="camera" id="1Eq-y5-VDh">
                                 <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -345,19 +343,19 @@
                         <outlet property="noTipSwitch" destination="Dek-Ms-0LF" id="fDA-8U-Tpe"/>
                         <outlet property="paymentMethodPicker" destination="Cmr-Zo-bFa" id="3B7-XG-yql"/>
                         <outlet property="quickTipSelector" destination="h7l-16-1pY" id="YCs-gk-4VW"/>
-                        <outlet property="saveDelivery" destination="b2p-cK-hI5" id="cUe-5K-37o"/>
                         <outlet property="setTimeToNowButton" destination="X53-vs-jif" id="fxk-KN-zGC"/>
                         <outlet property="ticketAmountField" destination="iDp-nC-dCM" id="quM-m9-u0s"/>
                         <outlet property="ticketNumberField" destination="GGt-il-SEx" id="KZC-Lp-6Se"/>
                         <outlet property="timeOverrideSwitch" destination="WEB-jd-FYD" id="KFx-Qf-owO"/>
                         <outlet property="totalTips" destination="8o6-JV-A43" id="4c5-HB-pbF"/>
                         <outlet property="viewTicketPhoto" destination="VZF-KF-MRa" id="ih5-Cw-iyc"/>
+                        <segue destination="hIt-Xb-CEL" kind="unwind" identifier="unwindToDeliveryListSegue" unwindAction="unwindToDeliveryList:" id="7fc-B8-03A"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nei-JL-scL" sceneMemberID="firstResponder"/>
                 <exit id="hIt-Xb-CEL" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="6595.652173913044" y="-854.34782608695662"/>
+            <point key="canvasLocation" x="5793" y="-1186"/>
         </scene>
         <!--Ticket Photo View Controller-->
         <scene sceneID="Ig1-nR-wwI">
@@ -406,6 +404,7 @@
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
+                        <outlet property="navbar" destination="B82-80-0Rk" id="ijI-qD-x9c"/>
                         <outlet property="ticketPhotoImageView" destination="vop-Yj-pbh" id="Xyz-Wi-nT6"/>
                     </connections>
                 </viewController>
@@ -417,7 +416,7 @@
                 </rotationGestureRecognizer>
                 <pinchGestureRecognizer id="NaU-hJ-fI0"/>
             </objects>
-            <point key="canvasLocation" x="7366.666666666667" y="-1856.2500000000002"/>
+            <point key="canvasLocation" x="6545" y="-1516"/>
         </scene>
         <!--Barcode View Controller-->
         <scene sceneID="gnf-1V-ZHD">
@@ -462,12 +461,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dEb-e8-IW4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7367" y="-1195"/>
+            <point key="canvasLocation" x="6545" y="-855"/>
         </scene>
         <!--Deliveries-->
         <scene sceneID="gcJ-VK-O4N">
             <objects>
-                <tableViewController modalTransitionStyle="crossDissolve" id="KWd-jm-cNS" customClass="DeliveryTableViewController" customModule="DelTracker" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController modalTransitionStyle="crossDissolve" useStoryboardIdentifierAsRestorationIdentifier="YES" id="KWd-jm-cNS" customClass="DeliveryTableViewController" customModule="DelTracker" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="black" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelectionDuringEditing="YES" allowsMultipleSelectionDuringEditing="YES" rowHeight="75" sectionHeaderHeight="28" sectionFooterHeight="28" id="gfm-mS-H2h">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -600,9 +599,9 @@
                                     <outlet property="ticketAmountCell" destination="Yhh-K9-KxV" id="Dev-i6-DEJ"/>
                                     <outlet property="ticketNumberCell" destination="zPF-2X-02e" id="Ie4-Nw-ftU"/>
                                     <outlet property="totalTipsCell" destination="qK6-dn-ZcV" id="4QH-QE-AqS"/>
-                                    <segue destination="Ck1-Ca-689" kind="showDetail" identifier="showDetail" id="0wE-d2-vRe">
-                                        <segue key="commit" inheritsFrom="parent" id="b6P-bh-6xm"/>
-                                        <segue key="preview" inheritsFrom="commit" id="J8u-zB-qCm"/>
+                                    <segue destination="Ck1-Ca-689" kind="showDetail" identifier="showDetail" action="showViewController:sender:" id="BX5-gx-VrQ">
+                                        <segue key="commit" inheritsFrom="parent" id="dH7-69-Pdf"/>
+                                        <segue key="preview" inheritsFrom="commit" id="W0S-4M-NY3"/>
                                     </segue>
                                 </connections>
                             </tableViewCell>
@@ -614,7 +613,7 @@
                     </tableView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Deliveries" id="IsQ-gB-ZaN">
-                        <barButtonItem key="backBarButtonItem" title="Day" id="7NF-II-h1h"/>
+                        <barButtonItem key="backBarButtonItem" title="Deliveries" id="7NF-II-h1h"/>
                         <leftBarButtonItems>
                             <barButtonItem systemItem="edit" id="g2h-ig-5H1">
                                 <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -632,14 +631,13 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="TuU-mm-iLp">
                             <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
-                                <segue destination="55y-U3-PIK" kind="popoverPresentation" identifier="addItem" popoverAnchorBarButtonItem="TuU-mm-iLp" id="hl1-WR-uXs">
-                                    <popoverArrowDirection key="popoverArrowDirection" left="YES"/>
-                                </segue>
+                                <segue destination="Ck1-Ca-689" kind="show" identifier="addItem" id="WXw-2w-NlP"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics" barStyle="black"/>
                     <connections>
                         <outlet property="deleteButton" destination="Fph-2c-OLb" id="OCy-fD-Ehd"/>
                         <outlet property="editButton" destination="g2h-ig-5H1" id="gow-aK-idd"/>
@@ -773,6 +771,7 @@
                         <outlet property="deleteButton" destination="Kl7-Gy-P6g" id="7yd-hr-U1v"/>
                         <outlet property="editButton" destination="1CE-qD-YQB" id="KLt-Bn-FUY"/>
                         <outlet property="table" destination="5HL-84-f67" id="jH8-22-o4k"/>
+                        <segue destination="pgk-wT-5uc" kind="show" identifier="deliveryDayShowDetail" id="kMC-GB-yH1"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kpF-ql-OGA" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -782,7 +781,7 @@
         <!--Add Day-->
         <scene sceneID="ret-i5-JYH">
             <objects>
-                <viewController id="VxG-zJ-4Br" customClass="DeliveryDayViewController" customModule="DelTracker" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="deliveryTableViewController" id="VxG-zJ-4Br" customClass="DeliveryDayViewController" customModule="DelTracker" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="pKj-wQ-YWP"/>
                         <viewControllerLayoutGuide type="bottom" id="L1X-ld-Y6a"/>
@@ -806,7 +805,7 @@
                                             <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
                                             <connections>
                                                 <action selector="daySaveButton:" destination="VxG-zJ-4Br" id="apE-Tp-AFv"/>
-                                                <segue destination="pgk-wT-5uc" kind="presentation" identifier="showDetail" id="ENj-Yr-GQC"/>
+                                                <segue destination="pgk-wT-5uc" kind="show" identifier="edit" action="showDetailViewController:sender:" id="ENj-Yr-GQC"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -841,11 +840,12 @@
                             <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="daySaveButton:" destination="VxG-zJ-4Br" id="zGn-0N-LTF"/>
-                                <segue destination="pgk-wT-5uc" kind="presentation" identifier="addItem" id="0dH-Sp-i2K"/>
+                                <segue destination="pgk-wT-5uc" kind="show" identifier="deliveryDayShowDetail" id="0dH-Sp-i2K"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="deliveryDatePicker" destination="v4H-MF-YNv" id="ld7-Hw-El7"/>
                         <outlet property="saveDayButton" destination="bVN-PK-61d" id="iJC-XP-ecH"/>
@@ -858,7 +858,7 @@
         <!--DeliveryDayTabBarController-->
         <scene sceneID="rgi-iA-Hic">
             <objects>
-                <tabBarController title="DeliveryDayTabBarController" id="pgk-wT-5uc" customClass="TabBarViewController" customModule="DelTracker" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController title="DeliveryDayTabBarController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="pgk-wT-5uc" customClass="DeliveryTabBarViewController" customModule="DelTracker" customModuleProvider="target" sceneMemberID="viewController">
                     <nil key="simulatedTopBarMetrics"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics" barStyle="black"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" barStyle="black" id="O1P-RF-dVO">
@@ -870,7 +870,7 @@
                     <connections>
                         <segue destination="Dvz-DS-5RG" kind="relationship" relationship="viewControllers" id="1Yr-kr-6Tw"/>
                         <segue destination="o3G-sC-Ue4" kind="relationship" relationship="viewControllers" id="1g1-WX-5XJ"/>
-                        <segue destination="npz-BE-PHt" kind="relationship" relationship="viewControllers" id="vyu-84-PM5"/>
+                        <segue destination="npz-BE-PHt" kind="relationship" relationship="viewControllers" id="qgM-8h-GVv"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="27f-U9-Ve6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1533,10 +1533,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                                         <connections>
-                                            <segue destination="44n-ke-hvC" kind="presentation" identifier="whoMadeBank" id="IxG-sB-W3h">
-                                                <segue key="commit" inheritsFrom="parent" id="k91-vg-hlK"/>
-                                                <segue key="preview" inheritsFrom="commit" id="WqU-4l-dvL"/>
-                                            </segue>
+                                            <segue destination="0II-aI-JuD" kind="showDetail" id="two-Nc-lCj"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="gray" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="Dp2-sO-zmw" detailTextLabel="Rdd-gp-VLJ" style="IBUITableViewCellStyleValue1" id="863-To-3jt">
@@ -1564,7 +1561,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                                         <connections>
-                                            <segue destination="3dV-xQ-KuM" kind="presentation" id="hd6-M5-re2"/>
+                                            <segue destination="Ht2-K0-Nyk" kind="showDetail" id="RBP-Rc-Y26"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" textLabel="dse-eS-zbq" detailTextLabel="XoM-bO-iZy" style="IBUITableViewCellStyleValue1" id="87N-gQ-34F">
@@ -1665,7 +1662,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="6Ap-DK-jyu">
                             <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
-                                <segue destination="H35-va-nz4" kind="unwind" unwindAction="unwindToDeliveryDayList:" id="KOu-eG-VHd"/>
+                                <segue destination="H35-va-nz4" kind="unwind" unwindAction="unwindToDeliveryDayList:" id="Fa3-up-6R8"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -1719,7 +1716,7 @@
         <!--Deliveries-->
         <scene sceneID="9G0-uq-u1W">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="o3G-sC-Ue4" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="o3G-sC-Ue4" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" tag="1" title="Deliveries" image="car-fast" id="LJr-bn-MMm"/>
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
@@ -1735,26 +1732,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ovP-sO-rPX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4241" y="-854"/>
-        </scene>
-        <!--Item-->
-        <scene sceneID="kVB-yB-2gE">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="55y-U3-PIK" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="SKz-vf-6mB"/>
-                    <toolbarItems/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="VtG-lg-cOR">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="Ck1-Ca-689" kind="relationship" relationship="rootViewController" id="CVp-2N-w8V"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="6wb-Yr-6Oj" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="5793" y="-537"/>
         </scene>
         <!--Delivery Details-->
         <scene sceneID="Jpu-3K-9FR">
@@ -1811,6 +1788,35 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="Iel-qC-lBI">
                                 <rect key="frame" x="0.0" y="692" width="414" height="44"/>
                                 <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="fc0-Nb-ErT"/>
+                                    <barButtonItem title="Now" id="ufd-n3-9Fp">
+                                        <connections>
+                                            <action selector="setTimeToNowBarButton:" destination="Apm-Ok-DQk" id="Rbr-9C-VV4"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" id="0AD-X4-YCj">
+                                        <button key="customView" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" id="ubc-1c-YLX">
+                                            <rect key="frame" x="126" y="7" width="143" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Override Drop Time?">
+                                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" id="Dyf-46-duS">
+                                        <switch key="customView" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="kgD-2u-dBf">
+                                            <rect key="frame" x="279" y="6.6666666666666679" width="51" height="31.000000000000004"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
+                                            <connections>
+                                                <action selector="overrideDeliveryTimeChanged:" destination="Ck1-Ca-689" eventType="valueChanged" id="tAj-If-Bv5"/>
+                                                <action selector="overrideDropTimeChanged:" destination="Apm-Ok-DQk" eventType="valueChanged" id="Uae-bT-U6H"/>
+                                            </connections>
+                                        </switch>
+                                        <connections>
+                                            <action selector="overrideDeliveryTimeChanged:" destination="Ck1-Ca-689" id="pjm-rH-S5M"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="hba-SO-0f3"/>
                                     <barButtonItem systemItem="save" id="e6j-cG-c3L">
                                         <connections>
@@ -1883,13 +1889,21 @@
                                     <segue destination="ApX-hF-G6b" kind="unwind" unwindAction="unwindToDropList:" id="GCI-aK-RTo"/>
                                 </connections>
                             </button>
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="T3l-3M-BBL">
+                                <rect key="frame" x="20" y="213" width="374" height="216"/>
+                                <date key="date" timeIntervalSinceReferenceDate="503095998.58481801">
+                                    <!--2016-12-10 20:53:18 +0000-->
+                                </date>
+                            </datePicker>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                         <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="Iel-qC-lBI" firstAttribute="bottom" secondItem="3de-be-RpK" secondAttribute="top" id="3NW-nt-9Qc"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="T3l-3M-BBL" secondAttribute="leading" id="3tN-hH-Uxp"/>
                             <constraint firstItem="LjE-fD-PKV" firstAttribute="top" secondItem="Ec2-Xx-GQP" secondAttribute="bottom" constant="13" id="49j-TI-s5h"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="T3l-3M-BBL" secondAttribute="trailing" id="5cL-mU-sDd"/>
                             <constraint firstItem="Ec2-Xx-GQP" firstAttribute="top" secondItem="GYJ-l8-i9c" secondAttribute="bottom" constant="14" id="5tc-XY-w5u"/>
                             <constraint firstItem="806-Li-oqK" firstAttribute="leading" secondItem="xcS-l1-Ukr" secondAttribute="leading" id="Ae7-g1-el2"/>
                             <constraint firstItem="avc-gC-YjH" firstAttribute="top" secondItem="806-Li-oqK" secondAttribute="bottom" constant="8" id="CHI-Fd-yIR"/>
@@ -1900,6 +1914,7 @@
                             <constraint firstItem="cWg-49-dCR" firstAttribute="leading" secondItem="xdm-hA-ILM" secondAttribute="trailing" constant="14" id="PmC-OU-Pbl"/>
                             <constraint firstItem="xcS-l1-Ukr" firstAttribute="top" secondItem="avc-gC-YjH" secondAttribute="bottom" constant="8" id="S7v-c9-Fez"/>
                             <constraint firstItem="avc-gC-YjH" firstAttribute="leading" secondItem="LjE-fD-PKV" secondAttribute="trailing" constant="7" id="bQR-BN-mad"/>
+                            <constraint firstItem="T3l-3M-BBL" firstAttribute="top" secondItem="cWg-49-dCR" secondAttribute="bottom" constant="8" id="c5I-4W-lh9"/>
                             <constraint firstAttribute="trailingMargin" secondItem="avc-gC-YjH" secondAttribute="trailing" constant="1" id="cGo-ty-gV9"/>
                             <constraint firstItem="xcS-l1-Ukr" firstAttribute="trailing" secondItem="cWg-49-dCR" secondAttribute="trailing" id="cHs-LY-Qef"/>
                             <constraint firstItem="xdm-hA-ILM" firstAttribute="baseline" secondItem="cWg-49-dCR" secondAttribute="baseline" id="cQQ-Qv-ps0"/>
@@ -1913,28 +1928,24 @@
                             <constraint firstItem="GYJ-l8-i9c" firstAttribute="trailing" secondItem="Iel-qC-lBI" secondAttribute="trailing" id="zch-SV-DYe"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Add Drop" id="IP4-0h-vg8" userLabel="Add Drop">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="uaQ-d9-jPf">
-                            <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="cancelAdd:" destination="Apm-Ok-DQk" id="uXt-MT-KgF"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Add Drop" id="IP4-0h-vg8" userLabel="Add Drop"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="currentBalanceLabel" destination="806-Li-oqK" id="eGm-SM-Q4c"/>
                         <outlet property="dropSaveButton" destination="e6j-cG-c3L" id="nso-wV-mDV"/>
                         <outlet property="dropTextField" destination="avc-gC-YjH" id="HI7-Ph-edC"/>
+                        <outlet property="dropTime" destination="T3l-3M-BBL" id="2Tj-Dc-7ue"/>
                         <outlet property="newBalanceLabel" destination="xcS-l1-Ukr" id="ZOO-O5-0xh"/>
                         <outlet property="quickDropButton" destination="cWg-49-dCR" id="25Q-OV-yXb"/>
+                        <outlet property="setTimeToNowButton" destination="ufd-n3-9Fp" id="dKt-u3-PC5"/>
+                        <outlet property="timeOverrideSwitch" destination="kgD-2u-dBf" id="rh1-lZ-spd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Zc-wH-Fp5" sceneMemberID="firstResponder"/>
                 <exit id="ApX-hF-G6b" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="6596" y="491"/>
+            <point key="canvasLocation" x="5793" y="774"/>
         </scene>
         <!--Drops-->
         <scene sceneID="IP3-bM-OJP">
@@ -1948,22 +1959,29 @@
                         <color key="sectionIndexColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="sectionIndexBackgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="dropCell" textLabel="kCH-9b-kGH" detailTextLabel="qJj-7o-5BZ" style="IBUITableViewCellStyleValue1" id="9as-UT-5XM" userLabel="DeliveryCell" customClass="DropTableViewCell" customModule="DelTracker" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="dropCell" id="bVi-MK-2TY" userLabel="DeliveryCell" customClass="DropTableViewCell" customModule="DelTracker" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="414" height="46"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9as-UT-5XM" id="k6n-jn-VAT">
-                                    <rect key="frame" x="0.0" y="0.0" width="381" height="45.666666666666664"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bVi-MK-2TY" id="jI8-za-gDO">
+                                    <rect key="frame" x="0.0" y="0.0" width="381" height="46"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="kCH-9b-kGH">
-                                            <rect key="frame" x="15" y="12.999999999999998" width="33.333333333333336" height="20.333333333333332"/>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" fixedFrame="YES" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="891-vl-nnD">
+                                            <rect key="frame" x="16" y="12" width="34" height="21"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="qJj-7o-5BZ">
-                                            <rect key="frame" x="335" y="12.999999999999998" width="44" height="20.333333333333332"/>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" fixedFrame="YES" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tej-6z-TOW">
+                                            <rect key="frame" x="320" y="12" width="44" height="21"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" fixedFrame="YES" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yrw-yK-79A">
+                                            <rect key="frame" x="268" y="12" width="44" height="21"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1974,12 +1992,12 @@
                                 <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                                 <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
-                                    <outlet property="dropAmount" destination="qJj-7o-5BZ" id="uHl-Im-kGM"/>
-                                    <outlet property="dropNumber" destination="kCH-9b-kGH" id="yiH-pc-ecr"/>
-                                    <segue destination="Apm-Ok-DQk" kind="showDetail" identifier="showDropDetail" id="nUl-BY-mW4">
-                                        <segue key="commit" inheritsFrom="parent" id="izV-6j-nW3"/>
-                                        <segue key="preview" inheritsFrom="commit" id="YoQ-Ek-wm6"/>
-                                        <nil key="action"/>
+                                    <outlet property="dropAmount" destination="yrw-yK-79A" id="xJn-CH-X2b"/>
+                                    <outlet property="dropNumber" destination="891-vl-nnD" id="1Ns-bF-JZX"/>
+                                    <outlet property="dropTime" destination="tej-6z-TOW" id="yue-F1-IQO"/>
+                                    <segue destination="Apm-Ok-DQk" kind="showDetail" identifier="showDropDetail" id="Jfi-2U-EXX">
+                                        <segue key="commit" inheritsFrom="parent" id="PNO-sX-Dg0"/>
+                                        <segue key="preview" inheritsFrom="commit" id="Hng-dZ-zJT"/>
                                     </segue>
                                 </connections>
                             </tableViewCell>
@@ -2007,9 +2025,7 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="dj4-wN-nNF">
                             <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
-                                <segue destination="8vO-r9-aEZ" kind="popoverPresentation" identifier="addDrop" popoverAnchorBarButtonItem="dj4-wN-nNF" id="d9q-de-t51">
-                                    <popoverArrowDirection key="popoverArrowDirection" left="YES"/>
-                                </segue>
+                                <segue destination="Apm-Ok-DQk" kind="show" identifier="addDrop" id="Q3v-Wd-fhu"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -2022,27 +2038,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xBz-m2-dgy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4991" y="491"/>
-        </scene>
-        <!--Item-->
-        <scene sceneID="hWN-Ty-ZvK">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="8vO-r9-aEZ" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="s5a-78-0bz"/>
-                    <toolbarItems/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="crj-Re-qdP">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="Apm-Ok-DQk" kind="relationship" relationship="rootViewController" id="VuY-Gg-vU3"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="avp-ob-nuS" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="5793" y="829"/>
+            <point key="canvasLocation" x="4989.8550724637689" y="490.76086956521743"/>
         </scene>
         <!--Delivery Day Tab Bar View Controller-->
         <scene sceneID="i2Y-h7-ghj">
@@ -2061,7 +2057,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KBq-Y9-YVs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-603" y="-539"/>
+            <point key="canvasLocation" x="-458" y="-540"/>
         </scene>
         <!--Delivery Day Statistics-->
         <scene sceneID="vg0-0v-enO">
@@ -2381,18 +2377,18 @@
                                         <rect key="frame" x="0.0" y="496" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Lym-s4-Raz" id="6zO-f4-lJB">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Total Sales" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Lrd-y1-cBJ">
-                                                    <rect key="frame" x="15" y="12" width="83" height="21"/>
+                                                    <rect key="frame" x="15" y="11.999999999999998" width="83" height="20.333333333333332"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="nlm-YF-0yC">
-                                                    <rect key="frame" x="355" y="12" width="44" height="21"/>
+                                                    <rect key="frame" x="355" y="11.999999999999998" width="44" height="20.333333333333332"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2999,11 +2995,6 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Delivery Day Statistics" id="rDo-O6-WJK"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="color" keyPath="tint">
-                            <color key="value" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="amountReceivedLabel" destination="fpf-li-u0o" id="Y8j-Ec-Fjy"/>
                         <outlet property="averageReceivedPerDayLabel" destination="OR5-Z6-oPh" id="G5q-1a-zAx"/>
@@ -3065,7 +3056,7 @@
         <scene sceneID="UOo-ex-slx">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="0Ez-AF-gGp" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Delivery Days" id="J1c-4i-Ae9"/>
+                    <tabBarItem key="tabBarItem" title="Delivery Days" image="calendar-7" id="J1c-4i-Ae9"/>
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics" barStyle="black" translucent="NO"/>
@@ -3085,7 +3076,8 @@
         <!--Navigation Controller-->
         <scene sceneID="Lez-vn-jli">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="QeK-hv-m4T" sceneMemberID="viewController">
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gbu-W0-lJd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="QeK-hv-m4T" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <nil key="simulatedBottomBarMetrics"/>
@@ -3098,28 +3090,8 @@
                         <segue destination="VxG-zJ-4Br" kind="relationship" relationship="rootViewController" id="jE6-qY-Mu8"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="gbu-W0-lJd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1830" y="-854"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="uIw-SZ-URq">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="44n-ke-hvC" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="DQX-Pf-uSx">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="0II-aI-JuD" kind="relationship" relationship="rootViewController" id="aKZ-mE-9Zc"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="w5x-GT-ulE" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="7367" y="-540"/>
         </scene>
         <!--Who Made Bank-->
         <scene sceneID="QB9-Yx-VGj">
@@ -3153,10 +3125,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                                         <connections>
-                                            <segue destination="JhF-8h-J5s" kind="showDetail" id="5R2-us-Wht">
-                                                <segue key="commit" inheritsFrom="parent" id="Hr1-a0-mZO"/>
-                                                <segue key="preview" inheritsFrom="commit" id="0Mk-tR-c2J"/>
-                                            </segue>
+                                            <segue destination="dU8-WG-ROK" kind="showDetail" id="EiQ-er-T9b"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="222" id="RyZ-1T-s02">
@@ -3167,7 +3136,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0J4-9n-Y04">
-                                                    <rect key="frame" x="-5" y="2" width="412" height="216"/>
+                                                    <rect key="frame" x="-15" y="2" width="417" height="216"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                     <connections>
                                                         <outlet property="dataSource" destination="0II-aI-JuD" id="uIR-8V-0Pd"/>
@@ -3187,12 +3156,6 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Who Made Bank" id="r6c-a1-trh">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="D43-yb-hAc">
-                            <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="cancelButton:" destination="0II-aI-JuD" id="zT6-ue-VZv"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="upC-4S-ccp">
                             <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
@@ -3209,26 +3172,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bl0-OV-nk6" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="iqO-He-ept" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="8087" y="-858"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="lNs-gu-ubd">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="JhF-8h-J5s" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="c7Z-My-jmV">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="dU8-WG-ROK" kind="relationship" relationship="rootViewController" id="qRn-yQ-3o0"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="CJT-N6-oNY" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="8839" y="-857"/>
+            <point key="canvasLocation" x="5793" y="-537"/>
         </scene>
         <!--Edit People-->
         <scene sceneID="lff-jF-ggu">
@@ -3292,9 +3236,7 @@
                             <barButtonItem systemItem="add" id="JkU-Wh-ATw">
                                 <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
-                                    <segue destination="fgb-Na-EXh" kind="popoverPresentation" identifier="addItem" popoverAnchorBarButtonItem="JkU-Wh-ATw" id="Zi3-2j-VSK">
-                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                    </segue>
+                                    <segue destination="4fn-6e-7Sf" kind="show" identifier="addItem" id="ygI-I2-4nN"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -3306,7 +3248,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vBE-2O-JJs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="9591" y="-858"/>
+            <point key="canvasLocation" x="6545" y="-194"/>
         </scene>
         <!--Add Person-->
         <scene sceneID="a7J-K5-7dW">
@@ -3372,14 +3314,7 @@
                         </constraints>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="Add Person" id="iQP-kO-9Z4">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="gbb-dP-I3U">
-                            <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="cancelAdd:" destination="4fn-6e-7Sf" id="BD0-MG-j9L"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Add Person" id="iQP-kO-9Z4"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <connections>
                         <outlet property="personSaveButton" destination="ccU-BQ-j7X" id="Poy-ad-wgC"/>
@@ -3389,45 +3324,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PAf-JG-MQP" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="FRO-Dg-iSU" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="11171" y="-858"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="Bfh-bl-p4C">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fgb-Na-EXh" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="MGD-sz-CWS">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="4fn-6e-7Sf" kind="relationship" relationship="rootViewController" id="UI6-Oc-eQX"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="tLy-1K-d8i" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="10381" y="-540"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="XKN-tY-T5Y">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="3dV-xQ-KuM" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="ZgS-uU-TgM">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="Ht2-K0-Nyk" kind="relationship" relationship="rootViewController" id="g6n-d8-lkf"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Nny-HE-YEV" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="5793" y="123"/>
+            <point key="canvasLocation" x="7281" y="-194"/>
         </scene>
         <!--Who Closed Bank-->
         <scene sceneID="O4i-eB-fYO">
@@ -3461,7 +3358,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                                         <connections>
-                                            <segue destination="JhF-8h-J5s" kind="showDetail" id="tpo-9l-hS3"/>
+                                            <segue destination="dU8-WG-ROK" kind="showDetail" id="YKf-w4-9sY"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="222" id="PGg-Cb-8w9">
@@ -3472,7 +3369,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Cy-HU-yuO">
-                                                    <rect key="frame" x="-7" y="2" width="416" height="216"/>
+                                                    <rect key="frame" x="-16" y="2" width="416" height="216"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                     <connections>
                                                         <outlet property="dataSource" destination="Ht2-K0-Nyk" id="ClI-ZS-ey7"/>
@@ -3492,12 +3389,6 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Who Closed Bank" id="dCO-PU-lUh">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="Xuw-Aa-NVC">
-                            <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="cancelButton:" destination="Ht2-K0-Nyk" id="8io-Ug-qby"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="iIN-HK-ATP">
                             <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
@@ -3514,13 +3405,13 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Y4-8r-KXV" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="7kq-4N-OId" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="6596" y="-194"/>
+            <point key="canvasLocation" x="5793" y="95"/>
         </scene>
-        <!--Item-->
+        <!--Overall Delivery Statistics-->
         <scene sceneID="syj-MQ-r4i">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="BBM-MT-x3v" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" image="chart" id="5jr-8u-doh"/>
+                    <tabBarItem key="tabBarItem" title="Overall Delivery Statistics" image="chart" id="5jr-8u-doh"/>
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="yCb-6p-HjP">
@@ -3539,17 +3430,19 @@
     </scenes>
     <resources>
         <image name="business-box-in-7" width="29" height="30"/>
+        <image name="calendar-7" width="30" height="30"/>
         <image name="car-fast" width="30" height="30"/>
         <image name="chart" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="ENj-Yr-GQC"/>
-        <segue reference="jE6-qY-Mu8"/>
-        <segue reference="IxG-sB-W3h"/>
-        <segue reference="5R2-us-Wht"/>
-        <segue reference="UI6-Oc-eQX"/>
-        <segue reference="0wE-d2-vRe"/>
+        <segue reference="WXw-2w-NlP"/>
+        <segue reference="kMC-GB-yH1"/>
+        <segue reference="B2A-LC-VtJ"/>
+        <segue reference="Q3v-Wd-fhu"/>
+        <segue reference="YKf-w4-9sY"/>
+        <segue reference="GUC-0u-3mQ"/>
         <segue reference="7Pz-4I-mP5"/>
-        <segue reference="nUl-BY-mW4"/>
+        <segue reference="FYb-JT-7jV"/>
     </inferredMetricsTieBreakers>
+    <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
 </document>

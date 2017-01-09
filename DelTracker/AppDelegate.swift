@@ -10,11 +10,126 @@ import UIKit
 import CoreData
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 	var window: UIWindow?
+	var delivery: Delivery?
+	var deliveryTableViewController: DeliveryTableViewController?
+	var deliveryDay: DeliveryDay?
+	var deliveryDays = [DeliveryDay]()
+	var launchedShortcutItem: UIApplicationShortcutItem?
+	let storyboard = UIStoryboard(name: "Main", bundle: nil)
+	var shortcutViewController = UIViewController()
+	enum ShortcutIdentifier: String {
+		case First
+		case Second
+		
+		// MARK: - Initializers
+		
+		init?(fullType: String) {
+			guard let last = fullType.components(separatedBy: ".").last else {
+				return nil
+			}
+			self.init(rawValue: last)
+		}
+		
+		// MARK: - Properties
+		
+		var type: String {
+			return Bundle.main.bundleIdentifier! + ".\(self.rawValue)"
+		}
+	}
+	func handleShortCutItem(_ shortcutItem: UIApplicationShortcutItem) -> Bool {
+		var handled = false
+		
+		// Verify that the provided `shortcutItem`'s `type` is one handled by the application.
+		guard ShortcutIdentifier(fullType: shortcutItem.type) != nil else {
+			return false
+		}
+		guard let shortCutType = shortcutItem.type as String? else {
+			return false
+		}
+		switch (shortCutType) {
+		case ShortcutIdentifier.First.type:
+			let dateFormatter = DateFormatter()
+			dateFormatter.dateFormat = "MMddyy"
+			DeliveryDayViewController.selectedDateGlobal = dateFormatter.string(from: NSDate() as Date)
+			Delivery.ArchiveURL = Delivery.DocumentsDirectory.appendingPathComponent("\(DeliveryDayViewController.selectedDateGlobal)")
+			//Drop.ArchiveURL = Drop.DocumentsDirectory.appendingPathComponent("\(DeliveryDayViewController.selectedDateGlobal)")
+			shortcutViewController = storyboard.instantiateViewController(withIdentifier: "deliveryTableViewController") as! DeliveryDayViewController
+			if let aWindow = window {
+				aWindow.rootViewController?.present(shortcutViewController, animated: true, completion: nil)
+			}
+			DeliveryStatisticsTableViewController.shortcutAction = "addDeliveryShortcut"
+			handled = true
+			break
+		case ShortcutIdentifier.Second.type:
+			let dateFormatter = DateFormatter()
+			dateFormatter.dateFormat = "MMddyy"
+			DeliveryDayViewController.selectedDateGlobal = dateFormatter.string(from: NSDate() as Date)
+			Delivery.ArchiveURL = Delivery.DocumentsDirectory.appendingPathComponent("\(DeliveryDayViewController.selectedDateGlobal)")
+			//Drop.ArchiveURL = Drop.DocumentsDirectory.appendingPathComponent("\(DeliveryDayViewController.selectedDateGlobal)")
+			shortcutViewController = storyboard.instantiateViewController(withIdentifier: "deliveryTableViewController") as! DeliveryDayViewController
+			if let aWindow = window {
+				aWindow.rootViewController?.present(shortcutViewController, animated: true, completion: nil)
+			}
+			DeliveryStatisticsTableViewController.shortcutAction = "viewDeliveriesShortcut"
+			handled = true
+			break
+		default:
+			break
+		}
+		return handled
+	}
+	func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
+		guard let secondaryAsNavController = secondaryViewController as? UINavigationController else { return false }
+		guard let topAsDetailController = secondaryAsNavController.topViewController as? DetailViewController else { return false }
+		if topAsDetailController.detailItem == nil {
+			// Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
+			return true
+		}
+		return false
+	}
+	// MARK: - Application Life Cycle
+	
+	func applicationDidBecomeActive(_ application: UIApplication) {
+		guard let shortcut = launchedShortcutItem else {
+			return
+		}
+		handleShortCutItem(shortcut)
+		launchedShortcutItem = nil
+	}/*
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		// Override point for customization after application launch.
+		let splitViewController = self.window!.rootViewController as! UISplitViewController
+		let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
+		navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
+		splitViewController.delegate = self
+		
+		let masterNavigationController = splitViewController.viewControllers[0] as! UINavigationController
+		let controller = masterNavigationController.topViewController as! MasterViewController
+		controller.managedObjectContext = self.persistentContainer.viewContext
 		return true
+	}*/
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+		// Override point for customization after application launch.
+		var shouldPerformAdditionalDelegateHandling = true
+		// If a shortcut was launched, display its information and take the appropriate action
+		if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
+			launchedShortcutItem = shortcutItem
+			// This will block "performActionForShortcutItem:completionHandler" from being called.
+			shouldPerformAdditionalDelegateHandling = false
+		}
+		return shouldPerformAdditionalDelegateHandling
+	}
+	/*
+	Called when the user activates your application by selecting a shortcut on the home screen, except when
+	application(_:,willFinishLaunchingWithOptions:) or application(_:didFinishLaunchingWithOptions) returns `false`.
+	You should handle the shortcut in those callbacks and return `false` if possible. In that case, this
+	callback is used if your application is already launched in the background.
+	*/
+	func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+		let handledShortCutItem = handleShortCutItem(shortcutItem)
+		completionHandler(handledShortCutItem)
 	}
 	func applicationWillResignActive(_ application: UIApplication) {
 		// Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -27,17 +142,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func applicationWillEnterForeground(_ application: UIApplication) {
 		// Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
 	}
-	func applicationDidBecomeActive(_ application: UIApplication) {
-		// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-	}
+	
 	func applicationWillTerminate(_ application: UIApplication) {
 		// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 		// Saves changes in the application's managed object context before the application terminates.
 		self.saveContext()
 	}
-	// MARK: - Core Data stack
 	
-	lazy var persistentContainer: NSPersistentContainer = {
+	var persistentContainer: NSPersistentContainer = {
 		/*
 		The persistent container for the application. This implementation
 		creates and returns a container, having loaded the store for the
@@ -49,7 +161,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			if let error = error as NSError? {
 				// Replace this implementation with code to handle the error appropriately.
 				// fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-				
 				/*
 				Typical reasons for an error here include:
 				* The parent directory does not exist, cannot be created, or disallows writing.
@@ -66,7 +177,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	
 	// MARK: - Core Data Saving support
 	
-	func saveContext () {
+	func saveContext() {
 		let context = persistentContainer.viewContext
 		if context.hasChanges {
 			do {
@@ -79,4 +190,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			}
 		}
 	}
-}
+
+	}

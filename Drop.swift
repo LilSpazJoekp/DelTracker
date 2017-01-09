@@ -6,37 +6,20 @@
 //  Copyright © 2016 Joel Payne. All rights reserved.
 //
 
-import UIKit
+//import UIKit
 
-class Drop: NSObject, NSCoding {
+//class Drop {
 	
 	// MARK: Properties
 	
-	var deliveryDropAmount: String
-	
-	// MARK: Archiving Paths
-	
-	static let DocumentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-	static var ArchiveURL = DocumentsDirectory.appendingPathComponent("drops" + "\(DeliveryDayViewController.selectedDateGlobal)")
+//	var deliveryDropAmount: Double
+//	var dropTimeValue: Date
 	
 	// MARK: Types
 	
-	struct DeliveryDropKey {
-		static let deliveryDropAmountKey = "deliveryDropAmount"
-	}
-	init?(deliveryDropAmount: String) {
-		self.deliveryDropAmount = deliveryDropAmount
-		super.init()
-	}
-	
-	//MARK: NSCoding
-	
-	func encode(with aCoder: NSCoder) {
-		aCoder.encode(deliveryDropAmount, forKey: DeliveryDropKey.deliveryDropAmountKey)
-	}
-	required convenience init?(coder aDecoder: NSCoder) {
-		let deliveryDropAmount = aDecoder.decodeObject(forKey: DeliveryDropKey.deliveryDropAmountKey) as! String
-		// Must call designated initializer.
-		self.init(deliveryDropAmount: deliveryDropAmount)
-	}
-}
+//	init?(deliveryDropAmount: Double, dropTimeValue: Date) {
+//		self.deliveryDropAmount = deliveryDropAmount
+//		self.dropTimeValue = dropTimeValue
+//		super.init()
+//	}
+//}

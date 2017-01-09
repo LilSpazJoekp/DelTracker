@@ -8,6 +8,7 @@
 
 import AVFoundation
 import UIKit
+import CoreData
 
 protocol BarcodeDelegate {
 	func barcodeRead(barcode: String, light: Bool, photo: UIImage?)

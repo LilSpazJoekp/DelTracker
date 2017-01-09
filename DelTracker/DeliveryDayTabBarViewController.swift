@@ -7,10 +7,16 @@
 //
 
 import UIKit
+import CoreData
 
 class DeliveryDayTabBarViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+		print("hellovdl")
     }
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(true)
+		print("hellovda")
+	}
 }

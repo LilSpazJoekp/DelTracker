@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class PersonViewController: UIViewController, UITextFieldDelegate, UIToolbarDelegate, UINavigationControllerDelegate {
 	@IBOutlet var personSaveButton: AnyObject!

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class CurrencyField: UITextField {
 	override func awakeFromNib() {
@@ -23,25 +24,7 @@ class CurrencyField: UITextField {
 struct Formatter {
 	static let currency = NumberFormatter(numberStyle: .currency)
 }
-extension UITextField {
-	var string: String {
-		return text ?? "0"
-	}
-}
-extension String {
-	var numbers: String {
-		return components(separatedBy: Numbers.characterSet.inverted).joined()
-	}
-	var integer: Int {
-		return Int(numbers) ?? 0
-	}
-}
+
 struct Numbers {
 	static let characterSet = CharacterSet(charactersIn: "0123456789")
-}
-extension NumberFormatter {
-	convenience init(numberStyle: NumberFormatter.Style) {
-		self.init()
-		self.numberStyle = numberStyle
-	}
 }
