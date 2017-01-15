@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WhoMadeBank: NSObject, NSCoding {
+class WhoMadeBank : NSObject, NSCoding {
 	
 	// MARK: Properties
 	

@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class DropViewController: UIViewController, UITextFieldDelegate, UIToolbarDelegate, UINavigationControllerDelegate {
+class DropViewController : UIViewController, UITextFieldDelegate, UIToolbarDelegate, UINavigationControllerDelegate {
 	@IBOutlet var currentBalanceLabel: UILabel!
 	@IBOutlet var dropTextField: CurrencyField!
 	@IBOutlet var newBalanceLabel: UILabel!
@@ -26,7 +26,7 @@ class DropViewController: UIViewController, UITextFieldDelegate, UIToolbarDelega
 			if let drop = drop {
 				let dateFormatter = DateFormatter()
 				dateFormatter.dateFormat = "hh:mm:ss a"
-				dropTime.setDate(drop.timestamp as! Date, animated: true)
+				dropTime.setDate(drop.time as! Date, animated: true)
 			}
 		}
 	}
@@ -38,6 +38,8 @@ class DropViewController: UIViewController, UITextFieldDelegate, UIToolbarDelega
 		dropTextField.resignFirstResponder()
 	}
 	@IBAction func dropSaveButton(_ sender: UIBarButtonItem) {
+		saveDrops()
+		//perfomUnwindSegue()
 	}
 	@IBAction func cancelEdit(_ sender: UIBarButtonItem) {
 		dismiss(animated: true, completion: nil)
@@ -48,47 +50,45 @@ class DropViewController: UIViewController, UITextFieldDelegate, UIToolbarDelega
 	var drop: Drop?
 	var drops = [Drop]()
 	var selectedTime: Date = NSDate() as Date
+	var managedObjectContext: NSManagedObjectContext?
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		dropTextField.delegate = self
 		dropTime.setValue(UIColor.white, forKey: "textColor")
 		if let drop = drop {
 			navigationItem.title = "Edit Drop"
-			dropTextField.text = drop.dropAmount.convertToCurrency()
+			dropTextField.text = drop.amount.convertToCurrency()
 		}
 	}
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		self.view.endEditing(true)
 	}
- 
-	// MARK: - Navigation
-	
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if dropSaveButton === sender as AnyObject? || quickDropButton === sender as AnyObject? {
-			
-		}
-	}
 	func setDropTime() {
 		dropTime.reloadInputViews()
 		selectedTime = dropTime.date
-		dropTime.setValue(UIColor.white, forKey: "textColor")
 	}
 	
 	// MARK: CoreData
 	
 	func saveDrops() {
-		let coreDataStack = UIApplication.shared.delegate as! AppDelegate
-		let context = coreDataStack.persistentContainer.viewContext
-		let newDrop = Drop(context: context)
-		if var dropAmount = dropTextField.text {
-			newDrop.dropAmount = dropAmount.removeDollarSign()
-			newDrop.timestamp = selectedTime as NSDate?
-			do {
-				try context.save()
-				print("Save Successful \(newDrop)")
-			} catch {
-				print("Failed to save")
+		setDropTime()
+		guard let managedObjectContext = managedObjectContext else {
+			return
+		}
+		if drop == nil {
+			let newDrop = Drop(context: managedObjectContext)
+			if var amount = dropTextField.text {
+				newDrop.amount = amount.removeDollarSign()
+				newDrop.time = selectedTime as NSDate?
 			}
+			drop = newDrop
+		}
+		if let drop = drop {
+			if var amount = dropTextField.text {
+				drop.amount = amount.removeDollarSign()
+				drop.time = selectedTime as NSDate?
+			}			
+			_ = navigationController?.popViewController(animated: true)
 		}
 	}
 }

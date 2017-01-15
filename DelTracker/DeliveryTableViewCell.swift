@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class DeliveryTableViewCell: UITableViewCell {
+class DeliveryTableViewCell : UITableViewCell {
 	@IBOutlet var deliveryNumber: UILabel!
 	@IBOutlet var ticketNumberCell: UILabel!
 	@IBOutlet var ticketAmountCell: UILabel!

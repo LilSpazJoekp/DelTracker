@@ -84,3 +84,27 @@ extension Double {
 		return resultString
 	}
 }
+extension NSDate {
+	func convertToTimeString() -> String {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "hh:mm:ss a"
+		let time = dateFormatter.string(from: self as Date)
+		return time
+	}
+}
+extension NSDate {
+	func convertToDateString() -> String {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "MM/DD/yy"
+		let date = dateFormatter.string(from: self as Date)
+		return date
+	}
+}
+extension Date {
+	func setDateForPredicate() -> String {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "yyyy-mm-dd"
+		let datePredicate = dateFormatter.string(from: self)
+		return datePredicate
+	}
+}

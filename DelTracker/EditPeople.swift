@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class EditPeople: UITableView {
+class EditPeople : UITableView {
 	func numberOfSections(in tableView: UITableView) -> Int {
 		return 1
 	}

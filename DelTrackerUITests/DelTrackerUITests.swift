@@ -8,7 +8,7 @@
 
 import XCTest
 
-class DelTrackerUITests: XCTestCase {
+class DelTrackerUITests : XCTestCase {
         
     override func setUp() {
         super.setUp()

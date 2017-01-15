@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class DeliveryDayTabBarViewController: UITabBarController {
+class DeliveryDayTabBarViewController : UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

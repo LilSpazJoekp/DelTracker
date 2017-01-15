@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
+class DeliveryTableViewController : UITableViewController, UITextFieldDelegate {
 	@IBOutlet var table: UITableView!
 	@IBOutlet var editButton: UIBarButtonItem!
 	@IBOutlet var deleteButton: UIBarButtonItem!
@@ -23,7 +23,6 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 			deliveries.remove(at: path)
 		}
 		table.deleteRows(at: indexPathsToDelete, with: .fade)
-		saveDeliveries()
 		table.setEditing(false, animated: true)
 		editButton.title = "Edit"
 		editButton.style = UIBarButtonItemStyle.plain
@@ -58,10 +57,7 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.clearsSelectionOnViewWillAppear = true
-		if let savedDeliveries = loadDeliveries() {
-			deliveries += savedDeliveries
 		}
-	}
 	
 	// MARK: - Table view data source
 	
@@ -76,27 +72,27 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 		let cellIdentifier = "deliveryCell"
 		let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! DeliveryTableViewCell
 		let delivery = deliveries[indexPath.row]
-		if delivery.paymentMethodValue == "0" {
+		if delivery.paymentMethod == 0 {
 			self.paymentMethodString = "None"
-		} else if delivery.paymentMethodValue == "1" {
+		} else if delivery.paymentMethod == 1 {
 			self.paymentMethodString = "Cash"
-		} else if delivery.paymentMethodValue == "2" {
+		} else if delivery.paymentMethod == 2 {
 			self.paymentMethodString = "Check"
-		} else if delivery.paymentMethodValue == "3" {
+		} else if delivery.paymentMethod == 3 {
 			self.paymentMethodString = "Credit"
-		} else if delivery.paymentMethodValue == "4" {
+		} else if delivery.paymentMethod == 4 {
 			self.paymentMethodString = "Charge"
-		} else if delivery.paymentMethodValue == "5" {
+		} else if delivery.paymentMethod == 5 {
 			self.paymentMethodString = "Other"
 		}
 		cell.deliveryNumber.text = String(indexPath.row + 1)
-		cell.ticketNumberCell.text = delivery.ticketNumberValue
-		cell.ticketAmountCell.text = delivery.ticketAmountValue
-		cell.amountGivenCell.text = delivery.amountGivenValue
-		cell.cashTipsCell.text = delivery.cashTipsValue
-		cell.totalTipsCell.text = delivery.totalTipsValue
+		cell.ticketNumberCell.text = "\(delivery.ticketNumber)"
+		cell.ticketAmountCell.text = delivery.ticketAmount.convertToCurrency()
+		cell.amountGivenCell.text = delivery.amountGiven.convertToCurrency()
+		cell.cashTipsCell.text = delivery.cashTips.convertToCurrency()
+		cell.totalTipsCell.text = delivery.totalTips.convertToCurrency()
 		cell.paymentMethodCell.text = paymentMethodString
-		cell.deliveryTimeCell.text = delivery.deliveryTimeValue
+		cell.deliveryTimeCell.text = delivery.deliveryTime?.convertToTimeString()
 		let backgroundView = UIView()
 		backgroundView.backgroundColor = UIColor.darkGray
 		cell.selectedBackgroundView = backgroundView
@@ -122,7 +118,6 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
 		if editingStyle == .delete {
 			deliveries.remove(at: indexPath.row)
-			saveDeliveries()
 			tableView.deleteRows(at: [indexPath], with: .fade)
 		} else if editingStyle == .insert {
 		}
@@ -131,7 +126,6 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 		let tempItemToMove = deliveries[fromIndexPath.row]
 		deliveries.remove(at: fromIndexPath.row)
 		deliveries.insert(tempItemToMove, at: to.row)
-		saveDeliveries()
 	}
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		setDeleteButtonCount()
@@ -181,7 +175,6 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 				deliveries.append(delivery)
 				tableView.insertRows(at: [newIndexPath], with: .bottom)
 			}
-			saveDeliveries()
 		}
 	}
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -203,7 +196,6 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 	}
 	
 	func activityIndicator(msg: String, _ indicator: Bool) {
-		print(msg)
 		strLabel = UILabel(frame: CGRect(x: 50, y: 0, width: 200, height: 50))
 		strLabel.text = msg
 		strLabel.textColor = UIColor.white
@@ -220,13 +212,5 @@ class DeliveryTableViewController: UITableViewController, UITextFieldDelegate {
 		view.bringSubview(toFront: strLabel)
 		view.addSubview(messageFrame)
 		view.bringSubview(toFront: messageFrame)
-	}
-	func saveDeliveries() {
-		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(deliveries, toFile: Delivery.ArchiveURL.path)
-		if !isSuccessfulSave {
-		}
-	}
-	func loadDeliveries() -> [Delivery]? {
-		return NSKeyedUnarchiver.unarchiveObject(withFile: Delivery.ArchiveURL.path) as? [Delivery]
 	}
 }

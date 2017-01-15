@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "EEC6356E1DEBDABF009D713F"
-               BuildableName = "DelTracker.app"
-               BlueprintName = "DelTracker"
-               ReferencedContainer = "container:DelTracker.xcodeproj">
+               BuildableName = "DelTracker2.app"
+               BlueprintName = "DelTracker2"
+               ReferencedContainer = "container:DelTracker2.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "EEC635851DEBDABF009D713F"
-               BuildableName = "DelTrackerTests.xctest"
-               BlueprintName = "DelTrackerTests"
-               ReferencedContainer = "container:DelTracker.xcodeproj">
+               BuildableName = "DelTracker2Tests.xctest"
+               BlueprintName = "DelTracker2Tests"
+               ReferencedContainer = "container:DelTracker2.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "EEC635901DEBDAC0009D713F"
-               BuildableName = "DelTrackerUITests.xctest"
-               BlueprintName = "DelTrackerUITests"
-               ReferencedContainer = "container:DelTracker.xcodeproj">
+               BuildableName = "DelTracker2UITests.xctest"
+               BlueprintName = "DelTracker2UITests"
+               ReferencedContainer = "container:DelTracker2.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -53,9 +53,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "EEC6356E1DEBDABF009D713F"
-            BuildableName = "DelTracker.app"
-            BlueprintName = "DelTracker"
-            ReferencedContainer = "container:DelTracker.xcodeproj">
+            BuildableName = "DelTracker2.app"
+            BlueprintName = "DelTracker2"
+            ReferencedContainer = "container:DelTracker2.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -76,12 +76,47 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "EEC6356E1DEBDABF009D713F"
-            BuildableName = "DelTracker.app"
-            BlueprintName = "DelTracker"
-            ReferencedContainer = "container:DelTracker.xcodeproj">
+            BuildableName = "DelTracker2.app"
+            BlueprintName = "DelTracker2"
+            ReferencedContainer = "container:DelTracker2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
+         <AdditionalOption
+            key = "MallocStackLogging"
+            value = ""
+            isEnabled = "YES">
+         </AdditionalOption>
+         <AdditionalOption
+            key = "DYLD_PRINT_LIBRARIES"
+            value = ""
+            isEnabled = "YES">
+         </AdditionalOption>
+         <AdditionalOption
+            key = "DYLD_INSERT_LIBRARIES"
+            value = "/usr/lib/libgmalloc.dylib"
+            isEnabled = "YES">
+         </AdditionalOption>
+         <AdditionalOption
+            key = "DYLD_PRINT_APIS"
+            value = ""
+            isEnabled = "YES">
+         </AdditionalOption>
+         <AdditionalOption
+            key = "NSZombieEnabled"
+            value = "YES"
+            isEnabled = "YES">
+         </AdditionalOption>
+         <AdditionalOption
+            key = "MallocGuardEdges"
+            value = ""
+            isEnabled = "YES">
+         </AdditionalOption>
+         <AdditionalOption
+            key = "MallocScribble"
+            value = ""
+            isEnabled = "YES">
+         </AdditionalOption>
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
@@ -95,9 +130,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "EEC6356E1DEBDABF009D713F"
-            BuildableName = "DelTracker.app"
-            BlueprintName = "DelTracker"
-            ReferencedContainer = "container:DelTracker.xcodeproj">
+            BuildableName = "DelTracker2.app"
+            BlueprintName = "DelTracker2"
+            ReferencedContainer = "container:DelTracker2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

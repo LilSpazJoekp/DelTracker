@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
+class AppDelegate : UIResponder, UIApplicationDelegate {
 	var window: UIWindow?
 	var delivery: Delivery?
 	var deliveryTableViewController: DeliveryTableViewController?
@@ -47,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 		}
 		guard let shortCutType = shortcutItem.type as String? else {
 			return false
-		}
+		}/*
 		switch (shortCutType) {
 		case ShortcutIdentifier.First.type:
 			let dateFormatter = DateFormatter()
@@ -77,39 +77,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 			break
 		default:
 			break
-		}
+		}*/
 		return handled
 	}
-	func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
-		guard let secondaryAsNavController = secondaryViewController as? UINavigationController else { return false }
-		guard let topAsDetailController = secondaryAsNavController.topViewController as? DetailViewController else { return false }
-		if topAsDetailController.detailItem == nil {
-			// Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
-			return true
-		}
-		return false
-	}
+	
 	// MARK: - Application Life Cycle
 	
 	func applicationDidBecomeActive(_ application: UIApplication) {
-		guard let shortcut = launchedShortcutItem else {
+		/*guard let shortcut = launchedShortcutItem else {
 			return
 		}
-		handleShortCutItem(shortcut)
+		handleShortCutItem(shortcut)*/
 		launchedShortcutItem = nil
-	}/*
-	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-		// Override point for customization after application launch.
-		let splitViewController = self.window!.rootViewController as! UISplitViewController
-		let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
-		navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
-		splitViewController.delegate = self
-		
-		let masterNavigationController = splitViewController.viewControllers[0] as! UINavigationController
-		let controller = masterNavigationController.topViewController as! MasterViewController
-		controller.managedObjectContext = self.persistentContainer.viewContext
-		return true
-	}*/
+	}
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		// Override point for customization after application launch.
 		var shouldPerformAdditionalDelegateHandling = true
@@ -133,11 +113,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 	}
 	func applicationWillResignActive(_ application: UIApplication) {
 		// Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-		// Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+		// Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use thi
+		self.saveContext()
 	}
 	func applicationDidEnterBackground(_ application: UIApplication) {
 		// Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
 		// If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+		self.saveContext()
 	}
 	func applicationWillEnterForeground(_ application: UIApplication) {
 		// Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
@@ -190,5 +172,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 			}
 		}
 	}
-
-	}
+}

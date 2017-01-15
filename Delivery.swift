@@ -31,5 +31,3 @@ class Delivery {
         self.paymentMethodValue = paymentMethodValue
         }
     }
-
-

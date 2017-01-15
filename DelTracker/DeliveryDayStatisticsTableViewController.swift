@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class DeliveryDayStatisticsTableViewController: UITableViewController {
+class DeliveryDayStatisticsTableViewController : UITableViewController {
 	
 	// MARK: StoryBoard Outlets
 	
@@ -114,24 +114,6 @@ class DeliveryDayStatisticsTableViewController: UITableViewController {
 	var messageFrame = UIView()
 	var activityIndicator = UIActivityIndicatorView()
 	var strLabel = UILabel()
-	var tNumberArray: [Int] = []
-	var tAmountArray: [Double] = []
-	var aGivenArray: [Double] = []
-	var cTipsArray: [Double] = []
-	var tTipsArray: [Double] = []
-	var deliveriesArray: [DeliveryDayStatisticsTableViewController.deliveryStruct] = []
-	
-	struct deliveryStruct {
-		var ticketNumberValue: String
-		var ticketAmountValue: String
-		var noTipSwitchValue: String
-		var amountGivenValue: String
-		var cashTipsValue: String
-		var totalTipsValue: String
-		var paymentMethodValue: String
-		var deliveryTimeValue: String
-		var ticketPhotoValue: UIImage?
-	}
 	
 	// MARK: View Life Cycle
 	
@@ -142,89 +124,89 @@ class DeliveryDayStatisticsTableViewController: UITableViewController {
 	}
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		//DispatchQueue.main.async {
-		self.deliveryDaysCountLabel.text = String(self.deliveryDayCount)
-		self.deliveriesCountLabel.text = String(self.deliveryCount)
-		self.totalSalesALabel.text = self.ticketAmountFinal.convertToCurrency()
-		self.totalTipsLabel.text = self.totalTipsFinal.convertToCurrency()
-		let paidutDouble: Double = Double(self.deliveryCount) * 1.25
-		self.paidoutLabel.text = paidutDouble.convertToCurrency()
-		self.amountReceivedLabel.text = self.totalReceivedValueFinal.convertToCurrency()
-		self.noTipCountLabel.text = String(self.noTipSalesArray.count)
-		self.noTipSalesLabel.text = self.noTipSalesFinal.convertToCurrency()
-		self.noTipPercentageLabel.text = self.noTipSalesArray.count.getPercentage(self.deliveryCount)
-		var averageRecievedPerDayDouble: Double
-		if self.totalReceivedValueArray.count > 0 {
-			averageRecievedPerDayDouble = self.totalReceivedValueFinal / Double(self.totalReceivedValueArray.count)
-		} else {
-			averageRecievedPerDayDouble = 0.0
+		DispatchQueue.main.async {
+			self.deliveryDaysCountLabel.text = String(self.deliveryDayCount)
+			self.deliveriesCountLabel.text = String(self.deliveryCount)
+			self.totalSalesALabel.text = self.ticketAmountFinal.convertToCurrency()
+			self.totalTipsLabel.text = self.totalTipsFinal.convertToCurrency()
+			let paidoutDouble: Double = Double(self.deliveryCount) * 1.25
+			self.paidoutLabel.text = paidoutDouble.convertToCurrency()
+			self.amountReceivedLabel.text = self.totalReceivedValueFinal.convertToCurrency()
+			self.noTipCountLabel.text = String(self.noTipSalesArray.count)
+			self.noTipSalesLabel.text = self.noTipSalesFinal.convertToCurrency()
+			self.noTipPercentageLabel.text = self.noTipSalesArray.count.getPercentage(self.deliveryCount)
+			var averageRecievedPerDayDouble: Double
+			if self.totalReceivedValueArray.count > 0 {
+				averageRecievedPerDayDouble = self.totalReceivedValueFinal / Double(self.totalReceivedValueArray.count)
+			} else {
+				averageRecievedPerDayDouble = 0.0
+			}
+			self.averageReceivedPerDayLabel.text = averageRecievedPerDayDouble.convertToCurrency()
+			self.highestReceivedDayLabel.text = self.totalReceivedValueArray.max()?.convertToCurrency()
+			self.lowestReceivedDayLabel.text = self.totalReceivedValueArray.min()?.convertToCurrency()
+			self.totalSalesBLabel.text = self.ticketAmountFinal.convertToCurrency()
+			self.cashCountLabel.text = String(self.cashSalesArray.count)
+			self.cashSalesPercentageLabel.text = self.cashSalesFinal.getDoublePercentage(self.ticketAmountFinal)
+			self.cashDeliveryPercentageLabel.text = self.cashSalesArray.count.getPercentage(self.deliveryCount)
+			self.cashSalesLabel.text = self.cashSalesFinal.convertToCurrency()
+			self.checkCountLabel.text = String(self.checkSalesArray.count)
+			self.checkSalesPercentageLabel.text = self.checkSalesFinal.getDoublePercentage(self.ticketAmountFinal)
+			self.checkDeliveryPercentageLabel.text = self.checkSalesArray.count.getPercentage(self.deliveryCount)
+			self.checkSalesLabel.text = self.checkSalesFinal.convertToCurrency()
+			self.creditCountLabel.text = String(self.creditSalesArray.count)
+			self.creditSalesPercentageLabel.text = self.creditSalesFinal.getDoublePercentage(self.ticketAmountFinal)
+			self.creditDeliveryPercentageLabel.text = self.creditSalesArray.count.getPercentage(self.deliveryCount)
+			self.creditSalesLabel.text = self.creditSalesFinal.convertToCurrency()
+			self.chargeCountLabel.text = String(self.chargeSalesArray.count)
+			self.chargeSalesPercentageLabel.text = self.chargeSalesFinal.getDoublePercentage(self.ticketAmountFinal)
+			self.chargeDeliveryPercentageLabel.text = self.chargeSalesArray.count.getPercentage(self.deliveryCount)
+			self.chargeSalesLabel.text = self.chargeSalesFinal.convertToCurrency()
+			self.otherCountLabel.text = String(self.otherSalesArray.count)
+			self.otherSalesPercentageLabel.text = self.otherSalesFinal.getDoublePercentage(self.ticketAmountFinal)
+			self.otherDeliveryPercentageLabel.text = self.otherSalesArray.count.getPercentage(self.deliveryCount)
+			self.otherSalesLabel.text = self.otherSalesFinal.convertToCurrency()
+			self.differenceLabel.text = self.differenceFinal.convertToCurrency()
+			self.offCountLabel.text = String(self.differenceArray.count)
+			self.offPercentageLabel.text = self.differenceArray.count.getPercentage(self.deliveryDayCount)
+			self.highestOverLabel.text = self.differenceOverArray.max()?.convertToCurrency()
+			self.differenceOverLabel.text = self.differenceOverFinal.convertToCurrency()
+			self.overCountLabel.text = String(self.differenceOverArray.count)
+			self.overPercentageLabel.text = self.differenceOverArray.count.getPercentage(self.differenceArray.count)
+			self.highestUnderLabel.text = self.differenceUnderArray.min()?.convertToCurrency()
+			self.differenceUnderLabel.text = self.differenceUnderFinal.convertToCurrency()
+			self.underCountLabel.text = String(self.differenceUnderArray.count)
+			self.underPercentageLabel.text = self.differenceUnderArray.count.getPercentage(self.differenceArray.count)
+			let whoMadeBankCountedSet = NSCountedSet(array: self.whoMadeBankArray)
+			let whoMadeBankMost = whoMadeBankCountedSet.max {
+				whoMadeBankCountedSet.count(for: $0) < whoMadeBankCountedSet.count(for: $1)
+			}
+			let whoClosedBankCountedSet = NSCountedSet(array: self.whoClosedBankArray)
+			let whoClosedBankMost = whoMadeBankCountedSet.max {
+				whoClosedBankCountedSet.count(for: $0) < whoClosedBankCountedSet.count(for: $1)
+			}
+			if self.deliveryDays != [] {
+				self.whoMadeBankTheMostCountLabel.text = "\(whoMadeBankCountedSet.count(for: whoMadeBankMost!))"
+				self.whoMadeBankTheMostPercentageLabel.text = whoMadeBankCountedSet.count(for: whoMadeBankMost!).getPercentage(self.deliveryDayCount)
+				self.whoMadeBankTheMostLabel.text = whoMadeBankMost as! String?
+				self.whoClosedBankTheMostCountLabel.text = "\(whoClosedBankCountedSet.count(for: whoClosedBankMost!))"
+				self.whoClosedBankTheMostPercentageLabel.text = whoClosedBankCountedSet.count(for: whoClosedBankMost!).getPercentage(self.deliveryDayCount)
+				self.whoClosedBankTheMostLabel.text = whoClosedBankMost as! String?
+				self.tableView.reloadData()
+			}
+			self.messageFrame.removeFromSuperview()
 		}
-		self.averageReceivedPerDayLabel.text = averageRecievedPerDayDouble.convertToCurrency()
-		self.highestReceivedDayLabel.text = self.totalReceivedValueArray.max()?.convertToCurrency()
-		self.lowestReceivedDayLabel.text = self.totalReceivedValueArray.min()?.convertToCurrency()
-		self.totalSalesBLabel.text = self.ticketAmountFinal.convertToCurrency()
-		self.cashCountLabel.text = String(self.cashSalesArray.count)
-		self.cashSalesPercentageLabel.text = self.cashSalesFinal.getDoublePercentage(self.ticketAmountFinal)
-		self.cashDeliveryPercentageLabel.text = self.cashSalesArray.count.getPercentage(self.deliveryCount)
-		self.cashSalesLabel.text = self.cashSalesFinal.convertToCurrency()
-		self.checkCountLabel.text = String(self.checkSalesArray.count)
-		self.checkSalesPercentageLabel.text = self.checkSalesFinal.getDoublePercentage(self.ticketAmountFinal)
-		self.checkDeliveryPercentageLabel.text = self.checkSalesArray.count.getPercentage(self.deliveryCount)
-		self.checkSalesLabel.text = self.checkSalesFinal.convertToCurrency()
-		self.creditCountLabel.text = String(self.creditSalesArray.count)
-		self.creditSalesPercentageLabel.text = self.creditSalesFinal.getDoublePercentage(self.ticketAmountFinal)
-		self.creditDeliveryPercentageLabel.text = self.creditSalesArray.count.getPercentage(self.deliveryCount)
-		self.creditSalesLabel.text = self.creditSalesFinal.convertToCurrency()
-		self.chargeCountLabel.text = String(self.chargeSalesArray.count)
-		self.chargeSalesPercentageLabel.text = self.chargeSalesFinal.getDoublePercentage(self.ticketAmountFinal)
-		self.chargeDeliveryPercentageLabel.text = self.chargeSalesArray.count.getPercentage(self.deliveryCount)
-		self.chargeSalesLabel.text = self.chargeSalesFinal.convertToCurrency()
-		self.otherCountLabel.text = String(self.otherSalesArray.count)
-		self.otherSalesPercentageLabel.text = self.otherSalesFinal.getDoublePercentage(self.ticketAmountFinal)
-		self.otherDeliveryPercentageLabel.text = self.otherSalesArray.count.getPercentage(self.deliveryCount)
-		self.otherSalesLabel.text = self.otherSalesFinal.convertToCurrency()
-		self.differenceLabel.text = self.differenceFinal.convertToCurrency()
-		self.offCountLabel.text = String(self.differenceArray.count)
-		self.offPercentageLabel.text = self.differenceArray.count.getPercentage(self.deliveryDayCount)
-		self.highestOverLabel.text = self.differenceOverArray.max()?.convertToCurrency()
-		self.differenceOverLabel.text = self.differenceOverFinal.convertToCurrency()
-		self.overCountLabel.text = String(self.differenceOverArray.count)
-		self.overPercentageLabel.text = self.differenceOverArray.count.getPercentage(self.differenceArray.count)
-		self.highestUnderLabel.text = self.differenceUnderArray.min()?.convertToCurrency()
-		self.differenceUnderLabel.text = self.differenceUnderFinal.convertToCurrency()
-		self.underCountLabel.text = String(self.differenceUnderArray.count)
-		self.underPercentageLabel.text = self.differenceUnderArray.count.getPercentage(self.differenceArray.count)
-		let whoMadeBankCountedSet = NSCountedSet(array: self.whoMadeBankArray)
-		let whoMadeBankMost = whoMadeBankCountedSet.max {
-			whoMadeBankCountedSet.count(for: $0) < whoMadeBankCountedSet.count(for: $1)
-		}
-		let whoClosedBankCountedSet = NSCountedSet(array: self.whoClosedBankArray)
-		let whoClosedBankMost = whoMadeBankCountedSet.max {
-			whoClosedBankCountedSet.count(for: $0) < whoClosedBankCountedSet.count(for: $1)
-		}
-		if self.deliveryDays != [] {
-			self.whoMadeBankTheMostCountLabel.text = "\(whoMadeBankCountedSet.count(for: whoMadeBankMost!))"
-			self.whoMadeBankTheMostPercentageLabel.text = whoMadeBankCountedSet.count(for: whoMadeBankMost!).getPercentage(self.deliveryDayCount)
-			self.whoMadeBankTheMostLabel.text = whoMadeBankMost as! String?
-			self.whoClosedBankTheMostCountLabel.text = "\(whoClosedBankCountedSet.count(for: whoClosedBankMost!))"
-			self.whoClosedBankTheMostPercentageLabel.text = whoClosedBankCountedSet.count(for: whoClosedBankMost!).getPercentage(self.deliveryDayCount)
-			self.whoClosedBankTheMostLabel.text = whoClosedBankMost as! String?
-			self.tableView.reloadData()
-		}
-		self.messageFrame.removeFromSuperview()
-		//}
 	}
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		activityIndicator(msg: "   Loading...", true)
 		
-		//DispatchQueue.main.async {
-		self.loadData()
-		//}
+		DispatchQueue.main.async {
+			self.loadData()
+		}
 		self.tableView.reloadData()
 	}
 	
-	// MARK: TableView Configuration
+	// MARK: Table View
 	
 	override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int)
 	{
@@ -256,14 +238,14 @@ class DeliveryDayStatisticsTableViewController: UITableViewController {
 		whoClosedBankArray.removeAll()
 		deliveryDayCount = 0
 		deliveryCount = 0
-		let coreDataStack = UIApplication.shared.delegate as! AppDelegate
-		let context = coreDataStack.persistentContainer.viewContext
-		if let savedDeliveryDays = loadDeliveryDays() {
+		let appDelegate = UIApplication.shared.delegate as! AppDelegate
+		let context = appDelegate.persistentContainer.viewContext
+		/*if let savedDeliveryDays = loadDeliveryDays() {
 			deliveryDays = savedDeliveryDays
 			for (index, _) in deliveryDays.enumerated() {
 				self.deliveryDayCount += 1
-				let deliveryDay = deliveryDays[index]
-				let requestAllDeliveryDays = NSFetchRequest<DeliveryDayCore>(entityName: "DeliveryDayCore")
+				let deliveryDay = deliveryDays[index]/*
+				let requestAllDeliveryDays = NSFetchRequest<DeliveryDay>(entityName: "DeliveryDay")
 				requestAllDeliveryDays.returnsObjectsAsFaults = false
 				do {
 					let deliveryDays = try context.fetch(requestAllDeliveryDays)
@@ -276,14 +258,14 @@ class DeliveryDayStatisticsTableViewController: UITableViewController {
 				} catch {
 					let nserror = error as NSError
 					fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-				}/*
+				}
 				let dateFormatter = DateFormatter()
 				dateFormatter.timeZone = TimeZone.current
 				dateFormatter.dateFormat = "MMddyy"
 				let convertedDeliveryDate = dateFormatter.date(from:deliveryDay.deliveryDateValue)
 				print(deliveryDay.deliveryDateValue)
 				print(convertedDeliveryDate as Any)
-				let newDeliveryDay = DeliveryDayCore(context: context)
+				let newDeliveryDay = DeliveryDay(context: context)
 				newDeliveryDay.setValue(convertedDeliveryDate, forKey: "date")
 				newDeliveryDay.setValue(Int16(deliveryDay.deliveryDayCountValue), forKey: "deliveryCount")
 				newDeliveryDay.setValue(deliveryDay.totalTipsValue.removeDollarSign(), forKey: "totalTips")
@@ -291,26 +273,19 @@ class DeliveryDayStatisticsTableViewController: UITableViewController {
 				newDeliveryDay.setValue(deliveryDay.whoMadeBankName, forKey: "whoMadeBank")
 				newDeliveryDay.setValue(deliveryDay.whoClosedBankName, forKey: "whoClosedBank")
 				newDeliveryDay.setValue(deliveryDay.manual, forKey: "manual")
-				do {
-					try context.save()
-					print("Save Successful \(newDeliveryDay)")
-				} catch {
-					print("Failed to save")
-					let nserror = error as NSError
-					fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-				}*/
+				*/
 				DeliveryDayViewController.selectedDateGlobal = deliveryDay.deliveryDateValue
 				whoMadeBankArray.append(deliveryDay.whoMadeBankName)
 				whoClosedBankArray.append(deliveryDay.whoClosedBankName)
 				
 				// Total Delivery Day Tips - paidout
 				totalTipsValueArray.append(deliveryDay.totalTipsValue.removeDollarSign())
-				let totalTipsValueTotaled = totalTipsValueArray.reduce(0, +)
+				let totalTipsValueTotaled = totalTipsValueArray.reduce(0, + )
 				self.totalTipsValueFinal = totalTipsValueTotaled
 				
 				// Total Delivery Day Received
 				totalReceivedValueArray.append(deliveryDay.totalReceivedValue.removeDollarSign())
-				let totalReceivedValueTotaled = totalReceivedValueArray.reduce(0, +)
+				let totalReceivedValueTotaled = totalReceivedValueArray.reduce(0, + )
 				self.totalReceivedValueFinal = totalReceivedValueTotaled
 				
 				// Difference
@@ -320,9 +295,9 @@ class DeliveryDayStatisticsTableViewController: UITableViewController {
 				} else if deliveryDayDifference < 0.0 {
 					differenceUnderArray.append(Double(String(format: "%.2f", deliveryDayDifference))!)
 				}
-				let differenceOverTotaled = differenceOverArray.reduce(0, +)
+				let differenceOverTotaled = differenceOverArray.reduce(0, + )
 				self.differenceOverFinal = differenceOverTotaled
-				let differenceUnderTotaled = differenceUnderArray.reduce(0, +)
+				let differenceUnderTotaled = differenceUnderArray.reduce(0, + )
 				self.differenceUnderFinal = differenceUnderTotaled
 				deliveries.removeAll()
 				Delivery.ArchiveURL = Delivery.DocumentsDirectory.appendingPathComponent("\(deliveryDay.deliveryDateValue)")
@@ -334,19 +309,21 @@ class DeliveryDayStatisticsTableViewController: UITableViewController {
 						Delivery.ArchiveURL = Delivery.DocumentsDirectory.appendingPathComponent("\(deliveryDay.deliveryDateValue)")
 						savedDeliveries = loadDeliveries()!
 						deliveries = savedDeliveries
+						let newDelivery = Delivery(context: context)
+						
 						for (index, _) in deliveries.enumerated() {
 							self.deliveryCount += 1
-							let delivery = deliveries[index]/*
+							let delivery = deliveries[index]
 							let dateFormatter = DateFormatter()
 							dateFormatter.timeZone = TimeZone.current
 							dateFormatter.dateFormat = "hh:mm:ss a, MMddyy"
 							var convertedDeliveryTime = dateFormatter.date(from: "12:00:00 AM, " + deliveryDay.deliveryDateValue)
-							if delivery.deliveryTimeValue != "" {
-							convertedDeliveryTime = dateFormatter.date(from: delivery.deliveryTimeValue + ", " + deliveryDay.deliveryDateValue)!
-							}
+							if delivery.deliveryTime != "" {
+								convertedDeliveryTime = dateFormatter.date(from: delivery.deliveryTime + ", " + deliveryDay.deliveryDateValue)!
+							}/*
 							print(delivery.deliveryTimeValue)
 							print(convertedDeliveryTime as Any)
-							let newDelivery = DeliveryCore(context: context)
+							//let newDelivery = Delivery(context: context)
 							newDelivery.setValue(Int16(delivery.ticketNumberValue)!, forKey: "ticketNumber")
 							newDelivery.setValue(delivery.ticketAmountValue.removeDollarSign(), forKey: "ticketAmount")
 							newDelivery.setValue(delivery.amountGivenValue.removeDollarSign(), forKey: "amountGiven")
@@ -354,10 +331,11 @@ class DeliveryDayStatisticsTableViewController: UITableViewController {
 							newDelivery.setValue(delivery.totalTipsValue.removeDollarSign(), forKey: "totalTips")
 							newDelivery.setValue(Int16(delivery.paymentMethodValue)!, forKey: "paymentMethod")
 							newDelivery.setValue(Bool(delivery.noTipSwitchValue)!, forKey: "noTip")
-							newDelivery.setValue(convertedDeliveryTime as NSDate?, forKey: "deliveryTime")
+							newDelivery.setValue(convertedDeliveryTime as NSDate?, forKey: "deliveryTime")*/
 							if let ticketPhoto = delivery.ticketPhotoValue {
-							newDelivery.setValue(UIImageJPEGRepresentation(ticketPhoto, 1.0) as NSData?, forKey: "ticketPhoto")
+								newDelivery.setValue(UIImageJPEGRepresentation(ticketPhoto, 1.0) as NSData?, forKey: "ticketPhoto")
 							}
+							/*
 							do {
 							try context.save()
 							print("Save Successful \(newDelivery)")
@@ -367,70 +345,75 @@ class DeliveryDayStatisticsTableViewController: UITableViewController {
 							fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
 							}*/
 							ticketAmountArray.append(delivery.ticketAmountValue.removeDollarSign())
-							let ticketAmountTotaled = ticketAmountArray.reduce(0, +)
+							let ticketAmountTotaled = ticketAmountArray.reduce(0, + )
 							self.ticketAmountFinal = ticketAmountTotaled
-							self.tAmountArray = ticketAmountArray
 							
 							// Sum of amountGiven
 							amountGivenArray.append(delivery.amountGivenValue.removeDollarSign())
-							let amountGivenTotaled = amountGivenArray.reduce(0, +)
+							let amountGivenTotaled = amountGivenArray.reduce(0, + )
 							self.amountGivenFinal = amountGivenTotaled
-							self.aGivenArray = amountGivenArray
 							
 							// Sum of cashTips
 							cashTipsArray.append(delivery.cashTipsValue.removeDollarSign())
-							let cashTipsTotaled = cashTipsArray.reduce(0, +)
+							let cashTipsTotaled = cashTipsArray.reduce(0, + )
 							self.cashTipsFinal = cashTipsTotaled
-							self.cTipsArray = cashTipsArray
 							
 							// Sum of totalTips
 							totalTipsArray.append(delivery.totalTipsValue.removeDollarSign())
-							let totalTipsTotaled = totalTipsArray.reduce(0, +)
+							let totalTipsTotaled = totalTipsArray.reduce(0, + )
 							self.totalTipsFinal = totalTipsTotaled
-							self.tTipsArray = totalTipsArray
 							
 							//NoTipSwitchArray
 							noTipArray.append(delivery.noTipSwitchValue)
 							
 							//Payment Method Sales Total
-							if delivery.paymentMethodValue == "1" {
+							if delivery.paymentMethod == "1" {
 								cashSalesArray.append(delivery.ticketAmountValue.removeDollarSign())
-								let cashSalesTotaled = cashSalesArray.reduce(0, +)
+								let cashSalesTotaled = cashSalesArray.reduce(0, + )
 								self.cashSalesFinal = cashSalesTotaled
-							} else if delivery.paymentMethodValue == "2" {
+							} else if delivery.paymentMethod == "2" {
 								checkSalesArray.append(delivery.ticketAmountValue.removeDollarSign())
-								let checkSalesTotaled = checkSalesArray.reduce(0, +)
+								let checkSalesTotaled = checkSalesArray.reduce(0, + )
 								self.checkSalesFinal = checkSalesTotaled
-							} else if delivery.paymentMethodValue == "3" {
+							} else if delivery.paymentMethod == "3" {
 								creditSalesArray.append(delivery.ticketAmountValue.removeDollarSign())
-								let creditSalesTotaled = creditSalesArray.reduce(0, +)
+								let creditSalesTotaled = creditSalesArray.reduce(0, + )
 								self.creditSalesFinal = creditSalesTotaled
-							} else if delivery.paymentMethodValue == "4" {
+							} else if delivery.paymentMethod == "4" {
 								chargeSalesArray.append(delivery.ticketAmountValue.removeDollarSign())
-								let chargeSalesTotaled = chargeSalesArray.reduce(0, +)
+								let chargeSalesTotaled = chargeSalesArray.reduce(0, + )
 								self.chargeSalesFinal = chargeSalesTotaled
 								chargeGivenArray.append(delivery.amountGivenValue.removeDollarSign())
-								let chargeGivenTotaled = chargeGivenArray.reduce(0, +)
+								let chargeGivenTotaled = chargeGivenArray.reduce(0, + )
 								self.chargeGivenFinal = chargeGivenTotaled
-							} else if delivery.paymentMethodValue == "5" {
+							} else if delivery.paymentMethod == "5" {
 								otherSalesArray.append(delivery.ticketAmountValue.removeDollarSign())
-								let otherSalesTotaled = otherSalesArray.reduce(0, +)
+								let otherSalesTotaled = otherSalesArray.reduce(0, + )
 								self.otherSalesFinal = otherSalesTotaled
 							}
-							if delivery.noTipSwitchValue == "true" {
+							if delivery.noTipSwitch == "true" {
 								noTipSalesArray.append(delivery.ticketAmountValue.removeDollarSign())
-								let noTipSalesTotaled = noTipSalesArray.reduce(0, +)
+								let noTipSalesTotaled = noTipSalesArray.reduce(0, + )
 								self.noTipSalesFinal = noTipSalesTotaled
 							}
-						}
+							//newDeliveryDay.addToDeliveries(newDelivery)
+						}/*
+						do {
+							try context.save()
+							print("Save Successful \(newDeliveryDay)")
+						} catch {
+							print("Failed to save")
+							let nserror = error as NSError
+							fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+						}*/
 					}
 				}
 			}
 			differenceArray.append(contentsOf: differenceOverArray)
 			differenceArray.append(contentsOf: differenceUnderArray)
-			let differenceTotaled = differenceArray.reduce(0, +)
-			self.differenceFinal = differenceTotaled
-			let requestAllDeliveries = NSFetchRequest<DeliveryCore>(entityName: "DeliveryCore")
+			let differenceTotaled = differenceArray.reduce(0, + )
+			self.differenceFinal = differenceTotaled/*
+			let requestAllDeliveries = NSFetchRequest<Delivery>(entityName: "Delivery")
 			requestAllDeliveries.returnsObjectsAsFaults = false
 			do {
 				coreDeliveries.removeAll()
@@ -461,10 +444,10 @@ class DeliveryDayStatisticsTableViewController: UITableViewController {
 			} catch {
 				let nserror = error as NSError
 				fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-			}
-		}
+			}*/
+		}*/
 	}
-	func activityIndicator(msg:String, _ indicator:Bool ) {
+	func activityIndicator(msg: String, _ indicator: Bool ) {
 		print(msg)
 		strLabel = UILabel(frame: CGRect(x: 50, y: 0, width: 200, height: 50))
 		strLabel.text = msg
@@ -484,10 +467,4 @@ class DeliveryDayStatisticsTableViewController: UITableViewController {
 	
 	// MARK: NSCoding
 	
-	func loadDeliveryDays() -> [DeliveryDay]? {
-		return NSKeyedUnarchiver.unarchiveObject(withFile: DeliveryDay.ArchiveURL.path) as? [DeliveryDay]
 	}
-	func loadDeliveries() -> [Delivery]? {
-		return NSKeyedUnarchiver.unarchiveObject(withFile: Delivery.ArchiveURL.path) as? [Delivery]
-	}
-}

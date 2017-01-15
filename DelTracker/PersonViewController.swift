@@ -9,42 +9,54 @@
 import UIKit
 import CoreData
 
-class PersonViewController: UIViewController, UITextFieldDelegate, UIToolbarDelegate, UINavigationControllerDelegate {
+class PersonViewController : UIViewController, UITextFieldDelegate, UIToolbarDelegate, UINavigationControllerDelegate {
 	@IBOutlet var personSaveButton: AnyObject!
 	@IBOutlet var personTextField: UITextField!
 	@IBAction func personSaveButton(_ sender: UIBarButtonItem) {
+		savePeople()
 	}
 	@IBAction func cancelEdit(_ sender: UIBarButtonItem) {
+		_ = navigationController?.popViewController(animated: true)
+	}
+	@IBAction func editPersonSaveButton(_ sender: UIBarButtonItem) {
+		savePeople()
 		dismiss(animated: true, completion: nil)
 	}
-	@IBAction func cancelAdd(_ sender: UIBarButtonItem) {
-		dismiss(animated: true, completion: nil)
-	}
+	
 	var person: Person?
+	var people = [Person]()
+	var selectedTime: Date = NSDate() as Date
+	var managedObjectContext: NSManagedObjectContext?
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		personTextField.delegate = self
 		if let person = person {
 			navigationItem.title = "Edit Person"
 			personTextField.text = person.name
-		} else {
-			personTextField.becomeFirstResponder()
 		}
-	}
-	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-		personTextField.resignFirstResponder()
-		return true
 	}
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		self.view.endEditing(true)
 	}
- 
-	// MARK: - Navigation
 	
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if personSaveButton === sender as AnyObject? {
-			let personTextFieldValue = personTextField.text ?? ""
-			person = Person(name: personTextFieldValue)
+	// MARK: CoreData
+	
+	func savePeople() {
+		guard let managedObjectContext = managedObjectContext else {
+			return
+		}
+		if person == nil {
+			let newPerson = Person(context: managedObjectContext)
+			if let name = personTextField.text {
+				newPerson.name = name
+			}
+			person = newPerson
+		}
+		if let person = person {
+			if let name = personTextField.text {
+				person.name = name
+			}
+			_ = navigationController?.popViewController(animated: true)
 		}
 	}
 }
