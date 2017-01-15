@@ -1515,17 +1515,24 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="gray" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="lTd-Hz-IAA" style="IBUITableViewCellStyleDefault" id="rtL-I7-My5">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="gray" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="lTd-Hz-IAA" detailTextLabel="AFu-3d-337" style="IBUITableViewCellStyleValue1" id="rtL-I7-My5">
                                         <rect key="frame" x="0.0" y="1124" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rtL-I7-My5" id="2Cj-qc-VKp">
                                             <rect key="frame" x="0.0" y="0.0" width="381" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Set Who Made Bank" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="lTd-Hz-IAA">
-                                                    <rect key="frame" x="15" y="0.0" width="364" height="43"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Who Made Bank" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="lTd-Hz-IAA">
+                                                    <rect key="frame" x="15" y="11" width="126" height="21"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="0.0"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="None" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="AFu-3d-337">
+                                                    <rect key="frame" x="338" y="11" width="41" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -1533,39 +1540,14 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                                         <connections>
-                                            <segue destination="For-JH-PbL" kind="show" identifier="setWhoDidBank" id="wXx-Rv-HVr"/>
+                                            <segue destination="For-JH-PbL" kind="show" identifier="whoMadeBank" id="2JO-gg-tM4"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" textLabel="g4Q-Qi-0US" detailTextLabel="oyM-0s-tQm" style="IBUITableViewCellStyleValue1" id="8ic-2d-JZm">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="gray" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="Dp2-sO-zmw" detailTextLabel="Rdd-gp-VLJ" style="IBUITableViewCellStyleValue1" id="863-To-3jt">
                                         <rect key="frame" x="0.0" y="1168" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8ic-2d-JZm" id="NBo-aU-418">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Who Made Bank" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="g4Q-Qi-0US">
-                                                    <rect key="frame" x="15" y="11" width="126" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="None" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="oyM-0s-tQm">
-                                                    <rect key="frame" x="358" y="11" width="41" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" textLabel="Dp2-sO-zmw" detailTextLabel="Rdd-gp-VLJ" style="IBUITableViewCellStyleValue1" id="863-To-3jt">
-                                        <rect key="frame" x="0.0" y="1212" width="414" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="863-To-3jt" id="jTN-c1-quW">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="381" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Who Closed Bank" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Dp2-sO-zmw">
@@ -1576,7 +1558,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="None" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Rdd-gp-VLJ">
-                                                    <rect key="frame" x="358" y="11" width="41" height="21"/>
+                                                    <rect key="frame" x="338" y="11" width="41" height="21"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1585,9 +1567,12 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                                        <connections>
+                                            <segue destination="For-JH-PbL" kind="show" identifier="whoClosedBank" id="TLo-K7-G3R"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" textLabel="dse-eS-zbq" detailTextLabel="XoM-bO-iZy" style="IBUITableViewCellStyleValue1" id="87N-gQ-34F">
-                                        <rect key="frame" x="0.0" y="1256" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="1212" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="87N-gQ-34F" id="3pB-eJ-CTT">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
@@ -1612,7 +1597,7 @@
                                         <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" textLabel="qBg-P5-BQT" style="IBUITableViewCellStyleDefault" id="HdU-Jb-U46">
-                                        <rect key="frame" x="0.0" y="1300" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="1256" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HdU-Jb-U46" id="70M-tN-1NM">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
@@ -1647,7 +1632,7 @@
                                         <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" textLabel="jAM-F6-4PS" detailTextLabel="vY9-lU-DzS" style="IBUITableViewCellStyleValue1" id="3TB-GG-zdO">
-                                        <rect key="frame" x="0.0" y="1344" width="414" height="44"/>
+                                        <rect key="frame" x="0.0" y="1300" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3TB-GG-zdO" id="TZt-hc-gXs">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43"/>
@@ -1722,7 +1707,7 @@
                         <outlet property="totalSalesLabel" destination="thW-m1-PIo" id="zyT-L9-Dly"/>
                         <outlet property="totalTipsLabel" destination="VeS-EW-lKN" id="MXM-9M-70c"/>
                         <outlet property="whoClosedBankLabel" destination="Rdd-gp-VLJ" id="Gye-Aw-KeR"/>
-                        <outlet property="whoMadeBankLabel" destination="oyM-0s-tQm" id="cqH-D1-xsC"/>
+                        <outlet property="whoMadeBankLabel" destination="AFu-3d-337" id="P8e-i1-5cn"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BfH-3L-JMh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3123,7 +3108,7 @@
         <scene sceneID="iHm-H4-Nun">
             <objects>
                 <tableViewController id="For-JH-PbL" customClass="PersonTableViewController" customModule="DelTracker2" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" sectionIndexMinimumDisplayRowCount="1" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="cu9-4o-dKB">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="cu9-4o-dKB">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
@@ -3156,20 +3141,12 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Edit People" id="8ed-np-dI9">
-                        <rightBarButtonItems>
-                            <barButtonItem systemItem="add" id="JkU-Wh-ATw">
-                                <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
-                                <connections>
-                                    <segue destination="4fn-6e-7Sf" kind="show" identifier="addItem" id="ygI-I2-4nN"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem systemItem="save" id="2D1-iH-g50">
-                                <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
-                                <connections>
-                                    <action selector="saveButton:" destination="For-JH-PbL" id="ENA-V0-go7"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="JkU-Wh-ATw">
+                            <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <segue destination="4fn-6e-7Sf" kind="show" identifier="addItem" id="ygI-I2-4nN"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
@@ -3296,6 +3273,7 @@
         <segue reference="WXw-2w-NlP"/>
         <segue reference="7Pz-4I-mP5"/>
         <segue reference="EeS-3Z-vfz"/>
+        <segue reference="TLo-K7-G3R"/>
         <segue reference="Q3v-Wd-fhu"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="1" green="0.53725490200000003" blue="0.0078431372550000003" alpha="1" colorSpace="calibratedRGB"/>

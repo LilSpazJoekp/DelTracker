@@ -284,15 +284,17 @@ class DeliveryStatisticsTableViewController : UITableViewController, UITextField
 			let totalReceivedValue = actuallyReceivedField.text
 			let manual = false
 			deliveryDay = DeliveryDay(deliveryDateValue: deliveryDateValue, deliveryDayCountValue: deliveryCountValue, totalTipsValue: totalTipsValue, totalReceivedValue: totalReceivedValue!, whoMadeBankName: whoMadeBankName, whoClosedBankName: whoClosedBankName, manual: manual)
-			*/
-		} else if segue.identifier == "setWhoDidBank" {
+			*/} else if segue.identifier == "whoMadeBank" {
 			let destination = segue.destination as! PersonTableViewController
-			destination.title = "Who Did Bank"
+			destination.title = "Who Made Bank"
 			if let selectedPerson = whoMadeBankLabel.text {
-				destination.whoMadeBankSelectedPerson = selectedPerson
+				destination.selectedPerson = selectedPerson
 			}
+		} else if segue.identifier == "whoClosedBank" {
+			let destination = segue.destination as! PersonTableViewController
+			destination.title = "Who Closed Bank"
 			if let selectedPerson = whoClosedBankLabel.text {
-				destination.whoClosedBankSelectedPerson = selectedPerson
+				destination.selectedPerson = selectedPerson
 			}
 		}
 	}
@@ -303,9 +305,12 @@ class DeliveryStatisticsTableViewController : UITableViewController, UITextField
 		deliveryDays[selectedIndexPath!] = deliveryDay
 		}
 		saveDeliveryDays()
-		} else*/ if let sourceViewController = sender.source as? PersonTableViewController, let whoMadeBank = sourceViewController.whoMadeBank, let whoClosedBank = sourceViewController.whoClosedBank {
-				self.whoMadeBank = whoMadeBank
-				self.whoClosedBank = whoClosedBank
+		} else*/ if let sourceViewController = sender.source as? PersonTableViewController, let person = sourceViewController.whoDidBank {
+			if sourceViewController.title == "Who Made Bank" {
+				self.whoMadeBank = person
+			} else if sourceViewController.title == "Who Closed Bank"{
+				self.whoClosedBank = person
+			}
 		}
 	}
 	override func viewDidAppear(_ animated: Bool) {
