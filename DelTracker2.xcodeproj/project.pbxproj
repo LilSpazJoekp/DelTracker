@@ -13,20 +13,11 @@
 		EE19BDAC1E03134E003986AE /* DeliveryTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE19BDAB1E03134E003986AE /* DeliveryTabBarViewController.swift */; };
 		EE19BDAE1E043BFD003986AE /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE19BDAD1E043BFD003986AE /* ScannerViewController.swift */; };
 		EE26E13F1E0DD3420071A3F9 /* CurrencyField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE26E13E1E0DD3420071A3F9 /* CurrencyField.swift */; };
-		EE35BB9D1DF9A70C00F850B7 /* WhoClosedBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35BB9C1DF9A70C00F850B7 /* WhoClosedBank.swift */; };
-		EE35BB9F1DF9B9C200F850B7 /* WhoClosedBankTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE35BB9E1DF9B9C200F850B7 /* WhoClosedBankTableViewController.swift */; };
-		EE43E0901E216F9800D19A36 /* DelTracker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EE43E08E1E216F9800D19A36 /* DelTracker.xcdatamodeld */; };
-		EE5BEAF91DF9A40C00967172 /* WhoMadeBank.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE5BEAF81DF9A40C00967172 /* WhoMadeBank.swift */; };
+		EE43E0901E216F9800D19A36 /* DelTracker2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EE43E08E1E216F9800D19A36 /* DelTracker2.xcdatamodeld */; };
 		EE7F8C331DF23B0000F52349 /* DeliveryDayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7F8C321DF23B0000F52349 /* DeliveryDayViewController.swift */; };
 		EE7F8C351DF23B1400F52349 /* DeliveryDayTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7F8C341DF23B1400F52349 /* DeliveryDayTableViewController.swift */; };
 		EE7F8C371DF23B3000F52349 /* DeliveryDayTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7F8C361DF23B3000F52349 /* DeliveryDayTableViewCell.swift */; };
 		EE8F7AF51DECF64500B38B51 /* DeliveryStatisticsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8F7AF41DECF64500B38B51 /* DeliveryStatisticsTableViewController.swift */; };
-		EEA994961E2345F700C64BA8 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA994951E2345F700C64BA8 /* CoreDataStack.swift */; };
-		EEA994BC1E23536900C64BA8 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA994BA1E23536900C64BA8 /* MasterViewController.swift */; };
-		EEA994BD1E23536900C64BA8 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA994BB1E23536900C64BA8 /* DetailViewController.swift */; };
-		EEA99F691E0F9FFC007A643D /* ProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA99F681E0F9FFC007A643D /* ProgressView.swift */; };
-		EEC09FCC1E0112B60036DFDF /* EditPeople.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC09FCB1E0112B60036DFDF /* EditPeople.swift */; };
-		EEC49D601DECB1A3008DB859 /* Delivery.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC49D5F1DECB1A3008DB859 /* Delivery.swift */; };
 		EEC635731DEBDABF009D713F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC635721DEBDABF009D713F /* AppDelegate.swift */; };
 		EEC635751DEBDABF009D713F /* DeliveryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC635741DEBDABF009D713F /* DeliveryViewController.swift */; };
 		EEC635781DEBDABF009D713F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EEC635761DEBDABF009D713F /* Main.storyboard */; };
@@ -36,16 +27,11 @@
 		EEC635961DEBDAC0009D713F /* DelTrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC635951DEBDAC0009D713F /* DelTrackerUITests.swift */; };
 		EEC635A61DEBDBF7009D713F /* DeliveryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC635A51DEBDBF7009D713F /* DeliveryTableViewController.swift */; };
 		EEC635A81DEBDC3B009D713F /* DeliveryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC635A71DEBDC3B009D713F /* DeliveryTableViewCell.swift */; };
-		EEC635AA1DEBDD11009D713F /* TextFieldMaxLengths.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC635A91DEBDD11009D713F /* TextFieldMaxLengths.swift */; };
-		EED2DAC91DF50AC100FF8C1D /* DeliveryDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED2DAC81DF50AC100FF8C1D /* DeliveryDay.swift */; };
-		EED2DACB1DF8AB2B00FF8C1D /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED2DACA1DF8AB2B00FF8C1D /* Person.swift */; };
 		EED2DACD1DF8AB4800FF8C1D /* PersonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED2DACC1DF8AB4800FF8C1D /* PersonTableViewCell.swift */; };
-		EED2DACF1DF8AB5F00FF8C1D /* WhoMadeBankTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED2DACE1DF8AB5F00FF8C1D /* WhoMadeBankTableViewController.swift */; };
 		EED2DAD11DF8ABA500FF8C1D /* PersonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED2DAD01DF8ABA500FF8C1D /* PersonViewController.swift */; };
 		EED2DAD31DF8ABF700FF8C1D /* PeopleTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED2DAD21DF8ABF700FF8C1D /* PeopleTableViewController.swift */; };
 		EEDF1A7C1E09CBCA00545E46 /* TicketPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEDF1A7B1E09CBCA00545E46 /* TicketPhotoViewController.swift */; };
 		EEF011851DF07DFE00CEC323 /* DropTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF011841DF07DFE00CEC323 /* DropTableViewController.swift */; };
-		EEF011891DF07EB200CEC323 /* Drop.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF011881DF07EB200CEC323 /* Drop.swift */; };
 		EEF0118D1DF087F000CEC323 /* DropTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF0118C1DF087F000CEC323 /* DropTableViewCell.swift */; };
 		EEF0118F1DF0DEA600CEC323 /* DropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF0118E1DF0DEA600CEC323 /* DropViewController.swift */; };
 /* End PBXBuildFile section */
@@ -68,51 +54,37 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		EE0733D51E22A1C500E5951E /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		EE0733D51E22A1C500E5951E /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Extensions.swift; path = ../Extensions.swift; sourceTree = "<group>"; };
 		EE1932BA1E0C6FDE00561FFE /* DeliveryDayStatisticsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DeliveryDayStatisticsTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		EE1932BC1E0C740500561FFE /* DeliveryDayTabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeliveryDayTabBarViewController.swift; sourceTree = "<group>"; };
 		EE19BDAB1E03134E003986AE /* DeliveryTabBarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeliveryTabBarViewController.swift; sourceTree = "<group>"; };
 		EE19BDAD1E043BFD003986AE /* ScannerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
 		EE26E13E1E0DD3420071A3F9 /* CurrencyField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyField.swift; sourceTree = "<group>"; };
-		EE35BB9C1DF9A70C00F850B7 /* WhoClosedBank.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = WhoClosedBank.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		EE35BB9E1DF9B9C200F850B7 /* WhoClosedBankTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = WhoClosedBankTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		EE43E08F1E216F9800D19A36 /* DelTracker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DelTracker.xcdatamodel; sourceTree = "<group>"; };
-		EE5BEAF81DF9A40C00967172 /* WhoMadeBank.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = WhoMadeBank.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		EE43E08F1E216F9800D19A36 /* DelTracker2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DelTracker2.xcdatamodel; sourceTree = "<group>"; };
 		EE7F8C321DF23B0000F52349 /* DeliveryDayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = DeliveryDayViewController.swift; path = ../DeliveryDayViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		EE7F8C341DF23B1400F52349 /* DeliveryDayTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = DeliveryDayTableViewController.swift; path = ../DeliveryDayTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		EE7F8C361DF23B3000F52349 /* DeliveryDayTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeliveryDayTableViewCell.swift; sourceTree = "<group>"; };
 		EE8F7AF41DECF64500B38B51 /* DeliveryStatisticsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DeliveryStatisticsTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		EEA994951E2345F700C64BA8 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
-		EEA994BA1E23536900C64BA8 /* MasterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
-		EEA994BB1E23536900C64BA8 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
-		EEA99F681E0F9FFC007A643D /* ProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressView.swift; sourceTree = "<group>"; };
-		EEC09FCB1E0112B60036DFDF /* EditPeople.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPeople.swift; sourceTree = "<group>"; };
-		EEC49D5F1DECB1A3008DB859 /* Delivery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Delivery.swift; sourceTree = "<group>"; };
-		EEC6356F1DEBDABF009D713F /* DelTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DelTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EEC6356F1DEBDABF009D713F /* DelTracker2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DelTracker2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEC635721DEBDABF009D713F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EEC635741DEBDABF009D713F /* DeliveryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DeliveryViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		EEC635771DEBDABF009D713F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		EEC6357C1DEBDABF009D713F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EEC6357F1DEBDABF009D713F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EEC635811DEBDABF009D713F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EEC635861DEBDABF009D713F /* DelTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DelTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EEC635861DEBDABF009D713F /* DelTracker2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DelTracker2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEC6358A1DEBDABF009D713F /* DelTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelTrackerTests.swift; sourceTree = "<group>"; };
 		EEC6358C1DEBDABF009D713F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EEC635911DEBDAC0009D713F /* DelTrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DelTrackerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EEC635911DEBDAC0009D713F /* DelTracker2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DelTracker2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEC635951DEBDAC0009D713F /* DelTrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelTrackerUITests.swift; sourceTree = "<group>"; };
 		EEC635971DEBDAC0009D713F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EEC635A51DEBDBF7009D713F /* DeliveryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DeliveryTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		EEC635A71DEBDC3B009D713F /* DeliveryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeliveryTableViewCell.swift; sourceTree = "<group>"; };
-		EEC635A91DEBDD11009D713F /* TextFieldMaxLengths.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldMaxLengths.swift; sourceTree = "<group>"; };
-		EED2DAC81DF50AC100FF8C1D /* DeliveryDay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DeliveryDay.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		EED2DACA1DF8AB2B00FF8C1D /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Person.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		EED2DACC1DF8AB4800FF8C1D /* PersonTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PersonTableViewCell.swift; path = ../PersonTableViewCell.swift; sourceTree = "<group>"; };
-		EED2DACE1DF8AB5F00FF8C1D /* WhoMadeBankTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = WhoMadeBankTableViewController.swift; path = ../WhoMadeBankTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		EED2DAD01DF8ABA500FF8C1D /* PersonViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonViewController.swift; sourceTree = "<group>"; };
 		EED2DAD21DF8ABF700FF8C1D /* PeopleTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PeopleTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		EEDF1A7B1E09CBCA00545E46 /* TicketPhotoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TicketPhotoViewController.swift; sourceTree = "<group>"; };
 		EEF011841DF07DFE00CEC323 /* DropTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = DropTableViewController.swift; path = ../DropTableViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		EEF011881DF07EB200CEC323 /* Drop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Drop.swift; path = ../Drop.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		EEF0118C1DF087F000CEC323 /* DropTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DropTableViewCell.swift; path = ../DropTableViewCell.swift; sourceTree = "<group>"; };
 		EEF0118E1DF0DEA600CEC323 /* DropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -145,9 +117,8 @@
 		5D2894051DF34D9C00E45BE6 /* DeliveryDayView */ = {
 			isa = PBXGroup;
 			children = (
-				EED2DAC81DF50AC100FF8C1D /* DeliveryDay.swift */,
-				EE7F8C341DF23B1400F52349 /* DeliveryDayTableViewController.swift */,
 				EE7F8C361DF23B3000F52349 /* DeliveryDayTableViewCell.swift */,
+				EE7F8C341DF23B1400F52349 /* DeliveryDayTableViewController.swift */,
 				EE7F8C321DF23B0000F52349 /* DeliveryDayViewController.swift */,
 			);
 			name = DeliveryDayView;
@@ -156,9 +127,6 @@
 		EEC635661DEBDABF009D713F = {
 			isa = PBXGroup;
 			children = (
-				EEA994951E2345F700C64BA8 /* CoreDataStack.swift */,
-				EEC635A91DEBDD11009D713F /* TextFieldMaxLengths.swift */,
-				EE0733D51E22A1C500E5951E /* Extensions.swift */,
 				EEC635711DEBDABF009D713F /* DelTracker */,
 				EEC635891DEBDABF009D713F /* DelTrackerTests */,
 				EEC635941DEBDAC0009D713F /* DelTrackerUITests */,
@@ -169,9 +137,9 @@
 		EEC635701DEBDABF009D713F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EEC6356F1DEBDABF009D713F /* DelTracker.app */,
-				EEC635861DEBDABF009D713F /* DelTrackerTests.xctest */,
-				EEC635911DEBDAC0009D713F /* DelTrackerUITests.xctest */,
+				EEC6356F1DEBDABF009D713F /* DelTracker2.app */,
+				EEC635861DEBDABF009D713F /* DelTracker2Tests.xctest */,
+				EEC635911DEBDAC0009D713F /* DelTracker2UITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -179,21 +147,19 @@
 		EEC635711DEBDABF009D713F /* DelTracker */ = {
 			isa = PBXGroup;
 			children = (
-				EE1932BA1E0C6FDE00561FFE /* DeliveryDayStatisticsTableViewController.swift */,
-				EEC09FCB1E0112B60036DFDF /* EditPeople.swift */,
 				EED2DAD41DF8AC0000FF8C1D /* PersonView */,
 				5D2894051DF34D9C00E45BE6 /* DeliveryDayView */,
 				EEF011901DF13FD800CEC323 /* DeliveryView */,
 				EEF011911DF1400F00CEC323 /* DropView */,
 				EEC635721DEBDABF009D713F /* AppDelegate.swift */,
+				EE0733D51E22A1C500E5951E /* Extensions.swift */,
 				EEC635761DEBDABF009D713F /* Main.storyboard */,
-				EE8F7AF41DECF64500B38B51 /* DeliveryStatisticsTableViewController.swift */,
-				EE1932BC1E0C740500561FFE /* DeliveryDayTabBarViewController.swift */,
-				EE19BDAB1E03134E003986AE /* DeliveryTabBarViewController.swift */,
+				EEEF23951E311D39006F662D /* StatisticsViewControllers */,
+				EEEF23941E311D1F006F662D /* TabBarViewControllers */,
 				EEC6357C1DEBDABF009D713F /* Assets.xcassets */,
 				EEC6357E1DEBDABF009D713F /* LaunchScreen.storyboard */,
 				EEC635811DEBDABF009D713F /* Info.plist */,
-				EE43E08E1E216F9800D19A36 /* DelTracker.xcdatamodeld */,
+				EE43E08E1E216F9800D19A36 /* DelTracker2.xcdatamodeld */,
 			);
 			path = DelTracker;
 			sourceTree = "<group>";
@@ -219,26 +185,37 @@
 		EED2DAD41DF8AC0000FF8C1D /* PersonView */ = {
 			isa = PBXGroup;
 			children = (
-				EED2DACA1DF8AB2B00FF8C1D /* Person.swift */,
 				EED2DACC1DF8AB4800FF8C1D /* PersonTableViewCell.swift */,
 				EED2DAD01DF8ABA500FF8C1D /* PersonViewController.swift */,
 				EED2DAD21DF8ABF700FF8C1D /* PeopleTableViewController.swift */,
-				EE5BEAF81DF9A40C00967172 /* WhoMadeBank.swift */,
-				EE35BB9C1DF9A70C00F850B7 /* WhoClosedBank.swift */,
-				EED2DACE1DF8AB5F00FF8C1D /* WhoMadeBankTableViewController.swift */,
-				EE35BB9E1DF9B9C200F850B7 /* WhoClosedBankTableViewController.swift */,
 			);
 			name = PersonView;
+			sourceTree = "<group>";
+		};
+		EEEF23941E311D1F006F662D /* TabBarViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				EE1932BC1E0C740500561FFE /* DeliveryDayTabBarViewController.swift */,
+				EE19BDAB1E03134E003986AE /* DeliveryTabBarViewController.swift */,
+			);
+			name = TabBarViewControllers;
+			sourceTree = "<group>";
+		};
+		EEEF23951E311D39006F662D /* StatisticsViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				EE1932BA1E0C6FDE00561FFE /* DeliveryDayStatisticsTableViewController.swift */,
+				EE8F7AF41DECF64500B38B51 /* DeliveryStatisticsTableViewController.swift */,
+			);
+			name = StatisticsViewControllers;
 			sourceTree = "<group>";
 		};
 		EEF011901DF13FD800CEC323 /* DeliveryView */ = {
 			isa = PBXGroup;
 			children = (
-				EEC49D5F1DECB1A3008DB859 /* Delivery.swift */,
 				EEC635A71DEBDC3B009D713F /* DeliveryTableViewCell.swift */,
 				EEC635A51DEBDBF7009D713F /* DeliveryTableViewController.swift */,
 				EEC635741DEBDABF009D713F /* DeliveryViewController.swift */,
-				EEA99F681E0F9FFC007A643D /* ProgressView.swift */,
 				EE26E13E1E0DD3420071A3F9 /* CurrencyField.swift */,
 				EEDF1A7B1E09CBCA00545E46 /* TicketPhotoViewController.swift */,
 				EE19BDAD1E043BFD003986AE /* ScannerViewController.swift */,
@@ -249,10 +226,7 @@
 		EEF011911DF1400F00CEC323 /* DropView */ = {
 			isa = PBXGroup;
 			children = (
-				EEA994BA1E23536900C64BA8 /* MasterViewController.swift */,
-				EEA994BB1E23536900C64BA8 /* DetailViewController.swift */,
 				EEF0118C1DF087F000CEC323 /* DropTableViewCell.swift */,
-				EEF011881DF07EB200CEC323 /* Drop.swift */,
 				EEF011841DF07DFE00CEC323 /* DropTableViewController.swift */,
 				EEF0118E1DF0DEA600CEC323 /* DropViewController.swift */,
 			);
@@ -262,9 +236,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		EEC6356E1DEBDABF009D713F /* DelTracker */ = {
+		EEC6356E1DEBDABF009D713F /* DelTracker2 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EEC6359A1DEBDAC0009D713F /* Build configuration list for PBXNativeTarget "DelTracker" */;
+			buildConfigurationList = EEC6359A1DEBDAC0009D713F /* Build configuration list for PBXNativeTarget "DelTracker2" */;
 			buildPhases = (
 				EEC6356B1DEBDABF009D713F /* Sources */,
 				EEC6356C1DEBDABF009D713F /* Frameworks */,
@@ -274,14 +248,14 @@
 			);
 			dependencies = (
 			);
-			name = DelTracker;
+			name = DelTracker2;
 			productName = DelTracker;
-			productReference = EEC6356F1DEBDABF009D713F /* DelTracker.app */;
+			productReference = EEC6356F1DEBDABF009D713F /* DelTracker2.app */;
 			productType = "com.apple.product-type.application";
 		};
-		EEC635851DEBDABF009D713F /* DelTrackerTests */ = {
+		EEC635851DEBDABF009D713F /* DelTracker2Tests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EEC6359D1DEBDAC0009D713F /* Build configuration list for PBXNativeTarget "DelTrackerTests" */;
+			buildConfigurationList = EEC6359D1DEBDAC0009D713F /* Build configuration list for PBXNativeTarget "DelTracker2Tests" */;
 			buildPhases = (
 				EEC635821DEBDABF009D713F /* Sources */,
 				EEC635831DEBDABF009D713F /* Frameworks */,
@@ -292,14 +266,14 @@
 			dependencies = (
 				EEC635881DEBDABF009D713F /* PBXTargetDependency */,
 			);
-			name = DelTrackerTests;
+			name = DelTracker2Tests;
 			productName = DelTrackerTests;
-			productReference = EEC635861DEBDABF009D713F /* DelTrackerTests.xctest */;
+			productReference = EEC635861DEBDABF009D713F /* DelTracker2Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		EEC635901DEBDAC0009D713F /* DelTrackerUITests */ = {
+		EEC635901DEBDAC0009D713F /* DelTracker2UITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EEC635A01DEBDAC0009D713F /* Build configuration list for PBXNativeTarget "DelTrackerUITests" */;
+			buildConfigurationList = EEC635A01DEBDAC0009D713F /* Build configuration list for PBXNativeTarget "DelTracker2UITests" */;
 			buildPhases = (
 				EEC6358D1DEBDAC0009D713F /* Sources */,
 				EEC6358E1DEBDAC0009D713F /* Frameworks */,
@@ -310,9 +284,9 @@
 			dependencies = (
 				EEC635931DEBDAC0009D713F /* PBXTargetDependency */,
 			);
-			name = DelTrackerUITests;
+			name = DelTracker2UITests;
 			productName = DelTrackerUITests;
-			productReference = EEC635911DEBDAC0009D713F /* DelTrackerUITests.xctest */;
+			productReference = EEC635911DEBDAC0009D713F /* DelTracker2UITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -345,7 +319,7 @@
 					};
 				};
 			};
-			buildConfigurationList = EEC6356A1DEBDABF009D713F /* Build configuration list for PBXProject "DelTracker" */;
+			buildConfigurationList = EEC6356A1DEBDABF009D713F /* Build configuration list for PBXProject "DelTracker2" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -358,9 +332,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				EEC6356E1DEBDABF009D713F /* DelTracker */,
-				EEC635851DEBDABF009D713F /* DelTrackerTests */,
-				EEC635901DEBDAC0009D713F /* DelTrackerUITests */,
+				EEC6356E1DEBDABF009D713F /* DelTracker2 */,
+				EEC635851DEBDABF009D713F /* DelTracker2Tests */,
+				EEC635901DEBDAC0009D713F /* DelTracker2UITests */,
 			);
 		};
 /* End PBXProject section */
@@ -397,40 +371,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EED2DACF1DF8AB5F00FF8C1D /* WhoMadeBankTableViewController.swift in Sources */,
 				EE1932BB1E0C6FDE00561FFE /* DeliveryDayStatisticsTableViewController.swift in Sources */,
 				EE8F7AF51DECF64500B38B51 /* DeliveryStatisticsTableViewController.swift in Sources */,
 				EEC635A61DEBDBF7009D713F /* DeliveryTableViewController.swift in Sources */,
 				EEC635751DEBDABF009D713F /* DeliveryViewController.swift in Sources */,
-				EEA994BC1E23536900C64BA8 /* MasterViewController.swift in Sources */,
 				EED2DACD1DF8AB4800FF8C1D /* PersonTableViewCell.swift in Sources */,
 				EE7F8C371DF23B3000F52349 /* DeliveryDayTableViewCell.swift in Sources */,
 				EEC635731DEBDABF009D713F /* AppDelegate.swift in Sources */,
-				EE35BB9D1DF9A70C00F850B7 /* WhoClosedBank.swift in Sources */,
-				EE35BB9F1DF9B9C200F850B7 /* WhoClosedBankTableViewController.swift in Sources */,
 				EE19BDAC1E03134E003986AE /* DeliveryTabBarViewController.swift in Sources */,
 				EEF011851DF07DFE00CEC323 /* DropTableViewController.swift in Sources */,
 				EE7F8C351DF23B1400F52349 /* DeliveryDayTableViewController.swift in Sources */,
 				EEF0118D1DF087F000CEC323 /* DropTableViewCell.swift in Sources */,
-				EEC09FCC1E0112B60036DFDF /* EditPeople.swift in Sources */,
 				EEC635A81DEBDC3B009D713F /* DeliveryTableViewCell.swift in Sources */,
-				EE43E0901E216F9800D19A36 /* DelTracker.xcdatamodeld in Sources */,
-				EEC49D601DECB1A3008DB859 /* Delivery.swift in Sources */,
+				EE43E0901E216F9800D19A36 /* DelTracker2.xcdatamodeld in Sources */,
 				EE7F8C331DF23B0000F52349 /* DeliveryDayViewController.swift in Sources */,
-				EED2DACB1DF8AB2B00FF8C1D /* Person.swift in Sources */,
 				EED2DAD11DF8ABA500FF8C1D /* PersonViewController.swift in Sources */,
 				EE26E13F1E0DD3420071A3F9 /* CurrencyField.swift in Sources */,
 				EEF0118F1DF0DEA600CEC323 /* DropViewController.swift in Sources */,
-				EEF011891DF07EB200CEC323 /* Drop.swift in Sources */,
 				EE19BDAE1E043BFD003986AE /* ScannerViewController.swift in Sources */,
-				EE5BEAF91DF9A40C00967172 /* WhoMadeBank.swift in Sources */,
-				EEA994BD1E23536900C64BA8 /* DetailViewController.swift in Sources */,
-				EED2DAC91DF50AC100FF8C1D /* DeliveryDay.swift in Sources */,
 				EED2DAD31DF8ABF700FF8C1D /* PeopleTableViewController.swift in Sources */,
 				EE1932BD1E0C740500561FFE /* DeliveryDayTabBarViewController.swift in Sources */,
-				EEA994961E2345F700C64BA8 /* CoreDataStack.swift in Sources */,
-				EEA99F691E0F9FFC007A643D /* ProgressView.swift in Sources */,
-				EEC635AA1DEBDD11009D713F /* TextFieldMaxLengths.swift in Sources */,
 				EE0733D61E22A1C500E5951E /* Extensions.swift in Sources */,
 				EEDF1A7C1E09CBCA00545E46 /* TicketPhotoViewController.swift in Sources */,
 			);
@@ -457,12 +417,12 @@
 /* Begin PBXTargetDependency section */
 		EEC635881DEBDABF009D713F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = EEC6356E1DEBDABF009D713F /* DelTracker */;
+			target = EEC6356E1DEBDABF009D713F /* DelTracker2 */;
 			targetProxy = EEC635871DEBDABF009D713F /* PBXContainerItemProxy */;
 		};
 		EEC635931DEBDAC0009D713F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = EEC6356E1DEBDABF009D713F /* DelTracker */;
+			target = EEC6356E1DEBDABF009D713F /* DelTracker2 */;
 			targetProxy = EEC635921DEBDAC0009D713F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -586,7 +546,7 @@
 				DEVELOPMENT_TEAM = 5ES99U9Z85;
 				INFOPLIST_FILE = DelTracker/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.jkpayne.DelTracker;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jkpayne.DelTracker2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -602,7 +562,7 @@
 				DEVELOPMENT_TEAM = 5ES99U9Z85;
 				INFOPLIST_FILE = DelTracker/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.jkpayne.DelTracker;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jkpayne.DelTracker2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -621,7 +581,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.jkpayne.DelTrackerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DelTracker.app/DelTracker";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DelTracker2.app/DelTracker2";
 			};
 			name = Debug;
 		};
@@ -636,7 +596,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.jkpayne.DelTrackerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DelTracker.app/DelTracker";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DelTracker2.app/DelTracker2";
 			};
 			name = Release;
 		};
@@ -671,7 +631,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		EEC6356A1DEBDABF009D713F /* Build configuration list for PBXProject "DelTracker" */ = {
+		EEC6356A1DEBDABF009D713F /* Build configuration list for PBXProject "DelTracker2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EEC635981DEBDAC0009D713F /* Debug */,
@@ -680,7 +640,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EEC6359A1DEBDAC0009D713F /* Build configuration list for PBXNativeTarget "DelTracker" */ = {
+		EEC6359A1DEBDAC0009D713F /* Build configuration list for PBXNativeTarget "DelTracker2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EEC6359B1DEBDAC0009D713F /* Debug */,
@@ -689,7 +649,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EEC6359D1DEBDAC0009D713F /* Build configuration list for PBXNativeTarget "DelTrackerTests" */ = {
+		EEC6359D1DEBDAC0009D713F /* Build configuration list for PBXNativeTarget "DelTracker2Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EEC6359E1DEBDAC0009D713F /* Debug */,
@@ -698,7 +658,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EEC635A01DEBDAC0009D713F /* Build configuration list for PBXNativeTarget "DelTrackerUITests" */ = {
+		EEC635A01DEBDAC0009D713F /* Build configuration list for PBXNativeTarget "DelTracker2UITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EEC635A11DEBDAC0009D713F /* Debug */,
@@ -710,13 +670,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		EE43E08E1E216F9800D19A36 /* DelTracker.xcdatamodeld */ = {
+		EE43E08E1E216F9800D19A36 /* DelTracker2.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				EE43E08F1E216F9800D19A36 /* DelTracker.xcdatamodel */,
+				EE43E08F1E216F9800D19A36 /* DelTracker2.xcdatamodel */,
 			);
-			currentVersion = EE43E08F1E216F9800D19A36 /* DelTracker.xcdatamodel */;
-			path = DelTracker.xcdatamodeld;
+			currentVersion = EE43E08F1E216F9800D19A36 /* DelTracker2.xcdatamodel */;
+			path = DelTracker2.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

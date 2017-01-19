@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
+class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelegate {
 	var window: UIWindow?
 	var delivery: Delivery?
 	var deliveryTableViewController: DeliveryTableViewController?
@@ -39,15 +39,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 		}
 	}
 	func handleShortCutItem(_ shortcutItem: UIApplicationShortcutItem) -> Bool {
-		var handled = false
+		let handled = false
 		
 		// Verify that the provided `shortcutItem`'s `type` is one handled by the application.
 		guard ShortcutIdentifier(fullType: shortcutItem.type) != nil else {
 			return false
 		}
-		guard let shortCutType = shortcutItem.type as String? else {
+		guard (shortcutItem.type as String?) != nil else {
 			return false
-		}
+		}/*
 		switch (shortCutType) {
 		case ShortcutIdentifier.First.type:
 			let dateFormatter = DateFormatter()
@@ -77,49 +77,45 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 			break
 		default:
 			break
-		}
+		}*/
 		return handled
 	}
-	func splitViewController(_ splitViewController: UISplitViewController, collapseSecondary secondaryViewController: UIViewController, onto primaryViewController: UIViewController) -> Bool {
-		guard let secondaryAsNavController = secondaryViewController as? UINavigationController else { return false }
-		guard let topAsDetailController = secondaryAsNavController.topViewController as? DetailViewController else { return false }
-		if topAsDetailController.detailItem == nil {
-			// Return true to indicate that we have handled the collapse by doing nothing; the secondary controller will be discarded.
-			return true
-		}
-		return false
-	}
+	
 	// MARK: - Application Life Cycle
 	
 	func applicationDidBecomeActive(_ application: UIApplication) {
-		guard let shortcut = launchedShortcutItem else {
+		/*guard let shortcut = launchedShortcutItem else {
 			return
 		}
-		handleShortCutItem(shortcut)
+		handleShortCutItem(shortcut)*/
 		launchedShortcutItem = nil
-	}/*
+	}
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-		// Override point for customization after application launch.
-		let splitViewController = self.window!.rootViewController as! UISplitViewController
-		let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
-		navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
-		splitViewController.delegate = self
-		
-		let masterNavigationController = splitViewController.viewControllers[0] as! UINavigationController
-		let controller = masterNavigationController.topViewController as! MasterViewController
-		controller.managedObjectContext = self.persistentContainer.viewContext
+		let mainContext = self.persistentContainer.viewContext
+		let dropChildContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+		dropChildContext.parent = mainContext
+		let deliveryChildContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+		deliveryChildContext.parent = mainContext
+		let tabBarViewController = self.window!.rootViewController as! UITabBarController
+		let statisticsNavigationController = tabBarViewController.viewControllers?[0] as! UINavigationController
+		tabBarViewController.delegate = self
+		let deliveryDayTableNaigationController = tabBarViewController.viewControllers?[1] as! UINavigationController
+		let statisticsTableViewController = statisticsNavigationController.topViewController as! DeliveryDayStatisticsTableViewController
+		let deliveryDayTableViewController = deliveryDayTableNaigationController.topViewController as! DeliveryDayTableViewController
+		statisticsTableViewController.mainContext = mainContext
+		deliveryDayTableViewController.mainContext = mainContext
+		deliveryDayTableViewController.dropChildContext = dropChildContext
+		deliveryDayTableViewController.deliveryChildContext = deliveryChildContext
 		return true
-	}*/
-	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		// Override point for customization after application launch.
-		var shouldPerformAdditionalDelegateHandling = true
+		/*var shouldPerformAdditionalDelegateHandling = true
 		// If a shortcut was launched, display its information and take the appropriate action
 		if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsKey.shortcutItem] as? UIApplicationShortcutItem {
 			launchedShortcutItem = shortcutItem
 			// This will block "performActionForShortcutItem:completionHandler" from being called.
 			shouldPerformAdditionalDelegateHandling = false
 		}
-		return shouldPerformAdditionalDelegateHandling
+		return shouldPerformAdditionalDelegateHandling*/
 	}
 	/*
 	Called when the user activates your application by selecting a shortcut on the home screen, except when
@@ -133,7 +129,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 	}
 	func applicationWillResignActive(_ application: UIApplication) {
 		// Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-		// Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+		// Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use thi
 	}
 	func applicationDidEnterBackground(_ application: UIApplication) {
 		// Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
@@ -141,12 +137,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 	}
 	func applicationWillEnterForeground(_ application: UIApplication) {
 		// Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
-	}
-	
+	}	
 	func applicationWillTerminate(_ application: UIApplication) {
 		// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 		// Saves changes in the application's managed object context before the application terminates.
-		self.saveContext()
+		self.saveDeliveryDayContext()
 	}
 	
 	var persistentContainer: NSPersistentContainer = {
@@ -156,7 +151,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 		application to it. This property is optional since there are legitimate
 		error conditions that could cause the creation of the store to fail.
 		*/
-		let container = NSPersistentContainer(name: "DelTracker")
+		let container = NSPersistentContainer(name: "DelTracker2")
 		container.loadPersistentStores(completionHandler: { (storeDescription, error) in
 			if let error = error as NSError? {
 				// Replace this implementation with code to handle the error appropriately.
@@ -177,11 +172,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 	
 	// MARK: - Core Data Saving support
 	
-	func saveContext() {
-		let context = persistentContainer.viewContext
-		if context.hasChanges {
+	func saveDeliveryDayContext() {
+		let deliveryDayContext = persistentContainer.viewContext
+		if deliveryDayContext.hasChanges {
 			do {
-				try context.save()
+				try deliveryDayContext.save()
 			} catch {
 				// Replace this implementation with code to handle the error appropriately.
 				// fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
@@ -190,5 +185,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 			}
 		}
 	}
-
-	}
+}

@@ -9,12 +9,10 @@
 import UIKit
 import CoreData
 
-class DeliveryDayViewController: UIViewController, UINavigationControllerDelegate {
+class DeliveryDayViewController : UIViewController, UINavigationControllerDelegate {
 	@IBAction func datePickerValueChanged(_ sender: UIDatePicker) {
-		setArchiveURLPath()
 	}
 	@IBAction func daySaveButton(_ sender: UIBarButtonItem) {
-		setArchiveURLPath()
 		performSegue(withIdentifier: "edit", sender: saveDayButton)
 	}
 	@IBAction func cancelButton(_ sender: UIBarButtonItem) {
@@ -23,27 +21,18 @@ class DeliveryDayViewController: UIViewController, UINavigationControllerDelegat
 	@IBOutlet var deliveryDatePicker: UIDatePicker!
 	@IBOutlet var addDayButton: UIBarButtonItem!
 	@IBOutlet var saveDayButton: AnyObject?
+	
+	// MARK: Variable and Constants
+	
 	var deliveryTableViewController: DeliveryTableViewController? = nil
 	var delivery: Delivery?
 	var deliveryDay: DeliveryDay?
 	var deliveryDays = [DeliveryDay]()
 	var deliveryDateViewController = DeliveryDayViewController.self
-	static var selectedDateGlobal: String = "010116"
-	static var totalReceivedValue: String = "$0.00"
-	static var whoMadeBankName: String = "None"
-	static var whoClosedBankName: String = "None"
-	static var manualStatus: Bool?
-	var selectedDate: String = ""
-	convenience required init(selectedDate: String) {
-		self.init(selectedDate: DeliveryDayViewController.selectedDateGlobal)
-		self.selectedDate = selectedDate
-	}
+	var mainContext: NSManagedObjectContext? = nil
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		if deliveryDay != nil {
-			deliveryDatePicker.isEnabled = false
-		}
-		setArchiveURLPath()
+		
 		deliveryDatePicker.setValue(UIColor.white, forKey: "textColor")
 	}
 	override func viewDidAppear(_ animated: Bool) {
@@ -51,52 +40,58 @@ class DeliveryDayViewController: UIViewController, UINavigationControllerDelegat
 			performSegue(withIdentifier: "edit", sender: self)
 		} else if DeliveryStatisticsTableViewController.shortcutAction == "viewDeliveriesShortcut" {
 			performSegue(withIdentifier: "edit", sender: self)
-		} else if let deliveryDay = deliveryDay {
-			let dateFormatter = DateFormatter()
-			dateFormatter.dateFormat = "MMddyy"
-			let date = dateFormatter.date(from: deliveryDay.deliveryDateValue)
-			deliveryDatePicker.setDate(date!, animated: true)
-			if let savedDeliveryDays = loadDeliveryDays() {
-				deliveryDays += savedDeliveryDays
-			}
-			setArchiveURLPath()
+			
+		}/*
+		persistentContainer.loadPersistentStores {
+		(persistentStoreDescription, error) in
+		if let error = error {
+		print("Unable to Load Persistent Store")
+		print("\(error), \(error.localizedDescription)")
+		} else {
+		do {
+		try self.fetchedResultsController.performFetch()
+		} catch {
+		let fetchError = error as NSError
+		print("Unable to Perform Fetch Request")
+		print("\(fetchError), \(fetchError.localizedDescription)")
 		}
-		setArchiveURLPath()
+		}
+		}*/
 	}
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if saveDayButton === sender as AnyObject? {
-			if let savedDeliveryDays = loadDeliveryDays() {
-				deliveryDays += savedDeliveryDays
-				let deliveryDayDetailViewController = segue.destination as? DeliveryStatisticsTableViewController
-				if DeliveryDayTableViewController.status != "adding" {
-					let selectedDeliveryDayCell = Int(DeliveryDayTableViewController.status)
-					let indexPath = selectedDeliveryDayCell
-					let selectedDeliveryDay = deliveryDays[indexPath!]
-					deliveryDayDetailViewController?.deliveryDay = selectedDeliveryDay
-					let deliveryDateValue = deliveryDay?.deliveryDateValue
-					let deliveryDayCountValue = deliveryDay?.deliveryDayCountValue
-					let totalTipsValue = deliveryDay?.totalTipsValue
-					let totalReceivedValue = deliveryDay?.totalReceivedValue
-					DeliveryDayViewController.totalReceivedValue = (deliveryDay?.totalReceivedValue)!
-					DeliveryDayViewController.whoMadeBankName = (deliveryDay?.whoMadeBankName)!
-					DeliveryDayViewController.whoClosedBankName = (deliveryDay?.whoClosedBankName)!
-					DeliveryDayViewController.manualStatus = selectedDeliveryDay.manual
-					let whoMadeBankName = deliveryDay?.whoMadeBankName
-					let whoClosedBankName = deliveryDay?.whoClosedBankName
-					let manual = selectedDeliveryDay.manual
-					deliveryDay = DeliveryDay(deliveryDateValue: deliveryDateValue!, deliveryDayCountValue: deliveryDayCountValue!, totalTipsValue: totalTipsValue!, totalReceivedValue: totalReceivedValue!, whoMadeBankName: whoMadeBankName!, whoClosedBankName: whoClosedBankName!, manual: manual)
-				}
-			}
+		setDeliveryDay()
+		guard let tabBarViewController = segue.destination as? DeliveryTabBarViewController else {
+			return
 		}
+		guard let mainContext = mainContext else {
+			return
+		}
+		self.navigationController?.isNavigationBarHidden = true
+		let deliveryStatisticsNavigationController = tabBarViewController.viewControllers?[0] as! UINavigationController
+		let deliveriesNavigationController = tabBarViewController.viewControllers?[1] as! UINavigationController
+		let dropsNavigationController = tabBarViewController.viewControllers?[2] as! UINavigationController
+		let deliveryStatisticsDestinationViewController = deliveryStatisticsNavigationController.viewControllers[0] as! DeliveryStatisticsTableViewController
+		let deliveriesDestinationViewController = deliveriesNavigationController.viewControllers[0] as! DeliveryTableViewController
+		let dropsDestinationViewController = dropsNavigationController.viewControllers[0] as! DropTableViewController
+		deliveryStatisticsDestinationViewController.mainContext = mainContext
+		deliveryStatisticsDestinationViewController.deliveryDay = deliveryDay
+		deliveriesDestinationViewController.setDate = (deliveryDay?.date?.convertToDateString())!
+		deliveriesDestinationViewController.deliveryDay = deliveryDay
+		dropsDestinationViewController.mainContext = mainContext
+		dropsDestinationViewController.drops = deliveryDay?.drops?.array as! [Drop]
+		dropsDestinationViewController.setDate = (deliveryDay?.date?.convertToDateString())!
 	}
-	func setArchiveURLPath() {
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "MMddyy"
-		DeliveryDayViewController.selectedDateGlobal = dateFormatter.string(from: deliveryDatePicker.date)
-		Delivery.ArchiveURL = Delivery.DocumentsDirectory.appendingPathComponent("\(DeliveryDayViewController.selectedDateGlobal)")
-		//Drop.ArchiveURL = Drop.DocumentsDirectory.appendingPathComponent("\(DeliveryDayViewController.selectedDateGlobal)")
-	}
-	func loadDeliveryDays() -> [DeliveryDay]? {
-		return NSKeyedUnarchiver.unarchiveObject(withFile: DeliveryDay.ArchiveURL.path) as? [DeliveryDay]
+	
+	// MARK: CoreData
+	
+	func setDeliveryDay() {
+		guard let mainContext = mainContext else {
+			return
+		}
+		if deliveryDay == nil {
+			let newDeliveryDay = DeliveryDay(context: mainContext)
+			newDeliveryDay.date = deliveryDatePicker.date as NSDate?
+			deliveryDay = newDeliveryDay
+		}
 	}
 }

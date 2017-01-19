@@ -8,16 +8,12 @@
 
 import UIKit
 import CoreData
-
 import AVFoundation
 
-class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, UIToolbarDelegate, UINavigationControllerDelegate, BarcodeDelegate {
+class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate, UIToolbarDelegate, UINavigationControllerDelegate, BarcodeDelegate {
 	
 	// MARK: - Storyboard Actions
 	
-	@IBAction func activityIndictorStart(_ sender: UIBarButtonItem) {
-		self.activityIndicatorOverlay?.show()
-	}
 	@IBAction func ticketNumberEditingBegan(_ sender: UITextField) {
 		previousBarButton.isEnabled = false
 		nextBarButton.isEnabled = true
@@ -76,10 +72,8 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			setTimeToNowButton?.isEnabled = true
 		} else {
 			if let delivery = delivery {
-				let dateFormatter = DateFormatter()
-				dateFormatter.dateFormat = "hh:mm:ss a"
-				if let date = dateFormatter.date(from: delivery.deliveryTimeValue) {
-					deliveryTime.setDate(date, animated: true)
+				if let date = delivery.deliveryTime {
+					deliveryTime.setDate(date as Date, animated: true)
 				}
 			}
 		}
@@ -109,6 +103,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	// MARK: Vairables and Constants
 	
 	var delivery: Delivery?
+	var deliveryDay: DeliveryDay?
 	var selectedTime: String = ""
 	var light: Bool = false
 	static var ticketPhoto: UIImage? = nil
@@ -122,7 +117,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	let flexBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 	let previousBarButton = UIBarButtonItem(title: "Previous", style: UIBarButtonItemStyle.plain, target: self, action: #selector(DeliveryViewController.goToPreviousField))
 	let nextBarButton = UIBarButtonItem(title: "Next", style: UIBarButtonItemStyle.plain, target: self, action: #selector(DeliveryViewController.goToNextField))
-	var activityIndicatorOverlay: ActivityIndicatorOverlay?
 	let doubleZero = UIButton(type: UIButtonType.custom)
 	
 	// MARK: - View Life Cycle
@@ -138,7 +132,6 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			navigationItem.title = "Add Delivery"
 		}
 		self.tabBarController?.tabBar.isHidden = true
-		self.activityIndicatorOverlay = ActivityIndicatorOverlay(activityIndicatorLabel: "Saving...", modal: false)
 		ticketNumberField.delegate = self
 		ticketAmountField.delegate = self
 		amountGivenField.delegate = self
@@ -153,20 +146,18 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	}
 	override func viewDidAppear(_ animated: Bool) {
 		if let delivery = delivery {
-			ticketNumberField.text = delivery.ticketNumberValue
-			ticketAmountField.text = delivery.ticketAmountValue
-			noTipSwitch.isOn = Bool(delivery.noTipSwitchValue)!
-			amountGivenField.text = delivery.amountGivenValue
-			cashTipsField?.text = delivery.cashTipsValue
-			totalTips.text = delivery.totalTipsValue
-			if let ticketPhoto = delivery.ticketPhotoValue {
-				DeliveryViewController.ticketPhoto = ticketPhoto
+			ticketNumberField.text = "\(delivery.ticketNumber)"
+			ticketAmountField.text = delivery.ticketAmount.convertToCurrency()
+			noTipSwitch.isOn = delivery.noTip
+			amountGivenField.text = delivery.amountGiven.convertToCurrency()
+			cashTipsField?.text = delivery.cashTips.convertToCurrency()
+			totalTips.text = delivery.totalTips.convertToCurrency()
+			if let ticketPhoto = delivery.ticketPhoto {
+				DeliveryViewController.ticketPhoto = UIImage(data: ticketPhoto as Data)
 			}
-			paymentMethodPicker.selectRow(Int(delivery.paymentMethodValue)!, inComponent: 0, animated: true)
-			let dateFormatter = DateFormatter()
-			dateFormatter.dateFormat = "hh:mm:ss a"
-			if let date = dateFormatter.date(from: delivery.deliveryTimeValue) {
-				deliveryTime.setDate(date, animated: true)
+			paymentMethodPicker.selectRow(Int(delivery.paymentMethod), inComponent: 0, animated: true)
+			if let date = delivery.deliveryTime {
+				deliveryTime.setDate(date as Date, animated: true)
 				deliveryTime.isEnabled = false
 				setTimeToNowButton?.isEnabled = false
 			}
@@ -189,7 +180,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 				self.deliveryTime.setDate(NSDate() as Date, animated: true)
 				self.setDeliveryTime()
 			}
-			self.setDeliveryTime()
+			self.setDeliveryTime()/*
 			let ticketNumberValue = self.ticketNumberField.text ?? ""
 			let ticketAmountValue = self.ticketAmountField.text ?? ""
 			let noTipSwitchValue = String(self.noTipSwitch.isOn)
@@ -198,7 +189,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			let totalTipsValue = self.totalTips.text ?? ""
 			let deliveryTimeValue = self.selectedTime
 			let paymentMethodValue = String(self.paymentMethodPicker.selectedRow(inComponent: 0))
-			self.delivery = Delivery(ticketNumberValue: ticketNumberValue, ticketAmountValue: ticketAmountValue, noTipSwitchValue: noTipSwitchValue, amountGivenValue: amountGivenValue, cashTipsValue: cashTipsValue, totalTipsValue: totalTipsValue, paymentMethodValue: paymentMethodValue, deliveryTimeValue: deliveryTimeValue, ticketPhotoValue: DeliveryViewController.ticketPhoto)
+			self.delivery = Delivery(ticketNumberValue: ticketNumberValue, ticketAmountValue: ticketAmountValue, noTipSwitchValue: noTipSwitchValue, amountGivenValue: amountGivenValue, cashTipsValue: cashTipsValue, totalTipsValue: totalTipsValue, paymentMethodValue: paymentMethodValue, deliveryTimeValue: deliveryTimeValue, ticketPhotoValue: DeliveryViewController.ticketPhoto)*/
 			self.messageFrame.removeFromSuperview()
 		} else if segue.identifier == "scan" {
 			let barcodeViewController: BarcodeViewController = segue.destination as! BarcodeViewController
@@ -248,11 +239,11 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		ticketNumberField.clearsOnInsertion = true
 	}
 	func configureQuickTipSegmentControl() {
-		quickTipSelector.addTarget(self, action: #selector(DeliveryViewController.selectedSegmentDidChange(_:)), for: .valueChanged)
+		quickTipSelector.addTarget(self, action: #selector(DeliveryViewController.selectedSegmentDidChange(_: )), for: .valueChanged)
 	}
 	func configureNoTipSwitch() {
 		noTipSwitch.setOn(false, animated: true)
-		noTipSwitch.addTarget(self, action: #selector(DeliveryViewController.switchValueDidChange(_:)), for: .valueChanged)
+		noTipSwitch.addTarget(self, action: #selector(DeliveryViewController.switchValueDidChange(_: )), for: .valueChanged)
 	}
 	func configureDoubleZeroButtonKey() {
 		doubleZero.setTitle("00", for: UIControlState())
@@ -260,8 +251,8 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		doubleZero.setTitleColor(UIColor.white, for: UIControlState())
 		doubleZero.frame = CGRect(x: 0, y: 115, width: 137, height: 56)
 		doubleZero.adjustsImageWhenHighlighted = true
-		doubleZero.addTarget(self, action: #selector(DeliveryViewController.doubleZero(_:)), for: UIControlEvents.touchUpInside)
-		doubleZero.setBackgroundColor(UIColor(red:0.47, green:0.47, blue:0.47, alpha:1.0), forState: UIControlState.highlighted)
+		doubleZero.addTarget(self, action: #selector(DeliveryViewController.doubleZero(_: )), for: UIControlEvents.touchUpInside)
+		doubleZero.setBackgroundColor(UIColor(red: 0.47, green: 0.47, blue: 0.47, alpha: 1.0), forState: UIControlState.highlighted)
 	}
 	
 	
@@ -313,7 +304,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	}
 	func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
 		let titleData = paymentMethodDataSource[row]
-		let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName:UIFont(name: "System", size: 15.0) as Any,NSForegroundColorAttributeName:UIColor.white])
+		let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName: UIFont(name: "System", size: 15.0) as Any, NSForegroundColorAttributeName: UIColor.white])
 		return myTitle
 	}
 	func paymentMethodChanged() {
@@ -403,7 +394,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 			cashTipsField?.selectAllText()
 		}
 	}
-	func doubleZero(_ sender : UIButton) {
+	func doubleZero(_ sender: UIButton) {
 		if ticketAmountField.isFirstResponder {
 			ticketAmountField.insertText("00")
 			ticketAmountField.resignFirstResponder()
@@ -435,7 +426,7 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 	func textFieldDidBeginEditing(_: UITextField) {
 		NotificationCenter.default.addObserver(self, selector: #selector(DeliveryViewController.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
 	}
-	func keyboardWillShow(_ note : Notification) -> Void{
+	func keyboardWillShow(_ note: Notification) -> Void {
 		DispatchQueue.main.async { () -> Void in
 			self.doubleZero.isHidden = false
 			let keyBoardWindow = UIApplication.shared.windows.last
@@ -453,23 +444,23 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		var cashTipsDropped = cashTipsField?.text
 		cashTipsDropped?.remove(at: (cashTipsDropped?.startIndex)!)
 		if (cashTipsField?.text) != nil {
-			let totalTipsCalc :Double = Double(amountGivenDropped!)! - Double(ticketAmountDropped!)! + Double(cashTipsDropped!)!
+			let totalTipsCalc: Double = Double(amountGivenDropped!)! - Double(ticketAmountDropped!)! + Double(cashTipsDropped!)!
 			totalTips.text = "$" + String(format: "%.2f", totalTipsCalc)
 		} else {
-			let totalTipsCalc :Double = Double(amountGivenDropped!)! - Double(ticketAmountDropped!)!
+			let totalTipsCalc: Double = Double(amountGivenDropped!)! - Double(ticketAmountDropped!)!
 			totalTips.text = "$" + String(format: "%.2f", totalTipsCalc)
 		}
 	}
 	func switchValueDidChange(_ aSwitch: UISwitch) {
-		if (noTipSwitch?.isOn)! {
-			delivery?.noTipSwitchValue = "true"
+		if noTipSwitch.isOn {
+			delivery?.noTip = noTipSwitch.isOn
 			amountGivenField.text = ticketAmountField.text
 			cashTipsField?.text = "$0.00"
 			amountGivenField.isEnabled = false
 			cashTipsField?.isEnabled = false
 			removeFirstCharacterAndCalculate()
 		} else {
-			delivery?.noTipSwitchValue = "false"
+			delivery?.noTip = noTipSwitch.isOn
 			amountGivenField.isEnabled = true
 			cashTipsField?.isEnabled = true
 			removeFirstCharacterAndCalculate()
@@ -500,4 +491,3 @@ class DeliveryViewController: UIViewController, UIPickerViewDelegate, UIPickerVi
 		view.bringSubview(toFront: messageFrame)
 	}
 }
-

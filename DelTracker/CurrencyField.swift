@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class CurrencyField: UITextField {
+class CurrencyField : UITextField {
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		addTarget(self, action: #selector(editingChanged), for: .editingChanged)

@@ -1,4 +1,3 @@
-
 //
 //  DeliveryDayTableViewController.swift
 //  DelTracker
@@ -10,26 +9,25 @@
 import UIKit
 import CoreData
 
-class DeliveryDayTableViewController: UITableViewController {
+class DeliveryDayTableViewController : UITableViewController, NSFetchedResultsControllerDelegate {
+	
 	@IBOutlet var table: UITableView!
 	@IBOutlet var editButton: UIBarButtonItem!
 	@IBOutlet var deleteButton: UIBarButtonItem!
-	@IBAction func deleteAction(_ sender: Any) {
+	@IBAction func deleteAction(_ sender: Any) {/*
 		indexPathsToDelete.removeAll()
 		for (_, path) in selectedIndicies.enumerated() {
-			let deliveryDay = deliveryDays[path]
-			if !deliveryDay.manual {
-				print(path)
-				let indexPath: IndexPath = [0, path]
-				indexPathsToDelete.append(indexPath)
-				removeDelivery(deliveryDate: deliveryDay.deliveryDateValue)
-				deliveryDays.remove(at: path)
-			} else {
-				deliveryDays.remove(at: path)
-			}
+		let deliveryDay = deliveryDays[path]
+		if !deliveryDay.manual {
+		let indexPath: IndexPath = [0, path]
+		indexPathsToDelete.append(indexPath)
+		deliveryDays.remove(at: path)
+		} else {
+		deliveryDays.remove(at: path)
+		}
 		}
 		table.deleteRows(at: indexPathsToDelete, with: .fade)
-		saveDeliveryDays()
+		saveDeliveryDays()*/
 		table.setEditing(false, animated: true)
 		editButton.title = "Edit"
 		editButton.style = UIBarButtonItemStyle.plain
@@ -52,79 +50,120 @@ class DeliveryDayTableViewController: UITableViewController {
 			deleteButton.tintColor = UIColor.clear
 		}
 	}
-	var deliveryDayView: DeliveryDayViewController?
-	var deliveryDays = [DeliveryDay]()
 	var selectedIndicies: [Int] = []
 	var deselectedIndexPath: Int?
 	var indexPathsToDelete: [IndexPath] = []
-	static var status: String = ""
-	static var manual: Bool?
-	var insertRows: IndexPath? = nil
-	var newRows: IndexPath? = nil
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		insertRows?.removeFirst()
-		newRows?.removeFirst()
-		self.clearsSelectionOnViewWillAppear = true
-		deleteButton.isEnabled = false
-		deleteButton.tintColor = UIColor.clear
-		self.navigationItem.leftBarButtonItem?.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
-		if let savedDeliveryDays = loadDeliveryDays() {
-			deliveryDays += savedDeliveryDays
-		}
-	}
+	var mainContext: NSManagedObjectContext? = nil
+	var dropChildContext: NSManagedObjectContext? = nil
+	var deliveryChildContext: NSManagedObjectContext? = nil
+	var _fetchedResultsController: NSFetchedResultsController<DeliveryDay>? = nil
 	
-	// MARK: - Table view data source
+	// MARK: - Table View
 	
 	override func numberOfSections(in tableView: UITableView) -> Int {
-		return 1
+		return self.fetchedResultsController.sections?.count ?? 0
 	}
+	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return deliveryDays.count
+		let sectionInfo = self.fetchedResultsController.sections![section]
+		return sectionInfo.numberOfObjects
 	}
+	
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let deliveryDay = deliveryDays[indexPath.row]
-		let cellIdentifier = "deliveryDayCell"
-		let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! DeliveryDayTableViewCell
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "MMddyy"
-		let dateFormatted = dateFormatter.date(from: String(deliveryDay.deliveryDateValue))
-		dateFormatter.dateFormat = "MM/dd/yy"
-		let dateFormattedFinal = dateFormatter.string(from: dateFormatted!)
-		cell.dateLabel?.text = dateFormattedFinal
-		cell.deliveryCount?.text = deliveryDay.deliveryDayCountValue
-		cell.totalTips?.text = deliveryDay.totalTipsValue
-		cell.totalPay?.text = deliveryDay.totalReceivedValue
-		let backgroundView = UIView()
-		backgroundView.backgroundColor = UIColor.darkGray
-		cell.selectedBackgroundView = backgroundView
+		let cell = tableView.dequeueReusableCell(withIdentifier: "deliveryDayCell", for: indexPath)
+		let deliveryDay = self.fetchedResultsController.object(at: indexPath)
+		self.configureCell(cell as! DeliveryDayTableViewCell, withDeliveryDay: deliveryDay)
 		return cell
 	}
-	override func viewDidAppear(_ animated: Bool) {
-		table.reloadSections(IndexSet.init(integer: 0), with: .fade)
-	}
+	
 	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		// Return false if you do not want the specified item to be editable.
 		return true
 	}
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		setDeleteButtonCount()
-		selectedIndicies.append(indexPath.row)
-		if selectedIndicies.count != 0 {
-		}
-	}
-	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-		setDeleteButtonCount()
-		if selectedIndicies.count != 0 {
-			if selectedIndicies.contains(indexPath.row) {
-				let selectedIndicesFiltered = selectedIndicies.filter {
-					el in el == indexPath.row
-				}
-				for (index, _) in selectedIndicesFiltered.enumerated() {
-					deselectedIndexPath = selectedIndicesFiltered[index]
-				}
-				selectedIndicies.remove(at: selectedIndicies.index(of: Int(deselectedIndexPath!))!)
+	
+	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+		if editingStyle == .delete {
+			let context = self.fetchedResultsController.managedObjectContext
+			context.delete(self.fetchedResultsController.object(at: indexPath))
+			
+			do {
+				try context.save()
+			} catch {
+				// Replace this implementation with code to handle the error appropriately.
+				// fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+				let nserror = error as NSError
+				fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
 			}
 		}
+	}
+	
+	func configureCell(_ cell: DeliveryDayTableViewCell, withDeliveryDay deliveryDay: DeliveryDay) {
+	}
+	
+	// MARK: - Fetched results controller
+	
+	var fetchedResultsController: NSFetchedResultsController<DeliveryDay> {
+		if _fetchedResultsController != nil {
+			return _fetchedResultsController!
+		}
+		let fetchRequest: NSFetchRequest<DeliveryDay> = DeliveryDay.fetchRequest()
+		// Set the batch size to a suitable number.
+		fetchRequest.fetchBatchSize = 20
+		// Edit the sort key as appropriate.
+		let sortDescriptor = NSSortDescriptor(key: "date", ascending: false)
+		fetchRequest.sortDescriptors = [sortDescriptor]
+		// Edit the section name key path and cache name if appropriate.
+		// nil for section name key path means "no sections".
+		let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.mainContext!, sectionNameKeyPath: nil, cacheName: "DeliveryDayCache")
+		aFetchedResultsController.delegate = self
+		_fetchedResultsController = aFetchedResultsController
+		do {
+			try _fetchedResultsController!.performFetch()
+		} catch {
+			// Replace this implementation with code to handle the error appropriately.
+			// fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+			let nserror = error as NSError
+			fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+		}
+		return _fetchedResultsController!
+	}
+	
+	func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		self.tableView.beginUpdates()
+	}
+	
+	func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+		switch type {
+		case .insert:
+			self.tableView.insertSections(IndexSet(integer: sectionIndex), with: .fade)
+		case .delete:
+			self.tableView.deleteSections(IndexSet(integer: sectionIndex), with: .fade)
+		default:
+			return
+		}
+	}
+	
+	func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+		switch type {
+		case .insert:
+			tableView.insertRows(at: [newIndexPath!], with: .fade)
+		case .delete:
+			tableView.deleteRows(at: [indexPath!], with: .fade)
+		case .update:
+			self.configureCell(tableView.cellForRow(at: indexPath!)! as! DeliveryDayTableViewCell, withDeliveryDay: anObject as! DeliveryDay)
+		case .move:
+			tableView.moveRow(at: indexPath!, to: newIndexPath!)
+		}
+	}
+	
+	func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		self.tableView.endUpdates()
+	}
+	// MARK: View Life Cycle
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		self.clearsSelectionOnViewWillAppear = true
 	}
 	func setDeleteButtonCount() {
 		if tableView.isEditing {
@@ -140,36 +179,10 @@ class DeliveryDayTableViewController: UITableViewController {
 			}
 		}
 	}
-	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-		if editingStyle == .delete {
-			let deliveryDay = deliveryDays[indexPath.row]
-			removeDelivery(deliveryDate: deliveryDay.deliveryDateValue)
-			deliveryDays.remove(at: indexPath.row)
-			tableView.deleteRows(at: [indexPath], with: .fade)
-			saveDeliveryDays()
-		}
-	}
-	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-		let tempItemToMove = deliveryDays[fromIndexPath.row]
-		deliveryDays.remove(at: fromIndexPath.row)
-		deliveryDays.insert(tempItemToMove, at: to.row)
-		saveDeliveryDays()
-	}
 	
 	// MARK: - Navigation
 	
 	@IBAction func unwindToDeliveryDayList(_ sender: UIStoryboardSegue) {
-		if let sourceViewController = sender.source as? DeliveryStatisticsTableViewController, let deliveryDay = sourceViewController.deliveryDay {
-			if let selectedIndexPath = tableView.indexPathForSelectedRow {
-				deliveryDays[selectedIndexPath.row] = deliveryDay
-				tableView.reloadRows(at: [selectedIndexPath], with: .right)
-			} else {
-				let newIndexPath = IndexPath(row: 0, section: 0)
-				deliveryDays.insert(deliveryDay, at: 0)
-				tableView.insertRows(at: [newIndexPath], with: .bottom)
-			}
-		}
-		saveDeliveryDays()
 	}
 	override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
 		if !tableView.isEditing {
@@ -179,72 +192,31 @@ class DeliveryDayTableViewController: UITableViewController {
 		}
 	}
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if !tableView.isEditing {
-			if segue.identifier == "showDetail" {
-				let deliveryDayDetailViewController = segue.destination as! DeliveryDayViewController
-				if let selectedDeliveryDayCell = sender as? DeliveryDayTableViewCell {
-					let indexPath = tableView.indexPath(for: selectedDeliveryDayCell)!
-					let selectedDeliveryDay = deliveryDays[indexPath.row]
-					deliveryDayDetailViewController.deliveryDay = selectedDeliveryDay
-					DeliveryDayViewController.manualStatus = selectedDeliveryDay.manual
-					DeliveryDayTableViewController.status = String(indexPath.row)
-				}
-			} else if segue.identifier == "addItem" {				
-				DeliveryDayTableViewController.status = "adding"
+		if let tabBarViewController = segue.destination as? DeliveryTabBarViewController {
+			let deliveryStatisticsNavigationController = tabBarViewController.viewControllers?[0] as! UINavigationController
+			let deliveriesNavigationController = tabBarViewController.viewControllers?[1] as! UINavigationController
+			let dropsNavigationController = tabBarViewController.viewControllers?[2] as! UINavigationController
+			let deliveryStatisticsDestinationViewController = deliveryStatisticsNavigationController.viewControllers[0] as! DeliveryStatisticsTableViewController
+			let deliveriesDestinationViewController = deliveriesNavigationController.viewControllers[0] as! DeliveryTableViewController
+			let dropsDestinationViewController = dropsNavigationController.viewControllers[0] as! DropTableViewController
+			if let indexPath = tableView.indexPathForSelectedRow, segue.identifier == "showDeliveryDayDetail" {
+				deliveryStatisticsDestinationViewController.deliveryDay = fetchedResultsController.object(at: indexPath)
+				deliveriesDestinationViewController.deliveryDay = fetchedResultsController.object(at: indexPath)
+				dropsDestinationViewController.deliveryDay = fetchedResultsController.object(at: indexPath)
+			}else if segue.identifier == "addDeliveryDay" {
+				let newDeliveryDay = DeliveryDay(context: mainContext!)
+				deliveryStatisticsDestinationViewController.deliveryDay = newDeliveryDay
+				deliveryStatisticsDestinationViewController.mainContext = self.mainContext!
+				deliveriesDestinationViewController.deliveryDay = newDeliveryDay
+				deliveriesDestinationViewController.mainContext = self.mainContext!
+				dropsDestinationViewController.deliveryDay = newDeliveryDay
+				dropsDestinationViewController.mainContext = self.mainContext!
 			}
+			
 		}
-	}
-	
-	// MARK: NSCoding
-	
-	func saveDeliveryDays() {
-		let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(deliveryDays, toFile: DeliveryDay.ArchiveURL.path)
-		if !isSuccessfulSave {
-			print("save Failed")
+		if let destinationViewController = segue.destination as? DeliveryDayViewController {
+			destinationViewController.mainContext = self.mainContext!
 		}
-	}
-	func loadDeliveryDays() -> [DeliveryDay]? {
-		return NSKeyedUnarchiver.unarchiveObject(withFile: DeliveryDay.ArchiveURL.path) as? [DeliveryDay]
-	}
-	func removeDelivery(deliveryDate: String) {
-		let fileManager = FileManager.default
-		let nsDocumentDirectory = FileManager.SearchPathDirectory.documentDirectory
-		let nsUserDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-		let paths = NSSearchPathForDirectoriesInDomains(nsDocumentDirectory, nsUserDomainMask, true)
-		guard let dirPath = paths.first else {
-			return
-		}
-		let filePath = "\(dirPath)/\(deliveryDate)"
-		do {
-			try fileManager.removeItem(atPath: filePath)
-		} catch let error as NSError {
-			print(error.debugDescription)
-		}
-	}
-	func removeFile(fileName: String) {
-		let fileManager = FileManager.default
-		let nsDocumentDirectory = FileManager.SearchPathDirectory.documentDirectory
-		let nsUserDomainMask = FileManager.SearchPathDomainMask.userDomainMask
-		let paths = NSSearchPathForDirectoriesInDomains(nsDocumentDirectory, nsUserDomainMask, true)
-		guard let dirPath = paths.first else {
-			return
-		}
-		let filePath = "\(dirPath)/\(fileName)"
-		do {
-			try fileManager.removeItem(atPath: filePath)
-		} catch let error as NSError {
-			print(error.debugDescription)
-		}
-		printDirectoryContents()
-	}
-	func printDirectoryContents() {
-		let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-		do {
-			let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil, options: [])
-			print(directoryContents)
-		} catch let error as NSError {
-			print(error.localizedDescription)
-		}
+		
 	}
 }
-

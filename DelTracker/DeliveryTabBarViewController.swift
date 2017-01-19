@@ -9,12 +9,9 @@
 import UIKit
 import CoreData
 
-class DeliveryTabBarViewController: UITabBarController {
+class DeliveryTabBarViewController : UITabBarController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-	}
-	func loadDeliveries() -> [Delivery]? {
-		return NSKeyedUnarchiver.unarchiveObject(withFile: Delivery.ArchiveURL.path) as? [Delivery]
 	}
 }

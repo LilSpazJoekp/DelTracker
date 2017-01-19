@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class DeliveryDayTableViewCell: UITableViewCell {
+class DeliveryDayTableViewCell : UITableViewCell {
 	@IBOutlet var dateLabel: UILabel?
 	@IBOutlet var deliveryCount: UILabel?
 	@IBOutlet var totalTips: UILabel?

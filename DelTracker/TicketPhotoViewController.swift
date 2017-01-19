@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class TicketPhotoViewController: UIViewController {
+class TicketPhotoViewController : UIViewController {
 	
 	@IBOutlet var navbar: UINavigationBar!
 	@IBAction func rotate(_ sender: Any) {		

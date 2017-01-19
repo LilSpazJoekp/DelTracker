@@ -84,3 +84,156 @@ extension Double {
 		return resultString
 	}
 }
+extension NSDate {
+	func convertToTimeString() -> String {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "hh:mm:ss a"
+		let time = dateFormatter.string(from: self as Date)
+		return time
+	}
+}
+extension NSDate {
+	func convertToDateString() -> String {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "MM/DD/yy"
+		let date = dateFormatter.string(from: self as Date)
+		return date
+	}
+}
+extension Date {
+	func convertToDateString() -> String {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "MM/DD/yy"
+		let date = dateFormatter.string(from: self as Date)
+		return date
+	}
+}
+extension NSDate {
+	func convertToSectionHeader() -> String {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "MMMM yyyy"
+		let date = dateFormatter.string(from: self as Date)
+		return date
+	}
+}
+extension NSDate {
+	func setDateForPredicate() -> String {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "yyyy-mm-dd"
+		let datePredicate = dateFormatter.string(from: self as Date)
+		return datePredicate
+	}
+}
+extension UILabel {
+	func checkForNegative() {		
+		if var labelText = self.text {
+			if labelText.removeDollarSign() < 0.0{
+				self.textColor = UIColor.red
+			}
+		}
+	}
+}
+extension NSDate {
+	func getStartOfDay() -> NSDate {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "yyyy"
+		let year = dateFormatter.string(from: self as Date)
+		dateFormatter.dateFormat = "MM"
+		let month = dateFormatter.string(from: self as Date)
+		dateFormatter.dateFormat = "dd"
+		let day = dateFormatter.string(from: self as Date)
+		let hour = "00"
+		let minute = "00"
+		let second = "00"
+		dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+		let interval = dateFormatter.date(from: "\(year)-\(month)-\(day) \(hour):\(minute):\(second)")?.timeIntervalSinceReferenceDate
+		let startOfDay = NSDate(timeIntervalSinceReferenceDate: interval!)
+		return startOfDay
+	}
+}
+extension NSDate {
+	func getEndOfDay() -> NSDate {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "yyyy"
+		let year = dateFormatter.string(from: self as Date)
+		dateFormatter.dateFormat = "MM"
+		let month = dateFormatter.string(from: self as Date)
+		dateFormatter.dateFormat = "dd"
+		let day = dateFormatter.string(from: self as Date)
+		let hour = "23"
+		let minute = "59"
+		let second = "59"
+		dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+		let interval = dateFormatter.date(from: "\(year)-\(month)-\(day) \(hour):\(minute):\(second)")?.timeIntervalSinceReferenceDate
+		let endOfDay = NSDate(timeIntervalSinceReferenceDate: interval!)
+		return endOfDay
+	}
+}
+private var maxLengths = [UITextField: Int]()
+extension UITextField {
+	@IBInspectable var maxLength: Int {
+		get {
+			guard let length = maxLengths[self] else {
+				return Int.max
+			}
+			return length
+		}
+		set {
+			maxLengths[self] = newValue
+			addTarget(
+				self,
+				action: #selector(limitLength),
+				for: UIControlEvents.editingChanged
+			)
+		}
+	}
+	func limitLength(_ textField: UITextField) {
+		guard let prospectiveText = textField.text,
+			prospectiveText.characters.count > maxLength
+			else {
+				return
+		}
+		let selection = selectedTextRange
+		let maxCharIndex = prospectiveText.index(prospectiveText.startIndex, offsetBy: maxLength)
+		text = prospectiveText.substring(to: maxCharIndex)
+		selectedTextRange = selection
+	}
+}
+private var selectorColorAssociationKey: UInt8 = 0
+extension UIPickerView {
+	@IBInspectable var selectorColor: UIColor? {
+		get {
+			return objc_getAssociatedObject(self, &selectorColorAssociationKey) as? UIColor
+		}
+		set(newValue) {
+			objc_setAssociatedObject(self, &selectorColorAssociationKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+		}
+	}
+	open override func didAddSubview(_ subview: UIView) {
+		super.didAddSubview(subview)
+		if let color = selectorColor {
+			if subview.bounds.height < 1.0 {
+				subview.backgroundColor = color
+			}
+		}
+	}
+}
+extension UIDatePicker {
+	@IBInspectable var selectorColor: UIColor? {
+		get {
+			return objc_getAssociatedObject(self, &selectorColorAssociationKey) as? UIColor
+		}
+		set(newValue) {
+			objc_setAssociatedObject(self, &selectorColorAssociationKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+		}
+	}
+	open override func didAddSubview(_ subview: UIView) {
+		super.didAddSubview(subview)
+		if let color = selectorColor {
+			if subview.bounds.height < 1.0 {
+				subview.backgroundColor = color
+			}
+		}
+	}
+}
+

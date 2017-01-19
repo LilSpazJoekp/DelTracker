@@ -13,7 +13,7 @@ import CoreData
 protocol BarcodeDelegate {
 	func barcodeRead(barcode: String, light: Bool, photo: UIImage?)
 }
-class BarcodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, AVCapturePhotoCaptureDelegate {
+class BarcodeViewController : UIViewController, AVCaptureMetadataOutputObjectsDelegate, AVCapturePhotoCaptureDelegate {
 	
 	@IBOutlet var navbar: UINavigationBar!
 	@IBAction func toggle(_ sender: UIBarButtonItem) {
@@ -112,7 +112,7 @@ class BarcodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
 			photoSettings.flashMode = .off
 			photoSettings.isHighResolutionPhotoEnabled = false
 			if photoSettings.availablePreviewPhotoPixelFormatTypes.count > 0 {
-				photoSettings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String : photoSettings.availablePreviewPhotoPixelFormatTypes.first!]
+				photoSettings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String: photoSettings.availablePreviewPhotoPixelFormatTypes.first!]
 			}
 			photoOutput.capturePhoto(with: photoSettings, delegate: self)
 				}
@@ -138,7 +138,7 @@ class BarcodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
 		self.messageFrame.removeFromSuperview()
 		self.dismiss(animated: true, completion: nil)
 	}
-	func activityIndicator(msg:String, _ indicator:Bool ) {
+	func activityIndicator(msg: String, _ indicator: Bool ) {
 		print(msg)
 		strLabel = UILabel(frame: CGRect(x: 50, y: 0, width: 200, height: 50))
 		strLabel.text = msg

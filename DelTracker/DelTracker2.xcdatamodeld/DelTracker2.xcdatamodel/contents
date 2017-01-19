@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16D25a" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="1">
+    <entity name="Delivery" representedClassName="Delivery" syncable="YES" codeGenerationType="class">
+        <attribute name="amountGiven" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="cashTips" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="dateString" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="deliveryTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="noTip" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="paymentMethod" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="ticketAmount" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="ticketNumber" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="ticketPhoto" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+        <attribute name="totalTips" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="deliveryDay" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DeliveryDay" inverseName="deliveries" inverseEntity="DeliveryDay" syncable="YES"/>
+    </entity>
+    <entity name="DeliveryDay" representedClassName="DeliveryDay" syncable="YES" codeGenerationType="class">
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="dateString" attributeType="String" syncable="YES"/>
+        <attribute name="deliveryCount" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="manual" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="totalReceived" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="totalTips" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="whoClosedBank" attributeType="String" defaultValueString="None" syncable="YES"/>
+        <attribute name="whoMadeBank" attributeType="String" defaultValueString="None" syncable="YES"/>
+        <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Delivery" inverseName="deliveryDay" inverseEntity="Delivery" syncable="YES"/>
+        <relationship name="drops" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Drop" inverseName="deliveryDay" inverseEntity="Drop" syncable="YES"/>
+    </entity>
+    <entity name="Drop" representedClassName="Drop" syncable="YES" codeGenerationType="class">
+        <attribute name="amount" attributeType="Double" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="dateString" attributeType="String" syncable="YES"/>
+        <attribute name="time" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="deliveryDay" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DeliveryDay" inverseName="drops" inverseEntity="DeliveryDay" syncable="YES"/>
+    </entity>
+    <entity name="Person" representedClassName="Person" syncable="YES" codeGenerationType="class">
+        <attribute name="name" attributeType="String" syncable="YES"/>
+    </entity>
+    <fetchRequest name="cashPaymentMethod" entity="Delivery" predicateString="paymentMethod == 1"/>
+    <fetchRequest name="cashTips" entity="Delivery" predicateString="cashTips != 0"/>
+    <fetchRequest name="chargePaymentMethod" entity="Delivery" predicateString="paymentMethod == 4"/>
+    <fetchRequest name="checkPaymentMethod" entity="Delivery" predicateString="paymentMethod == 2"/>
+    <fetchRequest name="creditPaymentMethod" entity="Delivery" predicateString="paymentMethod == 3"/>
+    <fetchRequest name="manualDeliveryDays" entity="DeliveryDay" predicateString="manual == 1"/>
+    <fetchRequest name="nonePaymentMethod" entity="Delivery" predicateString="paymentMethod == 0"/>
+    <fetchRequest name="noTipDeliveries" entity="Delivery" predicateString="noTip == 1"/>
+    <fetchRequest name="otherPaymentMethod" entity="Delivery" predicateString="paymentMethod == 5"/>
+    <fetchRequest name="totalTips" entity="Delivery" predicateString="NOT (noTip == 1)"/>
+    <elements>
+        <element name="Delivery" positionX="-74" positionY="-116" width="128" height="208"/>
+        <element name="DeliveryDay" positionX="-243" positionY="-430" width="128" height="193"/>
+        <element name="Drop" positionX="-18" positionY="-277" width="128" height="103"/>
+        <element name="Person" positionX="-20" positionY="-423" width="128" height="60"/>
+    </elements>
+</model>

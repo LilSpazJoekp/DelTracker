@@ -9,7 +9,10 @@
 import UIKit
 import CoreData
 
-class DropViewController: UIViewController, UITextFieldDelegate, UIToolbarDelegate, UINavigationControllerDelegate {
+class DropViewController : UIViewController, UITextFieldDelegate, UIToolbarDelegate, UINavigationControllerDelegate {
+	
+	// MARK: StoryBoard Outlets
+	
 	@IBOutlet var currentBalanceLabel: UILabel!
 	@IBOutlet var dropTextField: CurrencyField!
 	@IBOutlet var newBalanceLabel: UILabel!
@@ -18,6 +21,9 @@ class DropViewController: UIViewController, UITextFieldDelegate, UIToolbarDelega
 	@IBOutlet var setTimeToNowButton: UIBarButtonItem!
 	@IBOutlet var timeOverrideSwitch: UISwitch!
 	@IBOutlet var dropTime: UIDatePicker!
+	
+	// MARK: StoryBoard Actions
+	
 	@IBAction func overrideDropTimeChanged(_ sender: UISwitch) {
 		if timeOverrideSwitch.isOn {
 			dropTime.isEnabled = true
@@ -26,7 +32,7 @@ class DropViewController: UIViewController, UITextFieldDelegate, UIToolbarDelega
 			if let drop = drop {
 				let dateFormatter = DateFormatter()
 				dateFormatter.dateFormat = "hh:mm:ss a"
-				dropTime.setDate(drop.timestamp as! Date, animated: true)
+				dropTime.setDate(drop.time as! Date, animated: true)
 			}
 		}
 	}
@@ -38,57 +44,69 @@ class DropViewController: UIViewController, UITextFieldDelegate, UIToolbarDelega
 		dropTextField.resignFirstResponder()
 	}
 	@IBAction func dropSaveButton(_ sender: UIBarButtonItem) {
+		saveDrops()
+		//perfomUnwindSegue()
 	}
 	@IBAction func cancelEdit(_ sender: UIBarButtonItem) {
 		dismiss(animated: true, completion: nil)
 	}
-	@IBAction func cancelAdd(_ sender: UIBarButtonItem) {
-		dismiss(animated: true, completion: nil)
-	}
+	
+	// MARK: Variables and Constants
+	
 	var drop: Drop?
 	var drops = [Drop]()
+	var deliveryDay: DeliveryDay?
 	var selectedTime: Date = NSDate() as Date
+	var mainContext: NSManagedObjectContext? = nil
+	var dropChildContext: NSManagedObjectContext? = nil
+	
+	// MARK: View Life Cycle
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		dropTextField.delegate = self
 		dropTime.setValue(UIColor.white, forKey: "textColor")
 		if let drop = drop {
 			navigationItem.title = "Edit Drop"
-			dropTextField.text = drop.dropAmount.convertToCurrency()
+			dropTextField.text = drop.amount.convertToCurrency()
 		}
 	}
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 		self.view.endEditing(true)
 	}
- 
-	// MARK: - Navigation
 	
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if dropSaveButton === sender as AnyObject? || quickDropButton === sender as AnyObject? {
-			
-		}
-	}
+	// MARK: Actions
+	
 	func setDropTime() {
 		dropTime.reloadInputViews()
 		selectedTime = dropTime.date
-		dropTime.setValue(UIColor.white, forKey: "textColor")
 	}
 	
 	// MARK: CoreData
-	
+		
 	func saveDrops() {
-		let coreDataStack = UIApplication.shared.delegate as! AppDelegate
-		let context = coreDataStack.persistentContainer.viewContext
-		let newDrop = Drop(context: context)
-		if var dropAmount = dropTextField.text {
-			newDrop.dropAmount = dropAmount.removeDollarSign()
-			newDrop.timestamp = selectedTime as NSDate?
-			do {
-				try context.save()
-				print("Save Successful \(newDrop)")
-			} catch {
-				print("Failed to save")
+		setDropTime()
+		guard let mainContext = mainContext else {
+			return
+		}
+		
+		if drop == nil {
+			let newDrop = Drop(context: mainContext)
+			if var amount = dropTextField.text {
+				newDrop.amount = amount.removeDollarSign()
+				newDrop.time = selectedTime as NSDate?
+				var date = NSDate()
+				date = selectedTime as NSDate
+				newDrop.dateString = date.convertToDateString()
 			}
+			drop = newDrop
+		}
+		if let drop = drop {
+			if var amount = dropTextField.text {
+				drop.amount = amount.removeDollarSign()
+				drop.time = selectedTime as NSDate?
+			}			
+			_ = navigationController?.popViewController(animated: true)
 		}
 	}
 }
