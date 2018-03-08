@@ -509,7 +509,7 @@ class DeliveryStatisticsTableViewController : UITableViewController, UITextField
 			actuallyReceivedField.inputAccessoryView = keyboardToolbar
 		}
 	}
-	func goToPreviousField(_: Any?) {
+    @objc func goToPreviousField(_: Any?) {
 		if actuallyReceivedField.isFirstResponder {
 			actuallyReceivedField.resignFirstResponder()
 			deliveriesCount.becomeFirstResponder()
@@ -518,7 +518,7 @@ class DeliveryStatisticsTableViewController : UITableViewController, UITextField
 			nextBarButton.isEnabled = true
 		}
 	}
-	func goToNextField() {
+    @objc func goToNextField() {
 		if deliveriesCount.isFirstResponder {
 			deliveriesCount.resignFirstResponder()
 			actuallyReceivedField.becomeFirstResponder()

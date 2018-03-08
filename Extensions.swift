@@ -85,12 +85,20 @@ extension Double {
 	}
 }
 extension NSDate {
-	func convertToTimeString() -> String {
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "hh:mm:ss a"
-		let time = dateFormatter.string(from: self as Date)
-		return time
-	}
+    func convertToTimeString() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm:ss a"
+        let time = dateFormatter.string(from: self as Date)
+        return time
+    }
+}
+extension Date {
+    func convertToTimeString() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm:ss a"
+        let time = dateFormatter.string(from: self as Date)
+        return time
+    }
 }
 extension NSDate {
 	func convertToDateString() -> String {
@@ -187,15 +195,15 @@ extension UITextField {
 			)
 		}
 	}
-	func limitLength(_ textField: UITextField) {
-		guard let prospectiveText = textField.text,
-			prospectiveText.characters.count > maxLength
+    @objc func limitLength(_ textField: UITextField) {
+		guard let newText = textField.text,
+			newText.count > maxLength
 			else {
 				return
 		}
 		let selection = selectedTextRange
-		let maxCharIndex = prospectiveText.index(prospectiveText.startIndex, offsetBy: maxLength)
-		text = prospectiveText.substring(to: maxCharIndex)
+		let maxCharIndex = newText.index(newText.startIndex, offsetBy: maxLength)
+		text = newText.substring(to: maxCharIndex)
 		selectedTextRange = selection
 	}
 }

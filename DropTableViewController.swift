@@ -140,7 +140,7 @@ class DropTableViewController : UITableViewController, NSFetchedResultsControlle
 		cell.dropNumber.text = "\(indexPath.row + 1)"
 		cell.amount.text = drop.amount.convertToCurrency()
 		cell.dropTime.text = drop.time?.convertToTimeString()
-	}
+    }
 	
 	// MARK: - Fetched results controller
 	

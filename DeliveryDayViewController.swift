@@ -90,7 +90,7 @@ class DeliveryDayViewController : UIViewController, UINavigationControllerDelega
 		}
 		if deliveryDay == nil {
 			let newDeliveryDay = DeliveryDay(context: mainContext)
-			newDeliveryDay.date = deliveryDatePicker.date as NSDate?
+			newDeliveryDay.date = deliveryDatePicker.date
 			deliveryDay = newDeliveryDay
 		}
 	}

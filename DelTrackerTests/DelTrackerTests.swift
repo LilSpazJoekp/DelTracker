@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import DelTracker2
+@testable import DelTracker
 
 class DelTrackerTests : XCTestCase {    
     override func setUp() {

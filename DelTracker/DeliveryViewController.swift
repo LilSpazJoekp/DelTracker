@@ -20,7 +20,7 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 		ticketNumberField.selectAllText()
 	}
 	@IBAction func ticketNumberChanged(_ sender: UITextField) {
-		if ticketNumberField.text?.characters.count == 3 {
+		if ticketNumberField.text?.count == 3 {
 			ticketNumberField.resignFirstResponder()
 			ticketAmountField.becomeFirstResponder()
 			ticketAmountField.selectAllText()
@@ -212,11 +212,11 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 		ticketAmountField.becomeFirstResponder()
 	}
 	func toggleFlash() {
-		if let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo), device.hasTorch {
+		if let device = AVCaptureDevice.default(for: AVMediaType.video), device.hasTorch {
 			do {
 				try device.lockForConfiguration()
 				let torchOn = !device.isTorchActive
-				try device.setTorchModeOnWithLevel(1.0)
+				try device.setTorchModeOn(level: 1.0)
 				device.torchMode = torchOn ? .on : .off
 				device.unlockForConfiguration()
 			} catch {
@@ -257,7 +257,7 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 	
 	
 	// Quick Tip Segment Control
-	func selectedSegmentDidChange(_ segmentedControl: UISegmentedControl) {
+    @objc func selectedSegmentDidChange(_ segmentedControl: UISegmentedControl) {
 		if segmentedControl.selectedSegmentIndex == 0 {
 			cashTipsField?.text = "$5.00"
 			segmentControlSelected()
@@ -304,7 +304,7 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 	}
 	func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
 		let titleData = paymentMethodDataSource[row]
-		let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName: UIFont(name: "System", size: 15.0) as Any, NSForegroundColorAttributeName: UIColor.white])
+		let myTitle = NSAttributedString(string: titleData, attributes: [NSAttributedStringKey.font: UIFont(name: "System", size: 15.0) as Any, NSAttributedStringKey.foregroundColor: UIColor.white])
 		return myTitle
 	}
 	func paymentMethodChanged() {
@@ -359,7 +359,7 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 	}
 	
 	// Toolbar Previous and Next Buttons
-	func goToPreviousField(_: Any?) {
+    @objc func goToPreviousField(_: Any?) {
 		if ticketAmountField.isFirstResponder {
 			ticketAmountField.resignFirstResponder()
 			ticketNumberField.becomeFirstResponder()
@@ -374,7 +374,7 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 			amountGivenField.selectAllText()
 		}
 	}
-	func goToNextField() {
+    @objc func goToNextField() {
 		if ticketNumberField.isFirstResponder {
 			previousBarButton.isEnabled = true
 			ticketNumberField.resignFirstResponder()
@@ -394,7 +394,7 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 			cashTipsField?.selectAllText()
 		}
 	}
-	func doubleZero(_ sender: UIButton) {
+    @objc func doubleZero(_ sender: UIButton) {
 		if ticketAmountField.isFirstResponder {
 			ticketAmountField.insertText("00")
 			ticketAmountField.resignFirstResponder()
@@ -426,7 +426,7 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 	func textFieldDidBeginEditing(_: UITextField) {
 		NotificationCenter.default.addObserver(self, selector: #selector(DeliveryViewController.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
 	}
-	func keyboardWillShow(_ note: Notification) -> Void {
+	@objc func keyboardWillShow(_ note: Notification) -> Void {
 		DispatchQueue.main.async { () -> Void in
 			self.doubleZero.isHidden = false
 			let keyBoardWindow = UIApplication.shared.windows.last
@@ -438,11 +438,14 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 	}
 	func removeFirstCharacterAndCalculate() {
 		var ticketAmountDropped = ticketAmountField.text
-		ticketAmountDropped?.remove(at: (ticketAmountDropped?.startIndex)!)
-		var amountGivenDropped = amountGivenField.text
-		amountGivenDropped?.remove(at: (amountGivenDropped?.startIndex)!)
-		var cashTipsDropped = cashTipsField?.text
-		cashTipsDropped?.remove(at: (cashTipsDropped?.startIndex)!)
+        let localTicketAmountDropped = ticketAmountDropped
+		ticketAmountDropped?.remove(at: (localTicketAmountDropped?.startIndex)!)
+        var amountGivenDropped = ticketAmountField.text
+        let localAmountGivenDropped = ticketAmountDropped
+        amountGivenDropped?.remove(at: (localAmountGivenDropped?.startIndex)!)
+        var cashTipsDropped = ticketAmountField.text
+        let localCashTipsDropped = cashTipsDropped
+        cashTipsDropped?.remove(at: (localCashTipsDropped?.startIndex)!)
 		if (cashTipsField?.text) != nil {
 			let totalTipsCalc: Double = Double(amountGivenDropped!)! - Double(ticketAmountDropped!)! + Double(cashTipsDropped!)!
 			totalTips.text = "$" + String(format: "%.2f", totalTipsCalc)
@@ -451,7 +454,7 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 			totalTips.text = "$" + String(format: "%.2f", totalTipsCalc)
 		}
 	}
-	func switchValueDidChange(_ aSwitch: UISwitch) {
+    @objc func switchValueDidChange(_ aSwitch: UISwitch) {
 		if noTipSwitch.isOn {
 			delivery?.noTip = noTipSwitch.isOn
 			amountGivenField.text = ticketAmountField.text

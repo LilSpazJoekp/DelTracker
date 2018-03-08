@@ -52,7 +52,7 @@ class PersonTableViewController: UITableViewController, NSFetchedResultsControll
 	var whoMadeBankSelectedPerson: String?
 	var whoClosedBankSelectedPerson: String?
 	var mainContext: NSManagedObjectContext? = nil
-	private let persistentContainer = NSPersistentContainer(name: "DelTracker2")
+	private let persistentContainer = NSPersistentContainer(name: "DelTracker")
 	fileprivate lazy var fetchedResultsController: NSFetchedResultsController<Person> = {
 		let fetchRequest: NSFetchRequest<Person> = Person.fetchRequest()
 		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
@@ -102,7 +102,7 @@ class PersonTableViewController: UITableViewController, NSFetchedResultsControll
 			}
 		}
 	}
-	func applicationDidEnterBackground(_ notification: Notification) {
+    @objc func applicationDidEnterBackground(_ notification: Notification) {
 		do {
 			try persistentContainer.viewContext.save()
 		} catch {

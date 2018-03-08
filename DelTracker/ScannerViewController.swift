@@ -29,7 +29,7 @@ class BarcodeViewController : UIViewController, AVCaptureMetadataOutputObjectsDe
 	var videoPreviewLayer: AVCaptureVideoPreviewLayer?
 	var photoPreviewLayer: AVCaptureVideoPreviewLayer?
 	var qrCodeFrameView: UIView?
-	let supportedCodeTypes = [AVMetadataObjectTypeCode39Code]
+	let supportedCodeTypes = [AVMetadataObject.ObjectType.code39]
 	var photoData: Data? = nil
 	var barcode: String?
 	var light: Bool = false
@@ -40,9 +40,9 @@ class BarcodeViewController : UIViewController, AVCaptureMetadataOutputObjectsDe
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		let captureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+		let captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
 		do {
-			let input = try AVCaptureDeviceInput(device: captureDevice)
+			let input = try AVCaptureDeviceInput(device: captureDevice!)
 			barcodeCaptureSession = AVCaptureSession()
 			barcodeCaptureSession?.addInput(input)
 			let captureMetadataOutput = AVCaptureMetadataOutput()
@@ -51,8 +51,8 @@ class BarcodeViewController : UIViewController, AVCaptureMetadataOutputObjectsDe
 			photoOutput.isHighResolutionCaptureEnabled = false
 			captureMetadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
 			captureMetadataOutput.metadataObjectTypes = supportedCodeTypes
-			videoPreviewLayer = AVCaptureVideoPreviewLayer(session: barcodeCaptureSession)
-			videoPreviewLayer?.videoGravity = AVLayerVideoGravityResizeAspectFill
+			videoPreviewLayer = AVCaptureVideoPreviewLayer(session: barcodeCaptureSession!)
+			videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
 			videoPreviewLayer?.frame = view.layer.bounds
 			view.layer.addSublayer(videoPreviewLayer!)
 			barcodeCaptureSession?.startRunning()
@@ -73,11 +73,11 @@ class BarcodeViewController : UIViewController, AVCaptureMetadataOutputObjectsDe
 		return true
 	}
 	func toggleFlash() {
-		if let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo), device.hasTorch {
+		if let device = AVCaptureDevice.default(for: AVMediaType.video), device.hasTorch {
 			do {
 				try device.lockForConfiguration()
 				let torchOn = !device.isTorchActive
-				try device.setTorchModeOnWithLevel(1.0)
+				try device.setTorchModeOn(level: 1.0)
 				device.torchMode = torchOn ? .on : .off
 				device.unlockForConfiguration()
 				light = torchOn
@@ -90,9 +90,9 @@ class BarcodeViewController : UIViewController, AVCaptureMetadataOutputObjectsDe
 	// MARK: - AVCaptureMetadataOutputObjectsDelegate Methods
 	var captured: Bool = false
 	private let photoOutput = AVCapturePhotoOutput()
-	func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
+	func metadataOutput(_ captureOutput: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
 		// Check if the metadataObjects array is not nil and it contains at least one object.
-		if metadataObjects == nil || metadataObjects.count == 0 {
+		if metadataObjects.count == 0 {
 			qrCodeFrameView?.frame = CGRect.zero
 			print("No barcode is detected")
 			return
@@ -121,7 +121,7 @@ class BarcodeViewController : UIViewController, AVCaptureMetadataOutputObjectsDe
 			return
 		}
 	}
-	func capture(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhotoSampleBuffer photoSampleBuffer: CMSampleBuffer?, previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
+	func photoOutput(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
 		if let photoSampleBuffer = photoSampleBuffer {
 			let photoData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer, previewPhotoSampleBuffer: previewPhotoSampleBuffer)
 			photoJpeg = UIImage(data: photoData!)
@@ -131,7 +131,7 @@ class BarcodeViewController : UIViewController, AVCaptureMetadataOutputObjectsDe
 			barcodeDropped.remove(at: (barcodeDropped.startIndex))
 			self.delegate?.barcodeRead(barcode: barcodeDropped, light: light, photo: photoJpeg)
 		} else {
-			print("Error capturing photo: \(error)")
+            print("Error capturing photo: \(String(describing: error))")
 			return
 		}
 		barcodeCaptureSession?.stopRunning()

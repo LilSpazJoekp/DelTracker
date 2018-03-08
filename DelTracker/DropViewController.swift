@@ -32,7 +32,7 @@ class DropViewController : UIViewController, UITextFieldDelegate, UIToolbarDeleg
 			if let drop = drop {
 				let dateFormatter = DateFormatter()
 				dateFormatter.dateFormat = "hh:mm:ss a"
-				dropTime.setDate(drop.time as! Date, animated: true)
+                dropTime.setDate(drop.time! as Date, animated: true)
 			}
 		}
 	}
@@ -56,7 +56,7 @@ class DropViewController : UIViewController, UITextFieldDelegate, UIToolbarDeleg
 	var drop: Drop?
 	var drops = [Drop]()
 	var deliveryDay: DeliveryDay?
-	var selectedTime: Date = NSDate() as Date
+    var selectedTime: Date = NSDate() as Date
 	var mainContext: NSManagedObjectContext? = nil
 	var dropChildContext: NSManagedObjectContext? = nil
 	
@@ -94,9 +94,9 @@ class DropViewController : UIViewController, UITextFieldDelegate, UIToolbarDeleg
 			let newDrop = Drop(context: mainContext)
 			if var amount = dropTextField.text {
 				newDrop.amount = amount.removeDollarSign()
-				newDrop.time = selectedTime as NSDate?
+				newDrop.time = selectedTime
 				var date = NSDate()
-				date = selectedTime as NSDate
+                date = selectedTime as NSDate
 				newDrop.dateString = date.convertToDateString()
 			}
 			drop = newDrop
@@ -104,7 +104,7 @@ class DropViewController : UIViewController, UITextFieldDelegate, UIToolbarDeleg
 		if let drop = drop {
 			if var amount = dropTextField.text {
 				drop.amount = amount.removeDollarSign()
-				drop.time = selectedTime as NSDate?
+				drop.time = selectedTime
 			}			
 			_ = navigationController?.popViewController(animated: true)
 		}

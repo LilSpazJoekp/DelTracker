@@ -91,6 +91,9 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
 		launchedShortcutItem = nil
 	}
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        Thread.sleep(forTimeInterval: 1.0)
+        // Override point for customization after application launch.
+        
 		let mainContext = self.persistentContainer.viewContext
 		let dropChildContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
 		dropChildContext.parent = mainContext
@@ -151,7 +154,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
 		application to it. This property is optional since there are legitimate
 		error conditions that could cause the creation of the store to fail.
 		*/
-		let container = NSPersistentContainer(name: "DelTracker2")
+		let container = NSPersistentContainer(name: "DelTracker")
 		container.loadPersistentStores(completionHandler: { (storeDescription, error) in
 			if let error = error as NSError? {
 				// Replace this implementation with code to handle the error appropriately.

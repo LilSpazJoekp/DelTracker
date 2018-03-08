@@ -17,7 +17,7 @@ class CurrencyField : UITextField {
 		textAlignment = .right
 		editingChanged()
 	}
-	func editingChanged() {
+    @objc func editingChanged() {
 		text = Formatter.currency.string(from: (Double(string.numbers.integer) / 100) as NSNumber)
 	}
 }
