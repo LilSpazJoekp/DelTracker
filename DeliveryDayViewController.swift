@@ -30,56 +30,43 @@ class DeliveryDayViewController : UIViewController, UINavigationControllerDelega
 	var deliveryDays = [DeliveryDay]()
 	var deliveryDateViewController = DeliveryDayViewController.self
 	var mainContext: NSManagedObjectContext? = nil
+	var deliveryChildContext: NSManagedObjectContext? = nil
+	
+	// MARK: View Life Cycle
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
 		deliveryDatePicker.setValue(UIColor.white, forKey: "textColor")
 	}
 	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(true)
 		if DeliveryStatisticsTableViewController.shortcutAction == "addDeliveryShortcut" {
 			performSegue(withIdentifier: "edit", sender: self)
 		} else if DeliveryStatisticsTableViewController.shortcutAction == "viewDeliveriesShortcut" {
 			performSegue(withIdentifier: "edit", sender: self)
 			
-		}/*
-		persistentContainer.loadPersistentStores {
-		(persistentStoreDescription, error) in
-		if let error = error {
-		print("Unable to Load Persistent Store")
-		print("\(error), \(error.localizedDescription)")
-		} else {
-		do {
-		try self.fetchedResultsController.performFetch()
-		} catch {
-		let fetchError = error as NSError
-		print("Unable to Perform Fetch Request")
-		print("\(fetchError), \(fetchError.localizedDescription)")
 		}
-		}
-		}*/
 	}
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		setDeliveryDay()
-		guard let tabBarViewController = segue.destination as? DeliveryTabBarViewController else {
-			return
+		if let tabBarViewController = segue.destination as? DeliveryTabBarViewController {
+			setDeliveryDay()
+			guard let mainContext = mainContext else {
+				return
+			}
+			self.navigationController?.isNavigationBarHidden = true
+			let deliveryStatisticsNavigationController = tabBarViewController.viewControllers?[0] as! UINavigationController
+			let deliveriesNavigationController = tabBarViewController.viewControllers?[1] as! UINavigationController
+			let dropsNavigationController = tabBarViewController.viewControllers?[2] as! UINavigationController
+			let deliveryStatisticsDestinationViewController = deliveryStatisticsNavigationController.viewControllers[0] as! DeliveryStatisticsTableViewController
+			let deliveriesDestinationViewController = deliveriesNavigationController.viewControllers[0] as! DeliveryTableViewController
+			let dropsDestinationViewController = dropsNavigationController.viewControllers[0] as! DropTableViewController
+			deliveryStatisticsDestinationViewController.mainContext = mainContext
+			deliveryStatisticsDestinationViewController.deliveryDay = deliveryDay
+			deliveriesDestinationViewController.mainContext = mainContext
+			deliveriesDestinationViewController.deliveryDay = deliveryDay
+			dropsDestinationViewController.mainContext = mainContext
+			dropsDestinationViewController.deliveryDay = deliveryDay			
 		}
-		guard let mainContext = mainContext else {
-			return
-		}
-		self.navigationController?.isNavigationBarHidden = true
-		let deliveryStatisticsNavigationController = tabBarViewController.viewControllers?[0] as! UINavigationController
-		let deliveriesNavigationController = tabBarViewController.viewControllers?[1] as! UINavigationController
-		let dropsNavigationController = tabBarViewController.viewControllers?[2] as! UINavigationController
-		let deliveryStatisticsDestinationViewController = deliveryStatisticsNavigationController.viewControllers[0] as! DeliveryStatisticsTableViewController
-		let deliveriesDestinationViewController = deliveriesNavigationController.viewControllers[0] as! DeliveryTableViewController
-		let dropsDestinationViewController = dropsNavigationController.viewControllers[0] as! DropTableViewController
-		deliveryStatisticsDestinationViewController.mainContext = mainContext
-		deliveryStatisticsDestinationViewController.deliveryDay = deliveryDay
-		deliveriesDestinationViewController.setDate = (deliveryDay?.date?.convertToDateString())!
-		deliveriesDestinationViewController.deliveryDay = deliveryDay
-		dropsDestinationViewController.mainContext = mainContext
-		dropsDestinationViewController.drops = deliveryDay?.drops?.array as! [Drop]
-		dropsDestinationViewController.setDate = (deliveryDay?.date?.convertToDateString())!
 	}
 	
 	// MARK: CoreData
@@ -90,8 +77,10 @@ class DeliveryDayViewController : UIViewController, UINavigationControllerDelega
 		}
 		if deliveryDay == nil {
 			let newDeliveryDay = DeliveryDay(context: mainContext)
-			newDeliveryDay.date = deliveryDatePicker.date
+			newDeliveryDay.date = deliveryDatePicker.date as NSDate?
 			deliveryDay = newDeliveryDay
+		} else if let deliveryDay = deliveryDay {
+			deliveryDay.date = deliveryDatePicker.date as NSDate?
 		}
 	}
 }

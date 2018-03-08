@@ -9,20 +9,26 @@
 import UIKit
 import CoreData
 
-class DeliveryTableViewController : UITableViewController, UITextFieldDelegate {
+class DeliveryTableViewController : UITableViewController, UITextFieldDelegate, NSFetchedResultsControllerDelegate {
 	@IBOutlet var table: UITableView!
 	@IBOutlet var editButton: UIBarButtonItem!
 	@IBOutlet var deleteButton: UIBarButtonItem!
 	@IBAction func deleteAction(_ sender: UIBarButtonItem) {
 		indexPathsToDelete.removeAll()
 		for (_, path) in selectedIndicies.enumerated() {
-			print(path)
 			let indexPath: IndexPath = [0, path]
-			indexPathsToDelete.append(indexPath)
-			print(indexPathsToDelete)
-			deliveries.remove(at: path)
+			let context = self.fetchedResultsController.managedObjectContext
+			context.delete(self.fetchedResultsController.object(at: indexPath))
 		}
-		table.deleteRows(at: indexPathsToDelete, with: .fade)
+		let context = self.fetchedResultsController.managedObjectContext
+		do {
+			try context.save()
+		} catch {
+			let nserror = error as NSError
+			let alert = UIAlertController(title: "Error", message: "Unresolved error \(nserror), \(nserror.userInfo)", preferredStyle: UIAlertControllerStyle.alert)
+			alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
+			self.present(alert, animated: true, completion: nil)
+		}
 		table.setEditing(false, animated: true)
 		editButton.title = "Edit"
 		editButton.style = UIBarButtonItemStyle.plain
@@ -57,99 +63,45 @@ class DeliveryTableViewController : UITableViewController, UITextFieldDelegate {
 	var strLabel = UILabel()
 	var tabBar: DeliveryTabBarViewController?
 	var mainContext: NSManagedObjectContext? = nil
-	var deliveryChildContext: NSManagedObjectContext? = nil
+	var _fetchedResultsController: NSFetchedResultsController<Delivery>? = nil
+	var fetchedResultsController: NSFetchedResultsController<Delivery> {
+		if _fetchedResultsController != nil {
+			return _fetchedResultsController!
+		}
+		let fetchRequest: NSFetchRequest<Delivery> = Delivery.fetchRequest()
+		fetchRequest.fetchBatchSize = 20
+		let sortDescriptor = NSSortDescriptor(key: "deliveryTime", ascending: false)
+		fetchRequest.sortDescriptors = [sortDescriptor]
+		let predicate = NSPredicate(format: "deliveryDay == %@", deliveryDay!)
+		fetchRequest.predicate = predicate
+		let aFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: self.mainContext!, sectionNameKeyPath: nil, cacheName: "DeliveryCache")
+		aFetchedResultsController.delegate = self
+		_fetchedResultsController = aFetchedResultsController
+		do {
+			try _fetchedResultsController!.performFetch()
+		} catch {
+			let nserror = error as NSError
+			let alert = UIAlertController(title: "Error", message: "Unresolved error \(nserror), \(nserror.userInfo)", preferredStyle: UIAlertControllerStyle.alert)
+			alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
+			self.present(alert, animated: true, completion: nil)
+		}
+		return _fetchedResultsController!
+	}
+	
+	// MARK: View Life Cycle
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.clearsSelectionOnViewWillAppear = true
-		}
-	
-	// MARK: - Table view data source
-	
-	override func numberOfSections(in tableView: UITableView) -> Int {
-		return 1
-	}
-	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return deliveries.count
-	}
-	var paymentMethodString = ""
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cellIdentifier = "deliveryCell"
-		let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! DeliveryTableViewCell
-		let delivery = deliveries[indexPath.row]
-		if delivery.paymentMethod == 0 {
-			self.paymentMethodString = "None"
-		} else if delivery.paymentMethod == 1 {
-			self.paymentMethodString = "Cash"
-		} else if delivery.paymentMethod == 2 {
-			self.paymentMethodString = "Check"
-		} else if delivery.paymentMethod == 3 {
-			self.paymentMethodString = "Credit"
-		} else if delivery.paymentMethod == 4 {
-			self.paymentMethodString = "Charge"
-		} else if delivery.paymentMethod == 5 {
-			self.paymentMethodString = "Other"
-		}
-		cell.deliveryNumber.text = String(indexPath.row + 1)
-		cell.ticketNumberCell.text = "\(delivery.ticketNumber)"
-		cell.ticketAmountCell.text = delivery.ticketAmount.convertToCurrency()
-		cell.amountGivenCell.text = delivery.amountGiven.convertToCurrency()
-		cell.cashTipsCell.text = delivery.cashTips.convertToCurrency()
-		cell.totalTipsCell.text = delivery.totalTips.convertToCurrency()
-		cell.paymentMethodCell.text = paymentMethodString
-		cell.deliveryTimeCell.text = delivery.deliveryTime?.convertToTimeString()
-		let backgroundView = UIView()
-		backgroundView.backgroundColor = UIColor.darkGray
-		cell.selectedBackgroundView = backgroundView
-		return cell
 	}
 	override func viewWillAppear(_ animated: Bool) {
-		self.tabBarController?.tabBar.isHidden = false
-		if DeliveryStatisticsTableViewController.shortcutAction == "addDeliveryShortcut" {
-			performSegue(withIdentifier: "addItem", sender: self)
-			DeliveryStatisticsTableViewController.shortcutAction = ""
-		} else if DeliveryStatisticsTableViewController.shortcutAction == "viewDeliveriesShortcut" {
-			DeliveryStatisticsTableViewController.shortcutAction = ""
-		}
-	}
-	override func viewDidAppear(_ animated: Bool) {
-		table.reloadSections(IndexSet.init(integer: 0), with: .fade)
+		self.navigationController?.tabBarController?.tabBar.isHidden = false
 		self.tabBarController?.tabBar.items![1].badgeValue = String(deliveries.count)
 		self.tabBarController?.tabBar.items![2].badgeValue = String(drops.count)
 	}
-	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-		return true
-	}
-	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-		if editingStyle == .delete {
-			deliveries.remove(at: indexPath.row)
-			tableView.deleteRows(at: [indexPath], with: .fade)
-		} else if editingStyle == .insert {
-		}
-	}
-	override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-		let tempItemToMove = deliveries[fromIndexPath.row]
-		deliveries.remove(at: fromIndexPath.row)
-		deliveries.insert(tempItemToMove, at: to.row)
-	}
-	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		setDeleteButtonCount()
-		selectedIndicies.append(indexPath.row)
-		if selectedIndicies.count != 0 {
-		}
-	}
-	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-		setDeleteButtonCount()
-		if selectedIndicies.count != 0 {
-			if selectedIndicies.contains(indexPath.row) {				
-				let selectedIndicesFiltered = selectedIndicies.filter {
-					el in el == indexPath.row
-				}
-				for (index, _) in selectedIndicesFiltered.enumerated() {
-					deselectedIndexPath = selectedIndicesFiltered[index]
-				}
-				selectedIndicies.remove(at: selectedIndicies.index(of: Int(deselectedIndexPath!))!)
-			}
-		}
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(true)
+		self.table.reloadData()		
 	}
 	func setDeleteButtonCount() {
 		if tableView.isEditing {
@@ -165,40 +117,6 @@ class DeliveryTableViewController : UITableViewController, UITextFieldDelegate {
 			}
 		}
 	}
-	
-	// MARK: - Navigation
-	
-	@IBAction func unwindToDeliveryList(_ sender: UIStoryboardSegue) {
-		if let sourceViewController = sender.source as? DeliveryViewController, let delivery = sourceViewController.delivery {
-			if let selectedIndexPath = tableView.indexPathForSelectedRow {
-				deliveries[selectedIndexPath.row] = delivery
-				tableView.reloadRows(at: [selectedIndexPath], with: .right)
-				tableView.deselectRow(at: selectedIndexPath, animated: true)
-			} else {
-				let newIndexPath = IndexPath(row: deliveries.count, section: 0)
-				deliveries.append(delivery)
-				tableView.insertRows(at: [newIndexPath], with: .bottom)
-			}
-		}
-	}
-	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.identifier == "showDetail" {
-			let deliveryDetailViewController = segue.destination as! DeliveryViewController
-			if let selectedDeliveryCell = sender as? DeliveryTableViewCell {
-				let indexPath = tableView.indexPath(for: selectedDeliveryCell)!
-				let selectedDelivery = deliveries[indexPath.row]
-				deliveryDetailViewController.delivery = selectedDelivery
-			}
-		}
-	}
-	override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-		if !tableView.isEditing {
-			return true
-		} else {
-			return false
-		}
-	}
-	
 	func activityIndicator(msg: String, _ indicator: Bool) {
 		strLabel = UILabel(frame: CGRect(x: 50, y: 0, width: 200, height: 50))
 		strLabel.text = msg
@@ -216,5 +134,145 @@ class DeliveryTableViewController : UITableViewController, UITextFieldDelegate {
 		view.bringSubview(toFront: strLabel)
 		view.addSubview(messageFrame)
 		view.bringSubview(toFront: messageFrame)
+	}
+	
+	// MARK: - Table View Life Cycle
+	
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		let deliveryCount = self.fetchedResultsController.fetchedObjects?.count
+		return deliveryCount!
+	}
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "deliveryCell", for: indexPath) as! DeliveryTableViewCell
+		let delivery = self.fetchedResultsController.object(at: indexPath)
+		self.configureCell(cell, atIndexPath: indexPath, withDelivery: delivery)
+		let backgroundView = UIView()
+		backgroundView.backgroundColor = UIColor.darkGray
+		cell.selectedBackgroundView = backgroundView
+		return cell
+	}
+	override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+		return true
+	}
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		if tableView.isEditing {
+			setDeleteButtonCount()
+			selectedIndicies.append(indexPath.row)
+			if selectedIndicies.count != 0 {
+			}
+		} else {
+			tableView.deselectRow(at: indexPath, animated: true)
+		}
+	}
+	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+		setDeleteButtonCount()
+		if selectedIndicies.count != 0 {
+			if selectedIndicies.contains(indexPath.row) {
+				let selectedIndicesFiltered = selectedIndicies.filter {
+					el in el == indexPath.row
+				}
+				for (index, _) in selectedIndicesFiltered.enumerated() {
+					deselectedIndexPath = selectedIndicesFiltered[index]
+				}
+				selectedIndicies.remove(at: selectedIndicies.index(of: Int(deselectedIndexPath!))!)
+			}
+		}
+	}
+	override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+		if editingStyle == .delete {
+			let context = self.fetchedResultsController.managedObjectContext
+			context.delete(self.fetchedResultsController.object(at: indexPath))
+			do {
+				try context.save()
+			} catch {
+				let nserror = error as NSError
+			let alert = UIAlertController(title: "Error", message: "Unresolved error \(nserror), \(nserror.userInfo)", preferredStyle: UIAlertControllerStyle.alert)
+			alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
+			self.present(alert, animated: true, completion: nil)
+			}
+		}
+	}
+	func configureCell(_ cell: DeliveryTableViewCell, atIndexPath indexPath: IndexPath, withDelivery delivery: Delivery) {
+		let paymentMethod: String?
+		switch delivery.paymentMethod {
+		case 0:
+			paymentMethod = "None"
+		case 1:
+			paymentMethod = "Cash"
+		case 2:
+			paymentMethod = "Check"
+		case 3:
+			paymentMethod = "Credit"
+		case 4:
+			paymentMethod = "Charge"
+		case 5:
+			paymentMethod = "Other"
+		default:
+			paymentMethod = "None"
+		}
+		cell.deliveryNumber.text = String(indexPath.row + 1)
+		cell.ticketNumberCell.text = "\(delivery.ticketNumber)"
+		cell.ticketAmountCell.text = delivery.ticketAmount.convertToCurrency()
+		cell.amountGivenCell.text = delivery.amountGiven.convertToCurrency()
+		cell.cashTipsCell.text = delivery.cashTips.convertToCurrency()
+		cell.totalTipsCell.text = delivery.totalTips.convertToCurrency()
+		cell.paymentMethodCell.text = paymentMethod
+		cell.deliveryTimeCell.text = delivery.deliveryTime?.convertToTimeString()
+	}
+	
+	// MARK: - Fetched results controller
+	
+	func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		self.tableView.beginUpdates()
+	}
+	func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+		switch type {
+		case .insert:
+			self.tableView.insertSections(IndexSet(integer: sectionIndex), with: .fade)
+		case .delete:
+			self.tableView.deleteSections(IndexSet(integer: sectionIndex), with: .fade)
+		default:
+			return
+		}
+		self.tabBarController?.tabBar.items![1].badgeValue = String(deliveries.count)
+		self.tabBarController?.tabBar.items![2].badgeValue = String(drops.count)
+	}
+	func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+		switch type {
+		case .insert:
+			tableView.insertRows(at: [newIndexPath!], with: .fade)
+		case .delete:
+			tableView.deleteRows(at: [indexPath!], with: .fade)
+		case .update:
+			self.configureCell(tableView.cellForRow(at: indexPath!)! as! DeliveryTableViewCell, atIndexPath: indexPath!, withDelivery: anObject as! Delivery)
+		case .move:
+			tableView.moveRow(at: indexPath!, to: newIndexPath!)
+		}
+		self.tabBarController?.tabBar.items![1].badgeValue = String(deliveries.count)
+		self.tabBarController?.tabBar.items![2].badgeValue = String(drops.count)
+		}
+	func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+		self.tableView.endUpdates()
+	}
+	
+	// MARK: - Navigation
+	
+	override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+		if !tableView.isEditing {
+			return true
+		} else {
+			return false
+		}
+	}
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		guard let destinationViewController = segue.destination as? DeliveryViewController else {
+			return
+		}
+		self.navigationController?.tabBarController?.tabBar.isHidden = true
+		destinationViewController.mainContext = mainContext
+		destinationViewController.deliveryDay = deliveryDay
+		if let indexPath = tableView.indexPathForSelectedRow, segue.identifier == "showDetail" {
+			destinationViewController.delivery = fetchedResultsController.object(at: indexPath)
+		}
 	}
 }

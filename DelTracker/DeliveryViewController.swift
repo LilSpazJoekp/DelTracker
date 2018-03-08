@@ -41,7 +41,7 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 		amountGivenField.selectAllText()
 	}
 	@IBAction func amountGivenEditingEnded(_ sender: UITextField) {
-		removeFirstCharacterAndCalculate()
+		calculateTips()
 		cashTipsField?.isEnabled = true
 		cashTipsField?.isUserInteractionEnabled = true
 	}
@@ -51,14 +51,14 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 		cashTipsField?.selectAllText()
 	}
 	@IBAction func cashTipsEditingEnded(_ sender: UITextField) {
-		removeFirstCharacterAndCalculate()
+		calculateTips()
 	}
 	@IBAction func saveDelivery(_ sender: UIBarButtonItem) {
-		removeFirstCharacterAndCalculate()
+		calculateTips()
 		OperationQueue.main.addOperation() {
 			self.activityIndicator(msg: "   Saving...", true)
 		}
-		perfomUnwindSegue()
+		saveDelivery()
 	}
 	@IBAction func cancelEdit(_ sender: UIBarButtonItem) {
 		dismiss(animated: true, completion: nil)
@@ -104,20 +104,19 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 	
 	var delivery: Delivery?
 	var deliveryDay: DeliveryDay?
-	var selectedTime: String = ""
+	var selectedTime: Date = NSDate() as Date
 	var light: Bool = false
 	static var ticketPhoto: UIImage? = nil
 	var messageFrame = UIView()
 	var activityIndicator = UIActivityIndicatorView()
 	var strLabel = UILabel()
-	var activityIndicatorRunning: Bool = false
-	var selectedPaymentMethod: String = ""
 	var paymentMethodDataSource = ["None", "Cash", "Check", "Credit", "Charge", "Other"]
 	let keyboardToolbar = UIToolbar()
 	let flexBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 	let previousBarButton = UIBarButtonItem(title: "Previous", style: UIBarButtonItemStyle.plain, target: self, action: #selector(DeliveryViewController.goToPreviousField))
 	let nextBarButton = UIBarButtonItem(title: "Next", style: UIBarButtonItemStyle.plain, target: self, action: #selector(DeliveryViewController.goToNextField))
 	let doubleZero = UIButton(type: UIButtonType.custom)
+	var mainContext: NSManagedObjectContext? = nil
 	
 	// MARK: - View Life Cycle
 	
@@ -131,7 +130,6 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 		} else {
 			navigationItem.title = "Add Delivery"
 		}
-		self.tabBarController?.tabBar.isHidden = true
 		ticketNumberField.delegate = self
 		ticketAmountField.delegate = self
 		amountGivenField.delegate = self
@@ -145,6 +143,7 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 		deliveryTime.setValue(UIColor.white, forKey: "textColor")
 	}
 	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(true)
 		if let delivery = delivery {
 			ticketNumberField.text = "\(delivery.ticketNumber)"
 			ticketAmountField.text = delivery.ticketAmount.convertToCurrency()
@@ -173,25 +172,11 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 		cashTipsField?.resignFirstResponder()
 	}
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		if segue.identifier == "unwindToDeliveryListSegue" {
-			if self.timeOverrideSwitch.isOn {
-				self.setDeliveryTime()
-			} else if self.navigationItem.title == "Add Delivery" {
-				self.deliveryTime.setDate(NSDate() as Date, animated: true)
-				self.setDeliveryTime()
-			}
-			self.setDeliveryTime()/*
-			let ticketNumberValue = self.ticketNumberField.text ?? ""
-			let ticketAmountValue = self.ticketAmountField.text ?? ""
-			let noTipSwitchValue = String(self.noTipSwitch.isOn)
-			let amountGivenValue = self.amountGivenField.text ?? ""
-			let cashTipsValue = self.cashTipsField?.text ?? ""
-			let totalTipsValue = self.totalTips.text ?? ""
-			let deliveryTimeValue = self.selectedTime
-			let paymentMethodValue = String(self.paymentMethodPicker.selectedRow(inComponent: 0))
-			self.delivery = Delivery(ticketNumberValue: ticketNumberValue, ticketAmountValue: ticketAmountValue, noTipSwitchValue: noTipSwitchValue, amountGivenValue: amountGivenValue, cashTipsValue: cashTipsValue, totalTipsValue: totalTipsValue, paymentMethodValue: paymentMethodValue, deliveryTimeValue: deliveryTimeValue, ticketPhotoValue: DeliveryViewController.ticketPhoto)*/
-			self.messageFrame.removeFromSuperview()
-		} else if segue.identifier == "scan" {
+		ticketNumberField.resignFirstResponder()
+		ticketAmountField.resignFirstResponder()
+		amountGivenField.resignFirstResponder()
+		cashTipsField?.resignFirstResponder()
+		if segue.identifier == "scan" {
 			let barcodeViewController: BarcodeViewController = segue.destination as! BarcodeViewController
 			barcodeViewController.delegate = self
 		} else if segue.identifier == "viewPhoto" {
@@ -199,6 +184,9 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 			if let ticketPhoto = DeliveryViewController.ticketPhoto {
 				ticketPhotoViewController.ticketPhoto = ticketPhoto
 			}
+		}
+		if let destination = segue.destination as? DeliveryTableViewController {
+			destination.navigationController?.tabBarController?.tabBar.isHidden = false
 		}
 	}
 	func barcodeRead(barcode: String, light: Bool, photo: UIImage?) {
@@ -212,11 +200,11 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 		ticketAmountField.becomeFirstResponder()
 	}
 	func toggleFlash() {
-		if let device = AVCaptureDevice.default(for: AVMediaType.video), device.hasTorch {
+		if let device = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo), device.hasTorch {
 			do {
 				try device.lockForConfiguration()
 				let torchOn = !device.isTorchActive
-				try device.setTorchModeOn(level: 1.0)
+				try device.setTorchModeOnWithLevel(1.0)
 				device.torchMode = torchOn ? .on : .off
 				device.unlockForConfiguration()
 			} catch {
@@ -224,9 +212,68 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 			}
 		}
 	}
-	func perfomUnwindSegue() {
-		OperationQueue.main.addOperation {
-			self.performSegue(withIdentifier: "unwindToDeliveryListSegue", sender: self)
+	
+	// MARK: - CoreData
+	
+	func saveDelivery() {
+		guard let mainContext = mainContext else {
+			return
+		}
+		if let ticketNumber = ticketNumberField.text, var ticketAmount = ticketAmountField.text, var amountGiven = amountGivenField.text, var cashTips = cashTipsField?.text, var totalTips = totalTips.text {
+			if delivery == nil {
+				let newDelivery = Delivery(context: mainContext)
+				if self.navigationItem.title == "Add Delivery" {
+					if !timeOverrideSwitch.isOn {
+						deliveryTime.setDate(NSDate() as Date, animated: true)
+					}
+				}
+				newDelivery.ticketNumber = Int16(ticketNumber)!
+				newDelivery.ticketAmount = ticketAmount.removeDollarSign()
+				newDelivery.noTip = noTipSwitch.isOn
+				newDelivery.amountGiven = amountGiven.removeDollarSign()
+				newDelivery.cashTips = cashTips.removeDollarSign()
+				newDelivery.totalTips = totalTips.removeDollarSign()
+				if timeOverrideSwitch.isOn {
+                    let overrideDate = deliveryTime.date.setDateOfTime((deliveryDay?.date)! as NSDate)
+                    newDelivery.deliveryTime = overrideDate
+				} else {
+                    newDelivery.deliveryTime = deliveryTime.date as NSDate
+				}
+				newDelivery.paymentMethod = Int16(paymentMethodPicker.selectedRow(inComponent: 0))
+				if let ticketPhoto = DeliveryViewController.ticketPhoto {
+					let ticketPhotoData = UIImageJPEGRepresentation(ticketPhoto, 0.25)
+                    newDelivery.ticketPhoto = ticketPhotoData as NSData?
+				}
+				delivery = newDelivery
+			}
+			if let delivery = delivery {
+				delivery.ticketNumber = Int16(ticketNumber)!
+				delivery.ticketAmount = ticketAmount.removeDollarSign()
+				delivery.noTip = noTipSwitch.isOn
+				delivery.amountGiven = amountGiven.removeDollarSign()
+				delivery.cashTips = cashTips.removeDollarSign()
+				delivery.totalTips = totalTips.removeDollarSign()
+                delivery.deliveryTime = deliveryTime.date as NSDate
+				delivery.paymentMethod = Int16(paymentMethodPicker.selectedRow(inComponent: 0))
+				delivery.deliveryDay = deliveryDay
+				deliveryDay?.addToDeliveries(delivery)
+				if let ticketPhoto = DeliveryViewController.ticketPhoto {
+					let ticketPhotoData = UIImageJPEGRepresentation(ticketPhoto, 0.25)
+                    delivery.ticketPhoto = ticketPhotoData as NSData?
+				}
+				do {
+					try mainContext.save()
+				} catch {
+					self.messageFrame.removeFromSuperview()
+					let nserror = error as NSError
+					//let alert = UIAlertController(title: "Error", message: "Unresolved error \(nserror), \(nserror.userInfo)", preferredStyle: UIAlertControllerStyle.alert)
+					//alert.addAction(UIAlertAction(title: "Okay", style: UIAlertActionStyle.default, handler: nil))
+					//self.present(alert, animated: true, completion: nil)
+					print("Unresolved error \(nserror), \(nserror.userInfo)")
+				}
+				self.messageFrame.removeFromSuperview()
+				_ = navigationController?.popViewController(animated: true)
+			}
 		}
 	}
 	
@@ -278,7 +325,7 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 			cashTipsField?.isEnabled = true
 			amountGivenField.isEnabled = true
 			noTipSwitch?.isEnabled = true
-			removeFirstCharacterAndCalculate()
+			calculateTips()
 		}
 	}
 	func segmentControlSelected() {
@@ -288,8 +335,14 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 		ticketAmountField.resignFirstResponder()
 		amountGivenField.resignFirstResponder()
 		cashTipsField?.resignFirstResponder()
+		noTipSwitch.isOn = false
 		noTipSwitch?.isEnabled = false
-		removeFirstCharacterAndCalculate()
+		calculateTips()
+		if paymentMethodPicker.selectedRow(inComponent: 0) == 1 {
+			calculateCashTips(cashPaymentMethod: true)
+		} else {
+			calculateCashTips(cashPaymentMethod: false)
+		}
 	}
 	
 	// Payment Method PickerView
@@ -304,58 +357,119 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 	}
 	func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
 		let titleData = paymentMethodDataSource[row]
-		let myTitle = NSAttributedString(string: titleData, attributes: [NSAttributedStringKey.font: UIFont(name: "System", size: 15.0) as Any, NSAttributedStringKey.foregroundColor: UIColor.white])
+		let myTitle = NSAttributedString(string: titleData, attributes: [NSFontAttributeName: UIFont(name: "System", size: 15.0) as Any, NSForegroundColorAttributeName: UIColor.white])
 		return myTitle
 	}
 	func paymentMethodChanged() {
 		ticketAmountField.resignFirstResponder()
 		amountGivenField.resignFirstResponder()
 		cashTipsField?.resignFirstResponder()
-		removeFirstCharacterAndCalculate()
+		calculateTips()
 	}
 	func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
 		if row == 0 {
+			//calculateCashTips(cashPaymentMethod: false)
 			quickTipSelector.isEnabled = true
 			cashTipsField?.isEnabled = true
-			selectedPaymentMethod = "None"
 		} else if row == 1 {
-			noTipSwitch?.isEnabled = true
+			if quickTipSelector.selectedSegmentIndex != 5 {
+				calculateCashTips(cashPaymentMethod: true)
+			}
 			quickTipSelector.isEnabled = true
 			cashTipsField?.isEnabled = true
-			selectedPaymentMethod = "Cash"
 			paymentMethodChanged()
 		} else if row == 2 {
+			//calculateCashTips(cashPaymentMethod: false)
 			quickTipSelector.isEnabled = true
 			cashTipsField?.isEnabled = true
-			selectedPaymentMethod = "Check"
 			paymentMethodChanged()
 		} else if row == 3 {
+			//calculateCashTips(cashPaymentMethod: false)
 			quickTipSelector.isEnabled = true
 			cashTipsField?.isEnabled = true
-			selectedPaymentMethod = "Credit"
 			paymentMethodChanged()
 		} else if row == 4 {
+			//calculateCashTips(cashPaymentMethod: false)
 			quickTipSelector.isEnabled = true
 			cashTipsField?.isEnabled = true
-			selectedPaymentMethod = "Charge"
 			paymentMethodChanged()
 		} else if row == 5 {
+			//calculateCashTips(cashPaymentMethod: false)
 			quickTipSelector.isEnabled = true
 			cashTipsField?.isEnabled = true
-			selectedPaymentMethod = "Other"
 			paymentMethodChanged()
 		}
 	}
-	
-	// TimePicker
-	func setDeliveryTime() {
-		deliveryTime.reloadInputViews()
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "hh:mm:ss a"
-		dateFormatter.amSymbol = "AM"
-		dateFormatter.pmSymbol = "PM"
-		selectedTime = dateFormatter.string(from: deliveryTime.date)
-		deliveryTime.setValue(UIColor.white, forKey: "textColor")
+	func calculateCashTips(cashPaymentMethod: Bool) {
+		if cashPaymentMethod {
+			let ticketAmount = ticketAmountField.text?.removeDollarSign() ?? 0.0
+			var amountGiven = amountGivenField.text?.removeDollarSign() ?? 0.0
+			switch quickTipSelector.selectedSegmentIndex {
+			case 0:
+				amountGiven = ticketAmount + 5.0
+				amountGivenField.text = amountGiven.convertToCurrency()
+				cashTipsField?.text = "$0.00"
+			case 1:
+				amountGiven = ticketAmount + 4.0
+				amountGivenField.text = amountGiven.convertToCurrency()
+				cashTipsField?.text = "$0.00"
+			case 2:
+				amountGiven = ticketAmount + 3.0
+				amountGivenField.text = amountGiven.convertToCurrency()
+				cashTipsField?.text = "$0.00"
+			case 3:
+				amountGiven = ticketAmount + 2.0
+				amountGivenField.text = amountGiven.convertToCurrency()
+				cashTipsField?.text = "$0.00"
+			case 4:
+				amountGiven = ticketAmount + 1.0
+				amountGivenField.text = amountGiven.convertToCurrency()
+				cashTipsField?.text = "$0.00"
+			case 5:
+				amountGiven = ticketAmount + 0.0
+				amountGivenField.text = amountGiven.convertToCurrency()
+				cashTipsField?.text = "$0.00"
+			default:
+				amountGiven = ticketAmount + 0.0
+				amountGivenField.text = amountGiven.convertToCurrency()
+				cashTipsField?.text = "$0.00"
+			}
+		} else {
+			let ticketAmount = ticketAmountField.text?.removeDollarSign() ?? 0.0
+			var amountGiven = amountGivenField.text?.removeDollarSign() ?? 0.0
+			switch quickTipSelector.selectedSegmentIndex {
+			case 0:
+				amountGiven = ticketAmount
+				amountGivenField.text = amountGiven.convertToCurrency()
+				cashTipsField?.text = "$5.00"
+			case 1:
+				amountGiven = ticketAmount
+				amountGivenField.text = amountGiven.convertToCurrency()
+				cashTipsField?.text = "$4.00"
+			case 2:
+				amountGiven = ticketAmount
+				amountGivenField.text = amountGiven.convertToCurrency()
+				cashTipsField?.text = "$3.00"
+			case 3:
+				amountGiven = ticketAmount
+				amountGivenField.text = amountGiven.convertToCurrency()
+				cashTipsField?.text = "$2.00"
+			case 4:
+				amountGiven = ticketAmount
+				amountGivenField.text = amountGiven.convertToCurrency()
+				cashTipsField?.text = "$1.00"
+			case 5:
+				if cashTipsField?.text == "$0.00" {
+					amountGiven = ticketAmount
+					amountGivenField.text = amountGiven.convertToCurrency()
+					cashTipsField?.text = "$0.00"
+				}
+			default:
+				amountGiven = ticketAmount
+				amountGivenField.text = amountGiven.convertToCurrency()
+				cashTipsField?.text = "$0.00"
+			}
+		}
 	}
 	
 	// Toolbar Previous and Next Buttons
@@ -426,7 +540,7 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 	func textFieldDidBeginEditing(_: UITextField) {
 		NotificationCenter.default.addObserver(self, selector: #selector(DeliveryViewController.keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
 	}
-	@objc func keyboardWillShow(_ note: Notification) -> Void {
+    @objc func keyboardWillShow(_ note: Notification) -> Void {
 		DispatchQueue.main.async { () -> Void in
 			self.doubleZero.isHidden = false
 			let keyBoardWindow = UIApplication.shared.windows.last
@@ -436,22 +550,16 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 			UIView.animate(withDuration: (((note.userInfo! as NSDictionary).object(forKey: UIKeyboardAnimationCurveUserInfoKey) as AnyObject).doubleValue)!, delay: 0, options: UIViewAnimationOptions.curveEaseIn, animations: { () -> Void in self.view.frame = self.view.frame.offsetBy(dx: 0, dy: 0) }, completion: { (complete) -> Void in })
 		}
 	}
-	func removeFirstCharacterAndCalculate() {
-		var ticketAmountDropped = ticketAmountField.text
-        let localTicketAmountDropped = ticketAmountDropped
-		ticketAmountDropped?.remove(at: (localTicketAmountDropped?.startIndex)!)
-        var amountGivenDropped = ticketAmountField.text
-        let localAmountGivenDropped = ticketAmountDropped
-        amountGivenDropped?.remove(at: (localAmountGivenDropped?.startIndex)!)
-        var cashTipsDropped = ticketAmountField.text
-        let localCashTipsDropped = cashTipsDropped
-        cashTipsDropped?.remove(at: (localCashTipsDropped?.startIndex)!)
-		if (cashTipsField?.text) != nil {
-			let totalTipsCalc: Double = Double(amountGivenDropped!)! - Double(ticketAmountDropped!)! + Double(cashTipsDropped!)!
-			totalTips.text = "$" + String(format: "%.2f", totalTipsCalc)
+	func calculateTips() {
+		if cashTipsField?.text != nil {
+			var amountGiven = amountGivenField.text ?? "$0.00"
+			var ticketAmount = ticketAmountField.text ?? "$0.00"
+			var cashTips = cashTipsField?.text ?? "$0.00"
+			totalTips.text = (amountGiven.removeDollarSign() - ticketAmount.removeDollarSign() + cashTips.removeDollarSign()).convertToCurrency()
 		} else {
-			let totalTipsCalc: Double = Double(amountGivenDropped!)! - Double(ticketAmountDropped!)!
-			totalTips.text = "$" + String(format: "%.2f", totalTipsCalc)
+			var amountGiven = amountGivenField.text ?? "$0.00"
+			var ticketAmount = ticketAmountField.text ?? "$0.00"
+			totalTips.text = (amountGiven.removeDollarSign() - ticketAmount.removeDollarSign()).convertToCurrency()
 		}
 	}
     @objc func switchValueDidChange(_ aSwitch: UISwitch) {
@@ -461,12 +569,12 @@ class DeliveryViewController : UIViewController, UIPickerViewDelegate, UIPickerV
 			cashTipsField?.text = "$0.00"
 			amountGivenField.isEnabled = false
 			cashTipsField?.isEnabled = false
-			removeFirstCharacterAndCalculate()
+			calculateTips()
 		} else {
 			delivery?.noTip = noTipSwitch.isOn
 			amountGivenField.isEnabled = true
 			cashTipsField?.isEnabled = true
-			removeFirstCharacterAndCalculate()
+			calculateTips()
 		}
 	}
 	

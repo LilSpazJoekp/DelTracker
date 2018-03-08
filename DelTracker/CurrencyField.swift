@@ -12,7 +12,7 @@ import CoreData
 class CurrencyField : UITextField {
 	override func awakeFromNib() {
 		super.awakeFromNib()
-		addTarget(self, action: #selector(editingChanged), for: .editingChanged)
+        addTarget(self, action: #selector(editingChanged), for: .editingChanged)
 		keyboardType = .numberPad
 		textAlignment = .right
 		editingChanged()

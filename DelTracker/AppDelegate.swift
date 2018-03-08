@@ -91,14 +91,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
 		launchedShortcutItem = nil
 	}
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        Thread.sleep(forTimeInterval: 1.0)
-        // Override point for customization after application launch.
-        
 		let mainContext = self.persistentContainer.viewContext
-		let dropChildContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-		dropChildContext.parent = mainContext
-		let deliveryChildContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-		deliveryChildContext.parent = mainContext
 		let tabBarViewController = self.window!.rootViewController as! UITabBarController
 		let statisticsNavigationController = tabBarViewController.viewControllers?[0] as! UINavigationController
 		tabBarViewController.delegate = self
@@ -107,8 +100,6 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
 		let deliveryDayTableViewController = deliveryDayTableNaigationController.topViewController as! DeliveryDayTableViewController
 		statisticsTableViewController.mainContext = mainContext
 		deliveryDayTableViewController.mainContext = mainContext
-		deliveryDayTableViewController.dropChildContext = dropChildContext
-		deliveryDayTableViewController.deliveryChildContext = deliveryChildContext
 		return true
 		// Override point for customization after application launch.
 		/*var shouldPerformAdditionalDelegateHandling = true
@@ -146,7 +137,6 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
 		// Saves changes in the application's managed object context before the application terminates.
 		self.saveDeliveryDayContext()
 	}
-	
 	var persistentContainer: NSPersistentContainer = {
 		/*
 		The persistent container for the application. This implementation
@@ -154,6 +144,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
 		application to it. This property is optional since there are legitimate
 		error conditions that could cause the creation of the store to fail.
 		*/
+		
 		let container = NSPersistentContainer(name: "DelTracker")
 		container.loadPersistentStores(completionHandler: { (storeDescription, error) in
 			if let error = error as NSError? {
@@ -167,11 +158,12 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
 				* The store could not be migrated to the current model version.
 				Check the error message to determine what the actual problem was.
 				*/
-				fatalError("Unresolved error \(error), \(error.userInfo)")
+				//fatalError("Unresolved error \(error), \(error.userInfo)")
 			}
 		})
 		return container
 	}()
+	
 	
 	// MARK: - Core Data Saving support
 	
@@ -184,7 +176,7 @@ class AppDelegate : UIResponder, UIApplicationDelegate, UITabBarControllerDelega
 				// Replace this implementation with code to handle the error appropriately.
 				// fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
 				let nserror = error as NSError
-				fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+				print("Unresolved error \(nserror), \(nserror.userInfo)")
 			}
 		}
 	}

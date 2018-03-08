@@ -67,6 +67,7 @@ class PersonTableViewController: UITableViewController, NSFetchedResultsControll
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.clearsSelectionOnViewWillAppear = true
+		self.navigationController?.navigationBar.backItem?.leftItemsSupplementBackButton = true
 		persistentContainer.loadPersistentStores {
 			(persistentStoreDescription, error) in
 			if let error = error {
@@ -84,23 +85,6 @@ class PersonTableViewController: UITableViewController, NSFetchedResultsControll
 			}
 		}
 		NotificationCenter.default.addObserver(self, selector: #selector(applicationDidEnterBackground(_:)), name: Notification.Name.UIApplicationDidEnterBackground, object: nil)
-	}
-	override func viewDidAppear(_ animated: Bool) {
-		persistentContainer.loadPersistentStores {
-			(persistentStoreDescription, error) in
-			if let error = error {
-				print("Unable to Load Persistent Store")
-				print("\(error), \(error.localizedDescription)")
-			} else {
-				do {
-					try self.fetchedResultsController.performFetch()
-				} catch {
-					let fetchError = error as NSError
-					print("Unable to Perform Fetch Request")
-					print("\(fetchError), \(fetchError.localizedDescription)")
-				}
-			}
-		}
 	}
     @objc func applicationDidEnterBackground(_ notification: Notification) {
 		do {
@@ -264,13 +248,11 @@ class PersonTableViewController: UITableViewController, NSFetchedResultsControll
 			}
 			if self.title == "Who Made Bank" {
 				if people.count != 0 {
-					destinationViewController.whoMadeBank = whoMadeBank
-					destinationViewController.whoClosedBankLabel.text = whoClosedBankSelectedPerson
+					destinationViewController.deliveryDay?.whoMadeBank = whoMadeBank?.name
 				}
 			} else if self.title == "Who Closed Bank" {
 				if people.count != 0 {
-					destinationViewController.whoClosedBank = whoClosedBank
-					destinationViewController.whoMadeBankLabel.text = whoMadeBankSelectedPerson
+					destinationViewController.deliveryDay?.whoClosedBank = whoClosedBank?.name
 				}
 			}
 		} else {
@@ -284,105 +266,3 @@ class PersonTableViewController: UITableViewController, NSFetchedResultsControll
 		}
 	}
 }
-
-/*
-override func viewDidLoad() {
-super.viewDidLoad()
-self.clearsSelectionOnViewWillAppear = true
-self.navigationItem.leftBarButtonItem = self.editButtonItem
-self.navigationItem.leftBarButtonItem?.tintColor = UIColor(red:1.00, green:0.54, blue:0.01, alpha:1.0)
-if let savedPeople = loadPeople() {
-people += savedPeople
-}
-//let coreDataStack = UIApplication.shared.delegate as! AppDelegate
-//let context = coreDataStack.persistentContainer.viewContext
-/*
-for person in people {
-let newPerson = Person(context: context)
-newPerson.setValue(person.name, forKey: "name")
-do {
-try context.save()
-print("Save Successful \(newPerson)")
-} catch {
-print("Failed to save")
-let nserror = error as NSError
-fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-}
-
-}*/
-}
-
-// MARK: - Table view data source
-
-override func numberOfSections(in tableView: UITableView) -> Int {
-return 1
-}
-override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-return people.count
-}
-override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-let cellIdentifier = "personCell"
-let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! PersonTableViewCell
-let person = people[indexPath.row]
-cell.personName.text = person.name
-let backgroundView = UIView()
-backgroundView.backgroundColor = UIColor.darkGray
-cell.selectedBackgroundView = backgroundView
-return cell
-}
-// Override to support conditional editing of the table view.
-override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-// Return false if you do not want the specified item to be editable.
-return true
-}
-// Override to support editing the table view.
-override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-if editingStyle == .delete {
-people.remove(at: indexPath.row)
-savePeople()
-tableView.deleteRows(at: [indexPath], with: .fade)
-} else if editingStyle == .insert {
-}
-}
-override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-}
-
-// MARK: - Navigation
-
-@IBAction func unwindToPersonList(_ sender: UIStoryboardSegue) {
-if let sourceViewController = sender.source as? PersonViewController, let person = sourceViewController.person {
-if let selectedIndexPath = tableView.indexPathForSelectedRow {
-people[selectedIndexPath.row] = person
-tableView.reloadRows(at: [selectedIndexPath], with: .right)
-} else {
-let newIndexPath = IndexPath(row: people.count, section: 0)
-people.append(person)
-tableView.insertRows(at: [newIndexPath], with: .bottom)
-}
-savePeople()
-}
-}
-override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-if segue.identifier == "showDetail" {
-let personDetailViewController = segue.destination as! PersonViewController
-if let selectedPersonCell = sender as? PersonTableViewCell {
-let indexPath = tableView.indexPath(for: selectedPersonCell)!
-let selectedPerson = people[indexPath.row]
-personDetailViewController.person = selectedPerson
-}
-} else if segue.identifier == "addItem" {
-}
-}
-
-// MARK: NSCoding
-
-func savePeople() {
-let isSuccessfulSave = NSKeyedArchiver.archiveRootObject(people, toFile: Person.ArchiveURL.path)
-if !isSuccessfulSave {
-print("save Failed")
-}
-}
-func loadPeople() -> [Person]? {
-return NSKeyedUnarchiver.unarchiveObject(withFile: Person.ArchiveURL.path) as? [Person]
-}
-*/
